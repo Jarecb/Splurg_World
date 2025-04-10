@@ -1,0 +1,84 @@
+package org.jarec.data.creature;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class SplurgTest {
+
+    @Test
+    void getAge() {
+        Splurg splurg = new Splurg();
+        splurg.setAge(100);
+        Splurg splurg2 = new Splurg();
+        splurg2.setAge(50);
+        assertEquals(100, splurg.getAge());
+        assertEquals(50, splurg2.getAge());
+    }
+
+    @Test
+    void age() {
+        Splurg splurg = new Splurg();
+        splurg.setAge(100);
+        assertTrue(splurg.age());
+        assertEquals(99, splurg.getAge());
+        splurg.setAge(1);
+        assertFalse(splurg.age());
+        assertEquals(0, splurg.getAge());
+    }
+
+
+
+    @Test
+    void health() {
+        Splurg splurg = new Splurg();
+        splurg.setMaxHealth(20);
+        splurg.setHealth(20);
+        assertTrue(splurg.reduceHealth(15));
+        assertEquals(5, splurg.getHealth());
+        splurg.setHealth(20);
+        assertFalse(splurg.reduceHealth(20));
+        assertEquals(0, splurg.getHealth());
+        splurg.setHealth(21);
+        assertEquals(20, splurg.getHealth());
+        splurg.reduceHealth(10);
+        splurg.recoverHealth(11);
+        assertEquals(20, splurg.getHealth());
+    }
+
+    @Test
+    void getSize() {
+        Splurg splurg = new Splurg();
+        int expected = (splurg.getToughness().getValue() +
+                splurg.getStrength().getValue()) / 2;
+        assertEquals(expected, splurg.getSize().getValue());
+    }
+
+    @Test
+    void getSpeed() {
+        Splurg splurg = new Splurg();
+        int expected = 10 - splurg.getSize().getValue();
+        assertEquals(expected, splurg.getSpeed().getValue());
+    }
+
+    @Test
+    void spawnNewSplurgWithMatchingAttributes() {
+        Splurg parent1 = new Splurg();
+        parent1.setAggression(5);
+        parent1.setForaging(7);
+        parent1.setStrength(3);
+        parent1.setToughness(10);
+        Splurg parent2 = new Splurg();
+        parent2.setAggression(5);
+        parent2.setForaging(7);
+        parent2.setStrength(3);
+        parent2.setToughness(10);
+
+        Splurg splurgSpawn = new Splurg(parent1, parent2);
+
+        assertEquals(5, splurgSpawn.getAggression().getValue(), "Aggression not cloned");
+        assertEquals(7, splurgSpawn.getForaging().getValue(), "Foraging not cloned");
+        assertEquals(3, splurgSpawn.getStrength().getValue(), "Strength not cloned");
+        assertEquals(10, splurgSpawn.getToughness().getValue(), "Toughness not cloned");
+    }
+}
