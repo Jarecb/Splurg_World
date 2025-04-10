@@ -1,6 +1,8 @@
 package org.jarec.data.creature;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.jarec.data.Heading;
+import org.jarec.data.Location;
 import org.jarec.data.creature.attributes.*;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
@@ -9,14 +11,17 @@ import org.slf4j.LoggerFactory;
 public class Splurg extends Life {
     private static final Logger log = LoggerFactory.getLogger(Splurg.class);
 
-    private Aggression aggression = new Aggression();
-    private Foraging foraging = new Foraging();
-    private Strength strength = new Strength();
-    private Toughness toughness = new Toughness();
+    private final Aggression aggression = new Aggression();
+    private final Foraging foraging = new Foraging();
+    private final Strength strength = new Strength();
+    private final Toughness toughness = new Toughness();
     private Size size;
     private Speed speed;
+    private Location location;
+    private Heading heading = Heading.getRandomHeading();
 
     public Splurg() {
+        location = new Location(0, 0); // TODO needs to be nest location
         commonSetup();
     }
 
@@ -37,6 +42,9 @@ public class Splurg extends Life {
             toughness.setValue(parent1.getToughness().getValue());
         }
 
+        location = new Location((parent1.getLocation().getX() + parent2.getLocation().getX()) / 2,
+                (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2);
+
         commonSetup();
     }
 
@@ -46,7 +54,7 @@ public class Splurg extends Life {
 
         setAgeAtBirth();
         setMaxHealth();
-        log.info("A Splurg is spawned " + this.toString());
+        log.info("A Splurg is spawned {}", this);
     }
 
     private void setAgeAtBirth() {
@@ -56,6 +64,10 @@ public class Splurg extends Life {
     private void setMaxHealth() {
         setMaxHealth(Integer.parseInt((PropertyHandler.get("splurg.default.base.health", "10")))
             + toughness.getValue());
+    }
+
+    public void move(){
+        // TODO make it move
     }
 
     public Aggression getAggression() {
@@ -102,6 +114,11 @@ public class Splurg extends Life {
         toughness.setValue(value);
     }
 
+    Location getLocation() {
+        return location;
+    }
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
         sb.append("Agg:");
