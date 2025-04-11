@@ -16,19 +16,22 @@ import java.util.ArrayList;
 public class WorldPanel extends JPanel {
     private static final Logger log = LoggerFactory.getLogger(WorldPanel.class);
 
-    private BufferedImage canvas;
-    private ArrayList<Drawable> drawables = new ArrayList<>();
+    private BufferedImage displayBuffer;     // What gets painted to screen
+    private BufferedImage backgroundBuffer;  // External classes can draw here
+
+    private final ArrayList<Drawable> drawables = new ArrayList<>();
 
     public WorldPanel() {
         setBackground(Color.WHITE);
+
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
                 log.info("Mouse clicked at {}:{}", e.getX(), e.getY());
-                Graphics2D g2 = canvas.createGraphics();
+                Graphics2D g2 = getBackgroundGraphics();
                 g2.setColor(Color.RED);
                 g2.fillOval(e.getX() - 3, e.getY() - 3, 6, 6);
                 g2.dispose();
-                repaint();
+                publish();  // Show the update
             }
         });
     }
@@ -36,19 +39,63 @@ public class WorldPanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (canvas == null) {
-            canvas = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        }
-        g.drawImage(canvas, 0, 0, null);
 
-        // Draw any shapes added via code
-        for (Drawable d : drawables) {
-            d.draw((Graphics2D) canvas.getGraphics());
+        if (displayBuffer == null || displayBuffer.getWidth() != getWidth() || displayBuffer.getHeight() != getHeight()) {
+            initBuffers();
         }
+
+        g.drawImage(displayBuffer, 0, 0, null);
+    }
+
+    private void initBuffers() {
+        int width = getWidth();
+        int height = getHeight();
+        displayBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        backgroundBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // Optional: clear buffers
+        clearBuffer(displayBuffer);
+        clearBuffer(backgroundBuffer);
+    }
+
+    private void clearBuffer(BufferedImage buffer) {
+        Graphics2D g2 = buffer.createGraphics();
+        g2.setComposite(AlphaComposite.Clear);
+        g2.fillRect(0, 0, buffer.getWidth(), buffer.getHeight());
+        g2.dispose();
+    }
+
+    /** Returns a Graphics2D object that external code can use to draw to the background. */
+    public Graphics2D getBackgroundGraphics() {
+        if (backgroundBuffer == null) {
+            backgroundBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        }
+        return backgroundBuffer.createGraphics();
+    }
+
+    /** Pushes background buffer to display buffer and repaints. */
+    public void publish() {
+        if (displayBuffer == null || backgroundBuffer == null) return;
+
+        Graphics2D g2 = displayBuffer.createGraphics();
+        g2.drawImage(backgroundBuffer, 0, 0, null);
+
+        // Draw dynamic drawables if needed
+        for (Drawable d : drawables) {
+            d.draw(g2);
+        }
+
+        g2.dispose();
+        repaint();
+    }
+
+    /** Clears the background buffer (call before drawing new stuff). */
+    public void clearBackground() {
+        clearBuffer(backgroundBuffer);
     }
 
     public void addDrawable(Drawable d) {
         drawables.add(d);
-        repaint();
+        publish(); // Re-render with new drawable
     }
 }

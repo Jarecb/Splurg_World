@@ -1,6 +1,7 @@
 package org.jarec.data;
 
 import org.jarec.data.creature.Splurg;
+import org.jarec.game.resources.Splurgs;
 import org.jarec.util.PropertyHandler;
 
 import java.awt.*;
@@ -18,7 +19,7 @@ public class Nest {
         this.name = name;
     }
 
-    public Splurg spawn() {
+    public void spawn() {
         var spawnFood = Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"));
         if (spawnCountdown > 0) {
             spawnCountdown--;
@@ -28,10 +29,9 @@ public class Nest {
                 spawnCountdown = Integer.parseInt(PropertyHandler.get("nest.default.spawn.rate", "5"));
                 var splurgSpawn = new Splurg(this);
                 splurgSpawn.setLocation(location);
-                return splurgSpawn;
+                Splurgs.getInstance().addSplurg(splurgSpawn);
             }
         }
-        return null;
     }
 
     public Location getLocation() {

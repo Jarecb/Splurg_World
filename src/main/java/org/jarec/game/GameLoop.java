@@ -1,6 +1,9 @@
 package org.jarec.game;
 
+import org.jarec.game.resources.Nests;
+import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
+import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +27,7 @@ public class GameLoop {
         if (started) return;
         running = true;
         started = true;
+        turn = 0;
 
         Thread loopThread = new Thread(() -> {
             try {
@@ -34,7 +38,7 @@ public class GameLoop {
             }
         });
 
-        loopThread.setDaemon(true);  // Ensures the thread ends when the main app closes
+        loopThread.setDaemon(true);
         loopThread.start();
     }
 
@@ -48,7 +52,7 @@ public class GameLoop {
     }
 
     public void stop() {
-        started = false;  // This will stop the game loop
+        started = false;
         log.info("Game stopping");
     }
 
@@ -63,6 +67,14 @@ public class GameLoop {
                 turn++;
                 log.info("Game loop turn {}", turn);
                 WorldFrame.getInstance().updateStatus("");
+
+                Nests.getInstance().drawNests();
+                Nests.getInstance().spawnNests();
+                Splurgs.getInstance().drawSplurges();
+
+                WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
+                worldPanel.publish();
+
                 Thread.sleep(loopSleepTime);
             } else {
                 Thread.sleep(loopPauseTime);

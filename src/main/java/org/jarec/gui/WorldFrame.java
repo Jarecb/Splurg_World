@@ -1,6 +1,7 @@
 package org.jarec.gui;
 
 import org.jarec.game.GameLoop;
+import org.jarec.game.GameStart;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +13,7 @@ import java.awt.event.ActionEvent;
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
 
-    private static WorldFrame instance;  // Singleton instance
+    private static WorldFrame instance;
     private WorldPanel world;
     private JLabel statusBar;
     private JMenuItem startItem, pauseItem, stopItem;
@@ -96,7 +97,7 @@ public class WorldFrame extends JFrame {
 
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
-            GameLoop.getInstance().start();  // Start the game when clicked
+            new GameStart();
             updateStatus("Game started");
             updateMenuItemsState();
         });
@@ -127,7 +128,6 @@ public class WorldFrame extends JFrame {
     }
 
     private void updateMenuItemsState() {
-        // Enable/disable menu items based on the game state
         if (GameLoop.getInstance().isStarted()) {
             startItem.setEnabled(false);
             pauseItem.setEnabled(true);
@@ -157,5 +157,9 @@ public class WorldFrame extends JFrame {
 
     public void updateStatus(String message) {
         statusBar.setText(getTurn() + message);
+    }
+
+    public WorldPanel getWorldPanel(){
+        return world;
     }
 }
