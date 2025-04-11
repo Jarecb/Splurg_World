@@ -36,6 +36,7 @@ public class WorldFrame extends JFrame {
 
         setVisible(true);
         log.info("World Frame created");
+        statusBar.setText("Welcome to Splurg World");
     }
 
     public static synchronized WorldFrame getInstance() {
