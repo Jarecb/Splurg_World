@@ -16,6 +16,7 @@ public class GameLoop {
     private int turn = 0;
     private volatile boolean running = false;
     private volatile boolean started = false;
+    private volatile int loopSleepTime = 0;
 
     private GameLoop() {}
 
@@ -28,6 +29,7 @@ public class GameLoop {
         running = true;
         started = true;
         turn = 0;
+        loopSleepTime = Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000"));
 
         Thread loopThread = new Thread(() -> {
             try {
@@ -57,7 +59,6 @@ public class GameLoop {
     }
 
     private void run() throws InterruptedException {
-        var loopSleepTime = Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000"));
         var loopPauseTime = Integer.parseInt(PropertyHandler.get("world.game.loop.pausedelaytime", "1000"));
 
         log.info("Game starting");
@@ -100,5 +101,14 @@ public class GameLoop {
 
     public boolean isPaused() {
         return !running && started;
+    }
+
+    public void setGameSpeed(int loopSleepTime) {
+        this.loopSleepTime += loopSleepTime;
+        if (this.loopSleepTime < 5) {
+            this.loopSleepTime = 5;
+        } else if (this.loopSleepTime > 2000) {
+            this.loopSleepTime = 2000;
+        }
     }
 }

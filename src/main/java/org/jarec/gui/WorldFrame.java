@@ -82,6 +82,24 @@ public class WorldFrame extends JFrame {
                 updateMenuItemsState();
             }
         });
+
+        // LEFT arrow key
+        inputMap.put(KeyStroke.getKeyStroke("LEFT"), "leftArrowPressed");
+        actionMap.put("leftArrowPressed", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameLoop.getInstance().setGameSpeed(5);
+            }
+        });
+
+        // RIGHT arrow key
+        inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "rightArrowPressed");
+        actionMap.put("rightArrowPressed", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameLoop.getInstance().setGameSpeed(-5);
+            }
+        });
     }
 
     private void setupMenuBar() {
