@@ -28,7 +28,6 @@ public class Nest {
                 getFood(spawnFood);
                 spawnCountdown = Integer.parseInt(PropertyHandler.get("nest.default.spawn.rate", "5"));
                 var splurgSpawn = new Splurg(this);
-                splurgSpawn.setLocation(location);
                 Splurgs.getInstance().addSplurg(splurgSpawn);
             }
         }

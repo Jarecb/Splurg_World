@@ -68,9 +68,11 @@ public class GameLoop {
                 log.info("Game loop turn {}", turn);
                 WorldFrame.getInstance().updateStatus("");
 
+                Splurgs.getInstance().drawSplurges();
+                Splurgs.getInstance().moveSplurgs();
+
                 Nests.getInstance().drawNests();
                 Nests.getInstance().spawnNests();
-                Splurgs.getInstance().drawSplurges();
 
                 WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
                 worldPanel.publish();

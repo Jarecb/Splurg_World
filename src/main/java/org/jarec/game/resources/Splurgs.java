@@ -47,6 +47,14 @@ public class Splurgs {
         }
     }
 
+    public void moveSplurgs() {
+        synchronized (splurgList) {
+            for (Splurg splurg : splurgList) {
+                splurg.move();
+            }
+        }
+    }
+
     public void drawSplurges() {
         WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
 

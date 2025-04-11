@@ -5,6 +5,7 @@ import org.jarec.data.Location;
 import org.jarec.data.Nest;
 import org.jarec.data.creature.attributes.*;
 import org.jarec.util.PropertyHandler;
+import org.jarec.util.RandomInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,10 @@ public class Splurg extends Life {
     private Nest homeNest;
 
     public Splurg(Nest nest) {
+        var homeLocation = nest.getLocation();
+        var Location = new Location(homeLocation.getX(), homeLocation.getY());
+        setLocation(Location);
+
         commonSetup(nest);
     }
 
@@ -54,7 +59,7 @@ public class Splurg extends Life {
         setMaxHealth();
 
         homeNest = nest;
-        setLocation(homeNest.getLocation());
+
         log.info("A Splurg has spawned {}", this);
     }
 
@@ -68,7 +73,12 @@ public class Splurg extends Life {
     }
 
     public void move(){
-        // TODO make it move
+        if (RandomInt.getRandomInt(3) % 3 == 0){
+            setHeading(getHeading().getRandomTurn());
+        }
+        var location = getLocation();
+        location.updateLocation(getHeading());
+        setLocation(location);
     }
 
     public Aggression getAggression() {
@@ -138,6 +148,11 @@ public class Splurg extends Life {
         sb.append(speed.getValue());
         sb.append("; Hth:");
         sb.append(getHealth());
+        var location = getLocation();
+        sb.append("; Loc.X:");
+        sb.append(location.getX());
+        sb.append("; Loc.Y:");
+        sb.append(location.getY());
         sb.append("]");
 
         return sb.toString();

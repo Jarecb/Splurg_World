@@ -24,4 +24,9 @@ public class Location {
     public void setY(int y) {
         this.y = y;
     }
+
+    public void updateLocation(Heading heading){
+        this.x += heading.getDx();
+        this.y += heading.getDy();
+    }
 }
