@@ -1,5 +1,6 @@
 package org.jarec;
 
+import org.jarec.game.GameLoop;
 import org.jarec.gui.WorldFrame;
 import org.jarec.util.PropertyHandler;
 
@@ -17,6 +18,6 @@ public class Main {
         log.info("Version: {}", PropertyHandler.get("version", "??.??.??"));
 
         log.info("Creating Splurg World");
-        WorldFrame frame = new WorldFrame();
+        WorldFrame frame = WorldFrame.getInstance();
     }
 }

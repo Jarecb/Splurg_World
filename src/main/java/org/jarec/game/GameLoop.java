@@ -1,0 +1,90 @@
+package org.jarec.game;
+
+import org.jarec.gui.WorldFrame;
+import org.jarec.util.PropertyHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class GameLoop {
+    private static final Logger log = LoggerFactory.getLogger(GameLoop.class);
+
+    private static final GameLoop instance = new GameLoop();
+
+    private int turn = 0;
+    private volatile boolean running = false;
+    private volatile boolean started = false;
+
+    private GameLoop() {}
+
+    public static GameLoop getInstance() {
+        return instance;
+    }
+
+    public void start() {
+        if (started) return;
+        running = true;
+        started = true;
+
+        Thread loopThread = new Thread(() -> {
+            try {
+                run();
+            } catch (InterruptedException e) {
+                log.error("Something went wrong in the game loop: {}", e);
+                Thread.currentThread().interrupt();
+            }
+        });
+
+        loopThread.setDaemon(true);  // Ensures the thread ends when the main app closes
+        loopThread.start();
+    }
+
+    public void pause() {
+        running = !running;
+        if (running) {
+            log.info("Game unpaused");
+        } else {
+            log.info("Game paused");
+        }
+    }
+
+    public void stop() {
+        started = false;  // This will stop the game loop
+        log.info("Game stopping");
+    }
+
+    private void run() throws InterruptedException {
+        var loopSleepTime = Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000"));
+        var loopPauseTime = Integer.parseInt(PropertyHandler.get("world.game.loop.pausedelaytime", "1000"));
+
+        log.info("Game starting");
+
+        while (started) {
+            if (running) {
+                turn++;
+                log.info("Game loop turn {}", turn);
+                WorldFrame.getInstance().updateStatus("");
+                Thread.sleep(loopSleepTime);
+            } else {
+                Thread.sleep(loopPauseTime);
+            }
+        }
+
+        log.info("Game loop has stopped.");
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public boolean isStarted() {
+        return started;
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public boolean isPaused() {
+        return !running && started;
+    }
+}

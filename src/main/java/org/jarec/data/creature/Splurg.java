@@ -1,7 +1,6 @@
 package org.jarec.data.creature;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.jarec.data.Heading;
 import org.jarec.data.Location;
 import org.jarec.data.Nest;
 import org.jarec.data.creature.attributes.*;

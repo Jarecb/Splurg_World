@@ -1,5 +1,6 @@
 package org.jarec.data.creature.attributes;
 
+import org.jarec.data.Location;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 
@@ -24,5 +25,10 @@ public class Foraging implements SettableAttribute {
             throw new IllegalArgumentException("Foraging outside of range: " + foraging);
         }
         this.foraging = foraging;
+    }
+
+    public Location senseLife() {
+        // TODO detect any Plant within foraging distance
+        return null;
     }
 }
