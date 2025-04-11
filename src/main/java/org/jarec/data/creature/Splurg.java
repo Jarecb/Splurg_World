@@ -73,7 +73,8 @@ public class Splurg extends Life {
     }
 
     public void move(){
-        if (RandomInt.getRandomInt(3) % 3 == 0){
+        var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
+        if (RandomInt.getRandomInt(randomness) % randomness == 0){
             setHeading(getHeading().getRandomTurn());
         }
         var location = getLocation();

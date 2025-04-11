@@ -77,17 +77,31 @@ public class WorldPanel extends JPanel {
     public void publish() {
         if (displayBuffer == null || backgroundBuffer == null) return;
 
-        Graphics2D g2 = displayBuffer.createGraphics();
-        g2.drawImage(backgroundBuffer, 0, 0, null);
+        // ✅ Clear the display buffer
+        Graphics2D displayG = displayBuffer.createGraphics();
+        displayG.setComposite(AlphaComposite.Clear);
+        displayG.fillRect(0, 0, displayBuffer.getWidth(), displayBuffer.getHeight());
+        displayG.setComposite(AlphaComposite.SrcOver);
 
-        // Draw dynamic drawables if needed
+        // ✅ Then draw the background onto it
+        displayG.drawImage(backgroundBuffer, 0, 0, null);
+
+        // ✅ Optionally draw dynamic overlays
         for (Drawable d : drawables) {
-            d.draw(g2);
+            d.draw(displayG);
         }
 
-        g2.dispose();
+        displayG.dispose();
+
+        // ✅ Now clear the backgroundBuffer so it's clean for the next frame
+        Graphics2D bgG = backgroundBuffer.createGraphics();
+        bgG.setComposite(AlphaComposite.Clear);
+        bgG.fillRect(0, 0, backgroundBuffer.getWidth(), backgroundBuffer.getHeight());
+        bgG.dispose();
+
         repaint();
     }
+
 
     /** Clears the background buffer (call before drawing new stuff). */
     public void clearBackground() {

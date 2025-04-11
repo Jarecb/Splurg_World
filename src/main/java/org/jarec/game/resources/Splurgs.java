@@ -58,11 +58,12 @@ public class Splurgs {
     public void drawSplurges() {
         WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
 
-        var splurgSize = Integer.parseInt(PropertyHandler.get("splurg.default.size", "2"));
+        var splurgSizeMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.size.multiplier", "2"));
 
         Graphics2D g2 = worldPanel.getBackgroundGraphics();
         synchronized (splurgList) {
             for (Splurg splurg : splurgList) {
+                var splurgSize = splurg.getSize().getValue() * splurgSizeMultiplier;
                 int x = splurg.getLocation().getX();
                 int y = splurg.getLocation().getY();
                 Color color = splurg.getHomeNest().getColor();

@@ -56,19 +56,35 @@ public class Nests {
     public void drawNests() {
         WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
 
-        var nestSize = Integer.parseInt(PropertyHandler.get("nest.default.size", "20"));
+        int nestSize = Integer.parseInt(PropertyHandler.get("nest.default.size", "20"));
 
         Graphics2D g2 = worldPanel.getBackgroundGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // optional for smooth edges
+
+        Stroke originalStroke = g2.getStroke();
+        Stroke thickStroke = new BasicStroke(2); // Thicker outline
+
         synchronized (nestList) {
             for (Nest nest : nestList) {
                 int x = nest.getLocation().getX();
                 int y = nest.getLocation().getY();
                 Color color = nest.getColor();
 
+                int drawX = x - (nestSize / 2);
+                int drawY = y - (nestSize / 2);
+
+                // Fill circle
                 g2.setColor(color);
-                g2.fillOval(x - (nestSize / 2), y - (nestSize / 2), nestSize, nestSize);
+                g2.fillOval(drawX, drawY, nestSize, nestSize);
+
+                // Draw border
+                g2.setColor(Color.BLACK);
+                g2.setStroke(thickStroke);
+                g2.drawOval(drawX, drawY, nestSize, nestSize);
             }
         }
+
+        g2.setStroke(originalStroke); // Restore original stroke
         g2.dispose();
     }
 }
