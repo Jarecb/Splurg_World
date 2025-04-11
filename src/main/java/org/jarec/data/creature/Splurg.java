@@ -3,6 +3,7 @@ package org.jarec.data.creature;
 import com.google.common.annotations.VisibleForTesting;
 import org.jarec.data.Heading;
 import org.jarec.data.Location;
+import org.jarec.data.Nest;
 import org.jarec.data.creature.attributes.*;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
@@ -17,12 +18,10 @@ public class Splurg extends Life {
     private final Toughness toughness = new Toughness();
     private Size size;
     private Speed speed;
-    private Location location;
-    private Heading heading = Heading.getRandomHeading();
+    private Nest homeNest;
 
-    public Splurg() {
-        location = new Location(0, 0); // TODO needs to be nest location
-        commonSetup();
+    public Splurg(Nest nest) {
+        commonSetup(nest);
     }
 
     public Splurg (Splurg parent1, Splurg parent2){
@@ -42,19 +41,22 @@ public class Splurg extends Life {
             toughness.setValue(parent1.getToughness().getValue());
         }
 
-        location = new Location((parent1.getLocation().getX() + parent2.getLocation().getX()) / 2,
-                (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2);
+        setLocation(new Location((parent1.getLocation().getX() + parent2.getLocation().getX()) / 2,
+                (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2));
 
-        commonSetup();
+        commonSetup(parent1.getHomeNest());
     }
 
-    private void commonSetup() {
+    private void commonSetup(Nest nest) {
         size = new Size(toughness, strength);
         speed = new Speed(size);
 
         setAgeAtBirth();
         setMaxHealth();
-        log.info("A Splurg is spawned {}", this);
+
+        homeNest = nest;
+        setLocation(homeNest.getLocation());
+        log.info("A Splurg has spawned {}", this);
     }
 
     private void setAgeAtBirth() {
@@ -114,14 +116,16 @@ public class Splurg extends Life {
         toughness.setValue(value);
     }
 
-    Location getLocation() {
-        return location;
+    public Nest getHomeNest() {
+        return homeNest;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        sb.append("Agg:");
+        sb.append("Nest:");
+        sb.append(homeNest.getName());
+        sb.append("; Agg:");
         sb.append(aggression.getValue());
         sb.append("; For:");
         sb.append(foraging.getValue());

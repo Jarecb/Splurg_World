@@ -1,9 +1,14 @@
 package org.jarec.data.creature;
 
+import org.jarec.data.Heading;
+import org.jarec.data.Location;
+
 public abstract class Life {
     private int age = 0;
     private int health = 0;
     private int maxHealth = 0;
+    private Location location;
+    private Heading heading = Heading.getRandomHeading();
 
     public void setAge(int age) {
         this.age = age;
@@ -45,5 +50,21 @@ public abstract class Life {
             return false;
         }
         return true;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public Heading getHeading() {
+        return heading;
+    }
+
+    public void setHeading(Heading heading) {
+        this.heading = heading;
     }
 }

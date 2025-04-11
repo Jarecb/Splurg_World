@@ -1,16 +1,22 @@
 package org.jarec.data.creature;
 
+import org.jarec.data.Location;
+import org.jarec.data.Nest;
 import org.junit.jupiter.api.Test;
+
+import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class SplurgTest {
 
+    private static final Nest testNest = new Nest(new Location(0, 0), Color.RED, "The Hive");
+
     @Test
     void getAge() {
-        Splurg splurg = new Splurg();
+        Splurg splurg = new Splurg(testNest);
         splurg.setAge(100);
-        Splurg splurg2 = new Splurg();
+        Splurg splurg2 = new Splurg(testNest);
         splurg2.setAge(50);
         assertEquals(100, splurg.getAge());
         assertEquals(50, splurg2.getAge());
@@ -18,7 +24,7 @@ class SplurgTest {
 
     @Test
     void age() {
-        Splurg splurg = new Splurg();
+        Splurg splurg = new Splurg(testNest);
         splurg.setAge(100);
         assertTrue(splurg.age());
         assertEquals(99, splurg.getAge());
@@ -31,7 +37,7 @@ class SplurgTest {
 
     @Test
     void health() {
-        Splurg splurg = new Splurg();
+        Splurg splurg = new Splurg(testNest);
         splurg.setMaxHealth(20);
         splurg.setHealth(20);
         assertTrue(splurg.reduceHealth(15));
@@ -48,7 +54,7 @@ class SplurgTest {
 
     @Test
     void getSize() {
-        Splurg splurg = new Splurg();
+        Splurg splurg = new Splurg(testNest);
         int expected = (splurg.getToughness().getValue() +
                 splurg.getStrength().getValue()) / 2;
         assertEquals(expected, splurg.getSize().getValue());
@@ -56,19 +62,19 @@ class SplurgTest {
 
     @Test
     void getSpeed() {
-        Splurg splurg = new Splurg();
+        Splurg splurg = new Splurg(testNest);
         int expected = 10 - splurg.getSize().getValue();
         assertEquals(expected, splurg.getSpeed().getValue());
     }
 
     @Test
     void spawnNewSplurgWithMatchingAttributes() {
-        Splurg parent1 = new Splurg();
+        Splurg parent1 = new Splurg(testNest);
         parent1.setAggression(5);
         parent1.setForaging(7);
         parent1.setStrength(3);
         parent1.setToughness(10);
-        Splurg parent2 = new Splurg();
+        Splurg parent2 = new Splurg(testNest);
         parent2.setAggression(5);
         parent2.setForaging(7);
         parent2.setStrength(3);
