@@ -1,5 +1,6 @@
 package org.jarec;
 
+import org.jarec.gui.WorldFrame;
 import org.jarec.util.PropertyHandler;
 
 import org.slf4j.Logger;
@@ -14,5 +15,8 @@ public class Main {
         PropertyHandler.load("splurg.properties");
         log.info("Author: {}", PropertyHandler.get("author", "Property file not found!"));
         log.info("Version: {}", PropertyHandler.get("version", "??.??.??"));
+
+        log.info("Creating Splurg World");
+        WorldFrame frame = new WorldFrame();
     }
 }
