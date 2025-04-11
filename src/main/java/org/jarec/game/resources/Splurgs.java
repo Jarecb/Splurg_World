@@ -1,6 +1,5 @@
 package org.jarec.game.resources;
 
-import org.jarec.Main;
 import org.jarec.data.Nest;
 import org.jarec.data.creature.Splurg;
 import org.jarec.gui.WorldFrame;
@@ -10,66 +9,94 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Splurgs {
+
     private static final Logger log = LoggerFactory.getLogger(Splurgs.class);
 
-    // Singleton instance - eagerly initialized and final for thread safety
-    private static final Splurgs INSTANCE = new Splurgs();
+    // Thread-safe list for managing splurgs
+    private final List<Splurg> splurgList = new ArrayList<>();
 
-    // Thread-safe list to handle concurrent access if needed
-    private final List<Splurg> splurgList = Collections.synchronizedList(new ArrayList<>());
-    // List to track dead splurgs
-    private final List<Splurg> deadSplurgs = new ArrayList<>();
-
-    // Private constructor to prevent instantiation
+    // Private constructor to prevent external instantiation
     private Splurgs() {
     }
 
-    // Correctly declared as static to access without instance
-    public static Splurgs getInstance() {
-        return INSTANCE;
+    /**
+     * Holder class for lazy-loaded singleton instance.
+     */
+    private static class Holder {
+        private static final Splurgs INSTANCE = new Splurgs();
     }
 
+    /**
+     * Gets the singleton instance of Splurgs.
+     */
+    public static Splurgs getInstance() {
+        return Holder.INSTANCE;
+    }
+
+    /**
+     * Adds a Splurg to the list.
+     */
     public void addSplurg(Splurg splurg) {
         if (splurg != null) {
-            splurgList.add(splurg);
+            synchronized (splurgList) {
+                splurgList.add(splurg);
+            }
         }
     }
 
+    /**
+     * Returns a defensive copy of all splurgs.
+     */
     public List<Splurg> getSplurgs() {
-        // Return a copy to preserve encapsulation
         synchronized (splurgList) {
             return new ArrayList<>(splurgList);
         }
     }
 
-    public void findNearest(Splurg splurg) {
-        // Implementation for finding the nearest splurg (if needed)
-    }
-
+    /**
+     * Clears all splurgs from the list.
+     */
     public void clearSplurgs() {
         synchronized (splurgList) {
             splurgList.clear();
         }
     }
 
-    // Method to move splurgs and track dead splurgs
+    /**
+     * Moves all splurgs.
+     */
     public void moveSplurgs() {
         synchronized (splurgList) {
-            // Temporary list to track splurgs to remove
-            List<Splurg> toRemove = new ArrayList<>();
-
-            // Move each splurg
             for (Splurg splurg : splurgList) {
                 splurg.move();
             }
         }
     }
 
+    /**
+     * Removes all dead splurgs and logs their death.
+     */
+    public void removeDeadSplurgs() {
+        synchronized (splurgList) {
+            splurgList.removeIf(splurg -> {
+                boolean isDead = splurg.getHealth() <= 0;
+                if (isDead) {
+                    log.info("A Splurg from {} has died", splurg.getHomeNest().getName());
+                }
+                return isDead;
+            });
+        }
+    }
+
+    /**
+     * Returns a count of Splurgs per Nest.
+     */
     public Map<Nest, Long> getCounts() {
         synchronized (splurgList) {
             return splurgList.stream()
@@ -77,38 +104,27 @@ public class Splurgs {
         }
     }
 
+    /**
+     * Renders all Splurgs.
+     */
     public void drawSplurges() {
         WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
-
-        var splurgSizeMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.size.multiplier", "2"));
-
         Graphics2D g2 = worldPanel.getBackgroundGraphics();
+
+        int splurgSizeMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.size.multiplier", "2"));
+
         synchronized (splurgList) {
             for (Splurg splurg : splurgList) {
-                var splurgSize = splurg.getSize().getValue() * splurgSizeMultiplier;
+                int size = splurg.getSize().getValue() * splurgSizeMultiplier;
                 int x = splurg.getLocation().getX();
                 int y = splurg.getLocation().getY();
                 Color color = splurg.getHomeNest().getColor();
 
                 g2.setColor(color);
-                g2.fillOval(x - (splurgSize / 2), y - (splurgSize / 2), splurgSize, splurgSize);
+                g2.fillOval(x - (size / 2), y - (size / 2), size, size);
             }
         }
+
         g2.dispose();
-    }
-
-    public void removeDeadSplurgs(){
-        List<Splurg> toRemove = new ArrayList<>();
-
-        synchronized (splurgList) {
-            for (Splurg splurg : splurgList) {
-                if (splurg.getHealth() <= 0) {
-                    toRemove.add(splurg);
-                    log.info("A Splurg from new {} has died", splurg.getHomeNest().getName());
-                }
-            }
-
-            splurgList.removeAll(toRemove);
-        }
     }
 }
