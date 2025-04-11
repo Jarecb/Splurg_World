@@ -65,11 +65,11 @@ public class GameLoop {
         while (started) {
             if (running) {
                 turn++;
-                log.info("Game loop turn {}", turn);
                 WorldFrame.getInstance().updateStatus("");
 
                 Splurgs.getInstance().drawSplurges();
                 Splurgs.getInstance().moveSplurgs();
+                Splurgs.getInstance().removeDeadSplurgs();
 
                 Nests.getInstance().drawNests();
                 Nests.getInstance().spawnNests();

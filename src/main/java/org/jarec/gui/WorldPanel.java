@@ -112,4 +112,13 @@ public class WorldPanel extends JPanel {
         drawables.add(d);
         publish(); // Re-render with new drawable
     }
+
+    public int getWorldWidth() {
+        return getWidth();
+    }
+
+    public int getWorldHeight() {
+        return getHeight();
+    }
+
 }

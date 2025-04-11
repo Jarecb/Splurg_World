@@ -1,22 +1,29 @@
 package org.jarec.game.resources;
 
+import org.jarec.Main;
+import org.jarec.data.Nest;
 import org.jarec.data.creature.Splurg;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Splurgs {
+    private static final Logger log = LoggerFactory.getLogger(Splurgs.class);
 
     // Singleton instance - eagerly initialized and final for thread safety
     private static final Splurgs INSTANCE = new Splurgs();
 
     // Thread-safe list to handle concurrent access if needed
     private final List<Splurg> splurgList = Collections.synchronizedList(new ArrayList<>());
+    // List to track dead splurgs
+    private final List<Splurg> deadSplurgs = new ArrayList<>();
 
     // Private constructor to prevent instantiation
     private Splurgs() {
@@ -31,7 +38,6 @@ public class Splurgs {
         if (splurg != null) {
             splurgList.add(splurg);
         }
-        System.out.println(splurgList.size());
     }
 
     public List<Splurg> getSplurgs() {
@@ -41,17 +47,33 @@ public class Splurgs {
         }
     }
 
+    public void findNearest(Splurg splurg) {
+        // Implementation for finding the nearest splurg (if needed)
+    }
+
     public void clearSplurgs() {
         synchronized (splurgList) {
             splurgList.clear();
         }
     }
 
+    // Method to move splurgs and track dead splurgs
     public void moveSplurgs() {
         synchronized (splurgList) {
+            // Temporary list to track splurgs to remove
+            List<Splurg> toRemove = new ArrayList<>();
+
+            // Move each splurg
             for (Splurg splurg : splurgList) {
                 splurg.move();
             }
+        }
+    }
+
+    public Map<Nest, Long> getCounts() {
+        synchronized (splurgList) {
+            return splurgList.stream()
+                    .collect(Collectors.groupingBy(Splurg::getHomeNest, Collectors.counting()));
         }
     }
 
@@ -73,5 +95,20 @@ public class Splurgs {
             }
         }
         g2.dispose();
+    }
+
+    public void removeDeadSplurgs(){
+        List<Splurg> toRemove = new ArrayList<>();
+
+        synchronized (splurgList) {
+            for (Splurg splurg : splurgList) {
+                if (splurg.getHealth() <= 0) {
+                    toRemove.add(splurg);
+                    log.info("A Splurg from new {} has died", splurg.getHomeNest().getName());
+                }
+            }
+
+            splurgList.removeAll(toRemove);
+        }
     }
 }

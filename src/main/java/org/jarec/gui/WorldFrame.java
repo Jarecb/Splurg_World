@@ -1,7 +1,9 @@
 package org.jarec.gui;
 
+import org.jarec.data.Nest;
 import org.jarec.game.GameLoop;
 import org.jarec.game.GameStart;
+import org.jarec.game.resources.Splurgs;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
+import java.util.Map;
 
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
@@ -145,6 +149,22 @@ public class WorldFrame extends JFrame {
         }
     }
 
+    private String getStats(){
+        Map<Nest, Long> counts = Splurgs.getInstance().getCounts();
+        StringBuilder stats = new StringBuilder();
+
+        counts.forEach((nest, count) -> {
+            if (stats.length() > 0) {
+                stats.append(" | ");
+            }
+            stats.append(nest.getName()).append(": ").append(count);
+        });
+
+        stats.append("      ");
+
+        return stats.toString();
+    }
+
     private String getTurn() {
         return "Turn: " + GameLoop.getInstance().getTurn() + "      ";
     }
@@ -156,7 +176,7 @@ public class WorldFrame extends JFrame {
     }
 
     public void updateStatus(String message) {
-        statusBar.setText(getTurn() + message);
+        statusBar.setText(getTurn() + getStats() + message);
     }
 
     public WorldPanel getWorldPanel(){

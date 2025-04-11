@@ -1,13 +1,20 @@
 package org.jarec.data.creature;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.jarec.data.Heading;
+import org.jarec.data.HeadingUtils;
 import org.jarec.data.Location;
 import org.jarec.data.Nest;
 import org.jarec.data.creature.attributes.*;
+import org.jarec.game.GameLoop;
+import org.jarec.game.Combat;
+import org.jarec.game.resources.Splurgs;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class Splurg extends Life {
     private static final Logger log = LoggerFactory.getLogger(Splurg.class);
@@ -60,7 +67,7 @@ public class Splurg extends Life {
 
         homeNest = nest;
 
-        log.info("A Splurg has spawned {}", this);
+        log.info("A Splurg has spawned on turn {} {}", GameLoop.getInstance().getTurn(), this);
     }
 
     private void setAgeAtBirth() {
@@ -73,13 +80,65 @@ public class Splurg extends Life {
     }
 
     public void move(){
-        var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
-        if (RandomInt.getRandomInt(randomness) % randomness == 0){
-            setHeading(getHeading().getRandomTurn());
+        var targetAcquired = findNearest();
+        if (!targetAcquired) {
+            var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
+            if (RandomInt.getRandomInt(randomness) % randomness == 0) {
+                setHeading(getHeading().getRandomTurn());
+            }
         }
         var location = getLocation();
-        location.updateLocation(getHeading());
+        setHeading(location.updateLocation(getHeading()));
         setLocation(location);
+    }
+
+    public boolean findNearest() {
+        Location currentLocation = getLocation();
+
+        double distanceThreshold = getForaging().getValue() *
+                Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
+
+        List<Splurg> splurgs = Splurgs.getInstance().getSplurgs();
+
+        // Find the nearest Splurg within the distance threshold
+        synchronized (splurgs) {
+            Splurg nearestSplurg = splurgs.stream()
+                    // Exclude the same splurg
+                    .filter(candidate -> candidate != this)
+                    .filter(candidate -> !candidate.getHomeNest().equals(homeNest))
+                    // Calculate the distance and check if it's within the threshold
+                    .filter(candidate -> {
+                        double dx = currentLocation.getX() - candidate.getLocation().getX();
+                        double dy = currentLocation.getY() - candidate.getLocation().getY();
+                        double distance = Math.sqrt(dx * dx + dy * dy);
+                        return distance <= distanceThreshold;
+                    })
+                    // Find the closest Splurg by distance
+                    .min((splurg1, splurg2) -> {
+                        double distance1 = calculateDistance(currentLocation, splurg1.getLocation());
+                        double distance2 = calculateDistance(currentLocation, splurg2.getLocation());
+                        return Double.compare(distance1, distance2);
+                    })
+                    .orElse(null);
+
+            if (nearestSplurg != null) {
+                Heading newHeading = (HeadingUtils.getHeadingTo(getLocation(), nearestSplurg.getLocation()));
+                if (newHeading == null){
+                    Combat.attack(this, nearestSplurg);
+                } else {
+                    setHeading(newHeading);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Helper method to calculate Euclidean distance
+    private double calculateDistance(Location loc1, Location loc2) {
+        double dx = loc1.getX() - loc2.getX();
+        double dy = loc1.getY() - loc2.getY();
+        return Math.sqrt(dx * dx + dy * dy);
     }
 
     public Aggression getAggression() {
