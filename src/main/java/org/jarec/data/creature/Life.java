@@ -89,6 +89,9 @@ public abstract class Life {
     }
 
     public Heading getHeading() {
+        if (heading == null) {
+            heading = Heading.getRandomHeading();
+        }
         return heading;
     }
 

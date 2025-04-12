@@ -9,6 +9,8 @@ public class Combat {
 
     // Method for attacking and determining the result of a combat round between two Splurgs
     public static void attack(Splurg splurgA, Splurg splurgB) {
+        splurgA.setInCombat(true);
+        splurgB.setInCombat(true);
         var damageA = fight(splurgA, splurgB);
         var damageB = fight(splurgB, splurgA);
         splurgA.reduceHealth(damageB - damageA);

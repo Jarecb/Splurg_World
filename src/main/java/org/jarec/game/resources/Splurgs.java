@@ -62,6 +62,14 @@ public class Splurgs {
         }
     }
 
+    public void depositEnergy() {
+        synchronized (splurgList) {
+            for (Splurg splurg : splurgList) {
+                splurg.depositEnergy();
+            }
+        }
+    }
+
     public void healSplurgs() {
         synchronized (splurgList) {
             for (Splurg splurg : splurgList) {
@@ -96,6 +104,60 @@ public class Splurgs {
                     })
                     .sorted(orderingComparator)
                     .collect(Collectors.toList());
+        }
+    }
+
+    public void handleBreeding() {
+        synchronized (splurgList) {
+            // Make a snapshot of the current splurgs to prevent recursive breeding
+            List<Splurg> originalSplurgs = new ArrayList<>(splurgList);
+
+            Map<Nest, List<Splurg>> splurgsByNest = originalSplurgs.stream()
+                    .collect(Collectors.groupingBy(Splurg::getHomeNest));
+
+            for (Map.Entry<Nest, List<Splurg>> nestEntry : splurgsByNest.entrySet()) {
+                List<Splurg> sameNestSplurgs = new ArrayList<>(nestEntry.getValue());
+                List<Splurg[]> breedingPairs = new ArrayList<>();
+                List<Splurg> alreadyUsed = new ArrayList<>();
+
+                for (int i = 0; i < sameNestSplurgs.size(); i++) {
+                    for (int j = i + 1; j < sameNestSplurgs.size(); j++) {
+                        Splurg splurg1 = sameNestSplurgs.get(i);
+                        Splurg splurg2 = sameNestSplurgs.get(j);
+
+                        if (alreadyUsed.contains(splurg1) || alreadyUsed.contains(splurg2)) continue;
+
+                        int sizeDistanceThreshold = splurg1.getSize().getValue() + splurg2.getSize().getValue();
+                        double distance = calculateHypotenuse(splurg1.getLocation(), splurg2.getLocation());
+
+                        int spawnEnergyCost = Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"));
+
+                        if (distance <= sizeDistanceThreshold &&
+                                splurg1.getEnergy() >= spawnEnergyCost &&
+                                splurg2.getEnergy() >= spawnEnergyCost &&
+                                splurg1.canBreed() && splurg2.canBreed() &&
+                                !splurg1.isInCombat() && !splurg2.isInCombat()) {
+
+                            breedingPairs.add(new Splurg[]{splurg1, splurg2});
+                            alreadyUsed.add(splurg1);
+                            alreadyUsed.add(splurg2);
+                        }
+                    }
+                }
+
+                for (Splurg[] pair : breedingPairs) {
+                    Splurg parent1 = pair[0];
+                    Splurg parent2 = pair[1];
+
+                    Splurg child = new Splurg(parent1, parent2);
+                    int midX = (parent1.getLocation().getX() + parent2.getLocation().getX()) / 2;
+                    int midY = (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2;
+                    child.setLocation(new Location(midX, midY));
+
+                    splurgList.add(child);
+                    log.info("New splurg called {} born from {} and {}", child.getName(), parent1.getName(), parent2.getName());
+                }
+            }
         }
     }
 

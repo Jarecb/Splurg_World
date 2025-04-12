@@ -72,6 +72,8 @@ public class GameLoop {
                 Splurgs.getInstance().moveSplurgs();
                 Splurgs.getInstance().removeDeadSplurgs();
                 Splurgs.getInstance().healSplurgs();
+                Splurgs.getInstance().depositEnergy();
+                Splurgs.getInstance().handleBreeding();
 
                 Nests.getInstance().drawNests();
                 Nests.getInstance().spawnNests();

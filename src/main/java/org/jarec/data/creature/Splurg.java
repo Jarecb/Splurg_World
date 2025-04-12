@@ -28,6 +28,8 @@ public class Splurg extends Life {
     private Speed speed;
     private Nest homeNest;
     private String name = RandomNameGenerator.generateName();
+    private int breedingDelay = 0;
+    private boolean inCombat = false;
 
     public Splurg(Nest nest) {
         var homeLocation = nest.getLocation();
@@ -57,6 +59,14 @@ public class Splurg extends Life {
         setLocation(new Location((parent1.getLocation().getX() + parent2.getLocation().getX()) / 2,
                 (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2));
 
+
+        var spawnEnergyCost = Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"));
+        parent1.takeEnergy(spawnEnergyCost);
+        parent1.takeEnergy(spawnEnergyCost);
+
+        parent1.resetBreedingDelay();
+        parent2.resetBreedingDelay();
+
         commonSetup(parent1.getHomeNest());
     }
 
@@ -67,9 +77,15 @@ public class Splurg extends Life {
         setAgeAtBirth();
         setMaxHealth();
 
+        resetBreedingDelay();
+
         homeNest = nest;
 
         log.info("{} has spawned on turn {} {}", name, GameLoop.getInstance().getTurn(), this);
+    }
+
+    public void resetBreedingDelay(){
+        breedingDelay = Integer.parseInt(PropertyHandler.get("splurg.default.breeding.delay", "5"));
     }
 
     private void setAgeAtBirth() {
@@ -82,16 +98,45 @@ public class Splurg extends Life {
     }
 
     public void move() {
+        breedingDelay--;
+        if (breedingDelay < 0){ breedingDelay = 0;}
+
+        var location = getLocation();
         var targetAcquired = findNearest();
         if (!targetAcquired) {
             var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
             if (RandomInt.getRandomInt(randomness) % randomness == 0) {
                 setHeading(getHeading().getRandomTurn());
             }
+        } else if (getEnergy() > getSize().getValue()) {
+            setHeading(HeadingUtils.getHeadingTo(location, homeNest.getLocation()));
         }
-        var location = getLocation();
         setHeading(location.updateLocation(getHeading()));
         setLocation(location);
+    }
+
+    public boolean canBreed(){
+        return breedingDelay == 0;
+    }
+
+    public void depositEnergy(){
+        if (getEnergy() > getSize().getValue()
+                && getLocation().getX() == homeNest.getLocation().getX()
+                && getLocation().getY() == homeNest.getLocation().getY()) {
+            var energyTransfer = getEnergy() - getSize().getValue();
+            homeNest.addFood(energyTransfer);
+            takeEnergy(energyTransfer);
+            setHeading(Heading.getRandomHeading());
+            log.info("{} deposited {} energy at {}", name, energyTransfer, homeNest.getName());
+        }
+    }
+
+    public void setInCombat(boolean inCombat) {
+        this.inCombat = inCombat;
+    }
+
+    public boolean isInCombat(){
+        return this.inCombat;
     }
 
     public boolean findNearest() {
@@ -129,6 +174,7 @@ public class Splurg extends Life {
                 if (newHeading == null) {
                     Combat.attack(this, nearestSplurg);
                 } else {
+                    setInCombat(false);
                     setHeading(newHeading);
                     setHeading(getHeading().getRandomTurn());
                 }
