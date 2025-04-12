@@ -51,7 +51,7 @@ public class WorldFrame extends JFrame {
             splashLabel.setVerticalAlignment(JLabel.CENTER);
             add(splashLabel, BorderLayout.CENTER);  // Add splash image to the frame
         } else {
-            System.err.println("Splash image not found!");
+            log.error("Splash image not found!");
         }
 
         statsPanel = new JTextArea();
