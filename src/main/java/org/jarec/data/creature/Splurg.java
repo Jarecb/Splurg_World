@@ -9,6 +9,7 @@ import org.jarec.data.creature.attributes.*;
 import org.jarec.game.Combat;
 import org.jarec.game.GameLoop;
 import org.jarec.game.resources.Splurgs;
+import org.jarec.gui.WorldFrame;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 import org.jarec.util.RandomNameGenerator;
@@ -81,7 +82,9 @@ public class Splurg extends Life {
 
         homeNest = nest;
 
-        log.info("{} has spawned on turn {} {}", name, GameLoop.getInstance().getTurn(), this);
+        var statusMessage = name + " of " + homeNest.getName() + " was spawned on turn " + GameLoop.getInstance().getTurn();
+        log.info(statusMessage + " " + this);
+        WorldFrame.getInstance().updateStatus(statusMessage);
     }
 
     public void resetBreedingDelay(){

@@ -69,7 +69,7 @@ public class GameLoop {
         while (started) {
             if (running) {
                 turn++;
-                WorldFrame.getInstance().updateStatus("");
+                WorldFrame.getInstance().refreshStatus();
 
                 Splurgs.getInstance().drawSplurges();
                 Splurgs.getInstance().moveSplurgs();

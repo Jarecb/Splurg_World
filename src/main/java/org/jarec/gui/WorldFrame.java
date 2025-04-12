@@ -19,10 +19,14 @@ public class WorldFrame extends JFrame {
     private static JTextArea statsPanel;
     private JLabel statusBar;
     private JMenuItem startItem, pauseItem, stopItem;
+    private JLabel splashLabel;
+
     private static int nestCount = Integer.parseInt(PropertyHandler.get("gui.nest.default.number", "2"));
     private static int nestFood = Integer.parseInt(PropertyHandler.get("nest.default.setup.food", "100"));
+    private String currentStatusMessage = "";
+    private int messageTurnSet = -1;
+    private static final int MESSAGE_DURATION_TURNS = 50;
 
-    private JLabel splashLabel; // This will hold the splash image label
 
     // Private constructor ensures no auto-start
     private WorldFrame() throws HeadlessException {
@@ -352,7 +356,19 @@ public class WorldFrame extends JFrame {
     }
 
     public void updateStatus(String message) {
+        currentStatusMessage = message;
+        messageTurnSet = GameLoop.getInstance().getTurn();
         statusBar.setText(getTurn() + message);
+    }
+
+    public void refreshStatus() {
+        int currentTurn = GameLoop.getInstance().getTurn();
+        if (currentTurn - messageTurnSet < MESSAGE_DURATION_TURNS) {
+            statusBar.setText(getTurn() + currentStatusMessage);
+        } else {
+            currentStatusMessage = ""; // Optionally clear message
+            statusBar.setText(getTurn()); // Show only turn
+        }
     }
 
     public WorldPanel getWorldPanel() {

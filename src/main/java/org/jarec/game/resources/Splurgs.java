@@ -83,7 +83,9 @@ public class Splurgs {
             splurgList.removeIf(splurg -> {
                 boolean isDead = splurg.getHealth() <= 0;
                 if (isDead) {
-                    log.info("{} from {} has died", splurg.getName(), splurg.getHomeNest().getName());
+                    var statusMessage = splurg.getName() + " of " + splurg.getHomeNest().getName() + " has died";
+                    log.info(statusMessage);
+                    WorldFrame.getInstance().updateStatus(statusMessage);
                 }
                 return isDead;
             });
@@ -155,7 +157,10 @@ public class Splurgs {
                     child.setLocation(new Location(midX, midY));
 
                     splurgList.add(child);
-                    log.info("New splurg called {} born from {} and {}", child.getName(), parent1.getName(), parent2.getName());
+                    var statusMessage = "A new Splurg called " + child.getName() + " spawned from " + parent1.getName() + " and " + parent2.getName() + " of " + parent1.getHomeNest().getName();
+                    log.info(statusMessage);
+                    WorldFrame.getInstance().updateStatus(statusMessage);
+
                 }
             }
         }
