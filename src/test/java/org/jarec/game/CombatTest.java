@@ -19,17 +19,21 @@ class CombatTest {
         // Mocking the Attribute class for Strength and Toughness
         Strength strength = mock(Strength.class);
         when(attacker.getStrength()).thenReturn(strength);
-        when(strength.getValue()).thenReturn(10); // Attacker's strength is 10
-
+        when(strength.getValue()).thenReturn(10);
         Toughness toughness = mock(Toughness.class);
+        when(attacker.getToughness()).thenReturn(toughness);
+        when(toughness.getValue()).thenReturn(10);
+
+        when(defender.getStrength()).thenReturn(strength);
+        when(strength.getValue()).thenReturn(10);
         when(defender.getToughness()).thenReturn(toughness);
-        when(toughness.getValue()).thenReturn(4); // Defender's toughness is 4
+        when(toughness.getValue()).thenReturn(1);
 
         // Act
         attack(attacker, defender);
 
         // Assert
-        verify(attacker).reduceHealth(-6);  // Attacker should gain 6 health (0 - (10 - 4))
-        verify(defender).reduceHealth(6);   // Defender should lose 6 health
+        verify(attacker).reduceHealth(-9);
+        verify(defender).reduceHealth(9);
     }
 }
