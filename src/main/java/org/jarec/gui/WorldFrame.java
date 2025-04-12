@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Collections;
 import java.util.Map;
 
 public class WorldFrame extends JFrame {

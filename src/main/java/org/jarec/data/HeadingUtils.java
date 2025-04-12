@@ -11,7 +11,6 @@ public class HeadingUtils {
     }
 
     public static Heading getHeadingTo(Location fromLocation, Location toLocation) {
-        // Calculate dx, dy (difference in x and y coordinates)
         int dx = toLocation.getX() - fromLocation.getX();
         int dy = toLocation.getY() - fromLocation.getY();
 

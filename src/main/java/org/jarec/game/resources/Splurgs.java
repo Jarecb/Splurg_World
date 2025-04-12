@@ -1,5 +1,6 @@
 package org.jarec.game.resources;
 
+import org.jarec.data.Location;
 import org.jarec.data.Nest;
 import org.jarec.data.creature.Splurg;
 import org.jarec.gui.WorldFrame;
@@ -10,38 +11,29 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.jarec.util.Math.calculateHypotenuse;
 
 public class Splurgs {
 
     private static final Logger log = LoggerFactory.getLogger(Splurgs.class);
 
-    // Thread-safe list for managing splurgs
     private final List<Splurg> splurgList = new ArrayList<>();
-
-    // Private constructor to prevent external instantiation
     private Splurgs() {
     }
 
-    /**
-     * Holder class for lazy-loaded singleton instance.
-     */
     private static class Holder {
         private static final Splurgs INSTANCE = new Splurgs();
     }
 
-    /**
-     * Gets the singleton instance of Splurgs.
-     */
     public static Splurgs getInstance() {
         return Holder.INSTANCE;
     }
 
-    /**
-     * Adds a Splurg to the list.
-     */
     public void addSplurg(Splurg splurg) {
         if (splurg != null) {
             synchronized (splurgList) {
@@ -50,27 +42,18 @@ public class Splurgs {
         }
     }
 
-    /**
-     * Returns a defensive copy of all splurgs.
-     */
     public List<Splurg> getSplurgs() {
         synchronized (splurgList) {
             return new ArrayList<>(splurgList);
         }
     }
 
-    /**
-     * Clears all splurgs from the list.
-     */
     public void clearSplurgs() {
         synchronized (splurgList) {
             splurgList.clear();
         }
     }
 
-    /**
-     * Moves all splurgs.
-     */
     public void moveSplurgs() {
         synchronized (splurgList) {
             for (Splurg splurg : splurgList) {
@@ -79,9 +62,6 @@ public class Splurgs {
         }
     }
 
-    /**
-     * Removes all dead splurgs and logs their death.
-     */
     public void removeDeadSplurgs() {
         synchronized (splurgList) {
             splurgList.removeIf(splurg -> {
@@ -94,9 +74,23 @@ public class Splurgs {
         }
     }
 
-    /**
-     * Returns a count of Splurgs per Nest.
-     */
+    public List<Splurg> getSplurgsInVicinity(Location targetPoint) {
+        var searchRadius = Integer.parseInt(PropertyHandler.get("gui.mouse.click.detection.range", "20"));
+
+        Comparator<Splurg> orderingComparator = Comparator
+                .comparing((Splurg s) -> s.getHomeNest().getName(), String.CASE_INSENSITIVE_ORDER)
+                .thenComparing(Comparator.comparingInt(Splurg::getHealth).reversed());
+
+        synchronized (splurgList) {
+            return splurgList.stream()
+                    .filter(splurg -> {
+                        return calculateHypotenuse(targetPoint, splurg.getLocation()) <= searchRadius;
+                    })
+                    .sorted(orderingComparator)
+                    .collect(Collectors.toList());
+        }
+    }
+
     public Map<Nest, Long> getCounts() {
         synchronized (splurgList) {
             return splurgList.stream()
@@ -104,9 +98,6 @@ public class Splurgs {
         }
     }
 
-    /**
-     * Renders all Splurgs.
-     */
     public void drawSplurges() {
         WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
         Graphics2D g2 = worldPanel.getBackgroundGraphics();

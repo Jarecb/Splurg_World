@@ -1,5 +1,9 @@
 package org.jarec.gui;
 
+import org.jarec.data.Location;
+import org.jarec.data.creature.Splurg;
+import org.jarec.game.GameLoop;
+import org.jarec.game.resources.Splurgs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Coordinate 0:0 is top left corner
@@ -26,12 +31,21 @@ public class WorldPanel extends JPanel {
 
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
-                log.info("Mouse clicked at {}:{}", e.getX(), e.getY());
-                Graphics2D g2 = getBackgroundGraphics();
-                g2.setColor(Color.RED);
-                g2.fillOval(e.getX() - 3, e.getY() - 3, 6, 6);
-                g2.dispose();
-                publish();  // Show the update
+                if (GameLoop.getInstance().isPaused()) {
+                    Location clickLocation = new Location(e.getX(), e.getY());
+                    List<Splurg> localSplurgs = Splurgs.getInstance().getSplurgsInVicinity(clickLocation);
+
+                    if (!localSplurgs.isEmpty()) {
+                        JPopupMenu popup = new JPopupMenu();
+
+                        for (Splurg splurg : localSplurgs) {
+                            JMenuItem item = new JMenuItem(splurg.toString()); // Customize toString() for nicer info
+                            popup.add(item);
+                        }
+
+                        popup.show(WorldPanel.this, e.getX(), e.getY());
+                    }
+                }
             }
         });
     }
