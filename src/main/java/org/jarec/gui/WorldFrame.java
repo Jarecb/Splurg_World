@@ -292,14 +292,17 @@ public class WorldFrame extends JFrame {
 
     private void openHelpWindow() {
         JTextArea helpText = new JTextArea();
-        helpText.setText("This is the help text for the Splurg World game.\n" +
-                "Use the Game menu to Start, Pause, or Stop the game.\n\n" +
-                "You can also use the following keys:\n" +
-                "Space Bar: Pause/Unpause\n" +
-                "Left and Right Arrow: Slow down and speed up the game\n" +
-                "Up Arrow: Returns the game to its default speed\n" +
-                "Esc: Ends the current game\n\n" +
-                "When paused you can mouse click on the world to see the details of the Splurgs in that area");
+        helpText.setText("""
+                This is the help text for the Splurg World game.
+                Use the Game menu to Start, Pause, or Stop the game.\n
+                You can also use the following keys:
+                Space Bar: Pause/Unpause
+                Left and Right Arrow: Slow down and speed up the game
+                Up Arrow: Returns the game to its default speed
+                Esc: Ends the current game\n
+                When paused you can mouse click on the world to see the
+                details of the Splurgs in that area
+                """);
         helpText.setEditable(false);
         helpText.setCaretPosition(0);  // Scroll to the top
         JOptionPane.showMessageDialog(this, new JScrollPane(helpText), "Help", JOptionPane.INFORMATION_MESSAGE);
@@ -307,10 +310,14 @@ public class WorldFrame extends JFrame {
 
     private void openAboutWindow() {
         JTextArea aboutText = new JTextArea();
-        aboutText.setText("Splurg World\nVersion 1.0\nDeveloped by Your Name\n\n" +
-                "Welcome to Splurg World, a place populated by the Splurgs.\n" +
-                "Splurgs are Amoeba that just like to float about and fight. Fighting gives them energy that they can " +
-                "take back to their Hives\n to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.");
+        aboutText.setText("""
+                Splurg World
+                Version 1.0
+                Developed by Your Name\n
+                Welcome to Splurg World, a place populated by the Splurgs.
+                Splurgs are Amoeba that just like to float about and fight. Fighting gives them energy that they can take
+                back to their Hives to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.
+                """);
         aboutText.setEditable(false);
         aboutText.setCaretPosition(0);  // Scroll to the top
         JOptionPane.showMessageDialog(this, new JScrollPane(aboutText), "About", JOptionPane.INFORMATION_MESSAGE);
