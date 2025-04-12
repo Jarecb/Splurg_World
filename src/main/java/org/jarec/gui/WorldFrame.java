@@ -19,6 +19,7 @@ public class WorldFrame extends JFrame {
     private JLabel statusBar;
     private JMenuItem startItem, pauseItem, stopItem;
     private static int nestCount = Integer.parseInt(PropertyHandler.get("gui.nest.default.number", "2"));
+    private static int nestFood = Integer.parseInt(PropertyHandler.get("nest.default.setup.food", "100"));
 
     // Private constructor ensures no auto-start
     private WorldFrame() throws HeadlessException {
@@ -65,7 +66,7 @@ public class WorldFrame extends JFrame {
     }
 
     public static void updateStats(String stats) {
-        var output = "Splurg Word Stats\n";
+        var output = "Splurg World Stats\n";
         statsPanel.setText(output + stats);
     }
 
@@ -142,7 +143,7 @@ public class WorldFrame extends JFrame {
 
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
-            new GameStart(nestCount);
+            new GameStart(nestCount, nestFood);
             updateStatus("Game started");
             updateMenuItemsState();
         });
@@ -165,11 +166,88 @@ public class WorldFrame extends JFrame {
         gameMenu.add(pauseItem);
         gameMenu.add(stopItem);
 
+        JMenu settingsMenu = new JMenu("Settings");
+
+        JMenuItem twoHivesItem = new JMenuItem("2 Hives");
+        twoHivesItem.addActionListener(e -> setNestCount(2));
+
+        JMenuItem fourHivesItem = new JMenuItem("4 Hives");
+        fourHivesItem.addActionListener(e -> setNestCount(4));
+
+        JMenuItem oneHundredHiveFoodItem = new JMenuItem("100 Food");
+        oneHundredHiveFoodItem.addActionListener(e -> setNestFood(100));
+
+        JMenuItem twoHundredHiveFoodItem = new JMenuItem("200 Food");
+        twoHundredHiveFoodItem.addActionListener(e -> setNestFood(200));
+
+        JMenuItem threeHundredHiveFoodItem = new JMenuItem("300 Food");
+        threeHundredHiveFoodItem.addActionListener(e -> setNestFood(300));
+
+        JMenuItem fourHundredHiveFoodItem = new JMenuItem("400 Food");
+        fourHundredHiveFoodItem.addActionListener(e -> setNestFood(400));
+
+        settingsMenu.add(twoHivesItem);
+        settingsMenu.add(fourHivesItem);
+        settingsMenu.addSeparator();
+        settingsMenu.add(oneHundredHiveFoodItem);
+        settingsMenu.add(twoHundredHiveFoodItem);
+        settingsMenu.add(threeHundredHiveFoodItem);
+        settingsMenu.add(fourHundredHiveFoodItem);
+
+        // Help menu
+        JMenu helpMenu = new JMenu("Help");
+
+        JMenuItem helpItem = new JMenuItem("Help");
+        helpItem.addActionListener(e -> openHelpWindow());
+
+        JMenuItem aboutItem = new JMenuItem("About");
+        aboutItem.addActionListener(e -> openAboutWindow());
+
+        helpMenu.add(helpItem);
+        helpMenu.add(aboutItem);
+
         menuBar.add(fileMenu);
         menuBar.add(gameMenu);
+        menuBar.add(settingsMenu);
+        menuBar.add(helpMenu);
+
         setJMenuBar(menuBar);
 
         updateMenuItemsState();
+    }
+
+    private void setNestFood(int food) {
+        nestFood = food;
+    }
+
+    private void setNestCount(int nests) {
+        nestCount = nests;
+    }
+
+    private void openHelpWindow() {
+        JTextArea helpText = new JTextArea();
+        helpText.setText("This is the help text for the Splurg World game.\n" +
+                "Use the Game menu to Start, Pause, or Stop the game.\n\n" +
+                "You can also use the following keys:\n" +
+                "Space Bar: Pause/Unpause\n" +
+                "Left and Right Arrow: Slow down and speed up the game\n" +
+                "Up Arrow: Returns the game to its default speed\n" +
+                "Esc: Ends the current game\n\n" +
+                "When paused you can mouse click on the world to see the details of the Splurgs in that area");
+        helpText.setEditable(false);
+        helpText.setCaretPosition(0);  // Scroll to the top
+        JOptionPane.showMessageDialog(this, new JScrollPane(helpText), "Help", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void openAboutWindow() {
+        JTextArea aboutText = new JTextArea();
+        aboutText.setText("Splurg World\nVersion 1.0\nDeveloped by Your Name\n\n" +
+                "Welcome to Splurg World, a place populated by the Splurgs.\n" +
+                "Splurgs are Amoeba that just like to float about and fight. Fighting gives them energy that they can " +
+                "take back to their Hives\n to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.");
+        aboutText.setEditable(false);
+        aboutText.setCaretPosition(0);  // Scroll to the top
+        JOptionPane.showMessageDialog(this, new JScrollPane(aboutText), "About", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void updateMenuItemsState() {

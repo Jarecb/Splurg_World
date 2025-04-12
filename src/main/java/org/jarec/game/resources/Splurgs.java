@@ -194,7 +194,7 @@ public class Splurgs {
             return splurgList.stream()
                     .collect(Collectors.groupingBy(
                             Splurg::getHomeNest,
-                            Collectors.summingInt(Splurg::getEnergy)
+                            Collectors.summingInt(splurg -> splurg.getEnergy() + splurg.getHomeNest().getFoodReserve())
                     ));
         }
     }

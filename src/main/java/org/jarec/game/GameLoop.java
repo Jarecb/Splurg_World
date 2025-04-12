@@ -132,12 +132,18 @@ public class GameLoop {
         Splurgs splurgs = Splurgs.getInstance();
 
         Map<Nest, Integer> energy = splurgs.getTotalEnergyPerNest();
+        int totalEnergy = 0; // Variable to store the total energy
+
         for (Map.Entry<Nest, Integer> entry : energy.entrySet()) {
             sb.append(entry.getKey().getName())
                     .append(": ")
                     .append(entry.getValue())
                     .append(" Energy\n");
+
+            // Add each nest's energy to the total energy
+            totalEnergy += entry.getValue();
         }
+        sb.append("Total Energy: ").append(totalEnergy).append(" Energy\n");
 
         sb.append("\n");
         sb.append(getSplurgs());
@@ -151,7 +157,7 @@ public class GameLoop {
         return sb.toString();
     }
 
-    private String getSplurgs(){
+    private String getSplurgs() {
         Map<Nest, Long> counts = Splurgs.getInstance().getCounts();
         StringBuilder stats = new StringBuilder();
 
@@ -161,7 +167,10 @@ public class GameLoop {
             }
             stats.append(nest.getName()).append(": ").append(count).append(" Splurgs");
         });
+        long totalSplurgs = counts.values().stream().mapToLong(Long::longValue).sum();
+        stats.append("\nTotal Splurgs: ").append(totalSplurgs);
 
         return stats.toString();
     }
+
 }
