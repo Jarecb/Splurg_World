@@ -168,31 +168,71 @@ public class WorldFrame extends JFrame {
 
         JMenu settingsMenu = new JMenu("Settings");
 
-        JMenuItem twoHivesItem = new JMenuItem("2 Hives");
-        twoHivesItem.addActionListener(e -> setNestCount(2));
+        // Create ButtonGroup for radio buttons
+        ButtonGroup hiveGroup = new ButtonGroup();
+        ButtonGroup foodGroup = new ButtonGroup();
 
-        JMenuItem fourHivesItem = new JMenuItem("4 Hives");
-        fourHivesItem.addActionListener(e -> setNestCount(4));
+        // Hive Configuration radio buttons
+        JRadioButtonMenuItem twoHivesItem = new JRadioButtonMenuItem("2 Hives", nestCount == 2);
+        twoHivesItem.addActionListener(e -> {
+            if (twoHivesItem.isSelected()) {
+                setNestCount(2);
+            }
+        });
 
-        JMenuItem oneHundredHiveFoodItem = new JMenuItem("100 Food");
-        oneHundredHiveFoodItem.addActionListener(e -> setNestFood(100));
+        JRadioButtonMenuItem fourHivesItem = new JRadioButtonMenuItem("4 Hives", nestCount == 4);
+        fourHivesItem.addActionListener(e -> {
+            if (fourHivesItem.isSelected()) {
+                setNestCount(4);
+            }
+        });
 
-        JMenuItem twoHundredHiveFoodItem = new JMenuItem("200 Food");
-        twoHundredHiveFoodItem.addActionListener(e -> setNestFood(200));
+        // Add radio buttons to the ButtonGroup
+        hiveGroup.add(twoHivesItem);
+        hiveGroup.add(fourHivesItem);
 
-        JMenuItem threeHundredHiveFoodItem = new JMenuItem("300 Food");
-        threeHundredHiveFoodItem.addActionListener(e -> setNestFood(300));
+        // Food setup radio buttons
+        JRadioButtonMenuItem oneHundredFoodItem = new JRadioButtonMenuItem("100 Food", nestFood == 100);
+        oneHundredFoodItem.addActionListener(e -> {
+            if (oneHundredFoodItem.isSelected()) {
+                setNestFood(100);
+            }
+        });
 
-        JMenuItem fourHundredHiveFoodItem = new JMenuItem("400 Food");
-        fourHundredHiveFoodItem.addActionListener(e -> setNestFood(400));
+        JRadioButtonMenuItem twoHundredFoodItem = new JRadioButtonMenuItem("200 Food", nestFood == 200);
+        twoHundredFoodItem.addActionListener(e -> {
+            if (twoHundredFoodItem.isSelected()) {
+                setNestFood(200);
+            }
+        });
+
+        JRadioButtonMenuItem threeHundredFoodItem = new JRadioButtonMenuItem("300 Food", nestFood == 300);
+        threeHundredFoodItem.addActionListener(e -> {
+            if (threeHundredFoodItem.isSelected()) {
+                setNestFood(300);
+            }
+        });
+
+        JRadioButtonMenuItem fourHundredFoodItem = new JRadioButtonMenuItem("400 Food", nestFood == 400);
+        fourHundredFoodItem.addActionListener(e -> {
+            if (fourHundredFoodItem.isSelected()) {
+                setNestFood(400);
+            }
+        });
+
+        // Add food radio buttons to the ButtonGroup
+        foodGroup.add(oneHundredFoodItem);
+        foodGroup.add(twoHundredFoodItem);
+        foodGroup.add(threeHundredFoodItem);
+        foodGroup.add(fourHundredFoodItem);
 
         settingsMenu.add(twoHivesItem);
         settingsMenu.add(fourHivesItem);
         settingsMenu.addSeparator();
-        settingsMenu.add(oneHundredHiveFoodItem);
-        settingsMenu.add(twoHundredHiveFoodItem);
-        settingsMenu.add(threeHundredHiveFoodItem);
-        settingsMenu.add(fourHundredHiveFoodItem);
+        settingsMenu.add(oneHundredFoodItem);
+        settingsMenu.add(twoHundredFoodItem);
+        settingsMenu.add(threeHundredFoodItem);
+        settingsMenu.add(fourHundredFoodItem);
 
         // Help menu
         JMenu helpMenu = new JMenu("Help");
@@ -215,6 +255,8 @@ public class WorldFrame extends JFrame {
 
         updateMenuItemsState();
     }
+
+
 
     private void setNestFood(int food) {
         nestFood = food;
