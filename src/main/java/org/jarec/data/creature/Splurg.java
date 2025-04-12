@@ -219,6 +219,8 @@ public class Splurg extends Life {
         sb.append(speed.getValue());
         sb.append("; Hth:");
         sb.append(getHealth());
+        sb.append("; Eng:");
+        sb.append(getEnergy());
         var location = getLocation();
         sb.append("; Loc.X:");
         sb.append(location.getX());

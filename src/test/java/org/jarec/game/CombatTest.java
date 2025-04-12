@@ -11,29 +11,64 @@ import static org.mockito.Mockito.*;
 class CombatTest {
 
     @Test
-    public void testAttack() {
+    public void testStrongAttacker() {
         // Arrange
         Splurg attacker = mock(Splurg.class);
         Splurg defender = mock(Splurg.class);
 
         // Mocking the Attribute class for Strength and Toughness
-        Strength strength = mock(Strength.class);
-        when(attacker.getStrength()).thenReturn(strength);
-        when(strength.getValue()).thenReturn(10);
-        Toughness toughness = mock(Toughness.class);
-        when(attacker.getToughness()).thenReturn(toughness);
-        when(toughness.getValue()).thenReturn(10);
+        Strength attackerStrength = mock(Strength.class);
+        when(attacker.getStrength()).thenReturn(attackerStrength);
+        when(attackerStrength.getValue()).thenReturn(10); // Attacker strength is 10
 
-        when(defender.getStrength()).thenReturn(strength);
-        when(strength.getValue()).thenReturn(10);
-        when(defender.getToughness()).thenReturn(toughness);
-        when(toughness.getValue()).thenReturn(1);
+        Toughness attackerToughness = mock(Toughness.class);
+        when(attacker.getToughness()).thenReturn(attackerToughness);
+        when(attackerToughness.getValue()).thenReturn(10); // Attacker toughness is 10
+
+        Strength defenderStrength = mock(Strength.class);
+        when(defender.getStrength()).thenReturn(defenderStrength);
+        when(defenderStrength.getValue()).thenReturn(10); // Defender strength is 10
+
+        Toughness defenderToughness = mock(Toughness.class);
+        when(defender.getToughness()).thenReturn(defenderToughness);
+        when(defenderToughness.getValue()).thenReturn(1); // Defender toughness is 1
+
+        // Act
+        Combat.attack(attacker, defender);
+
+        verify(attacker).reduceHealth(-9);  // Attacker should gain 9 health (0 - 9)
+        verify(defender).reduceHealth(9);   // Defender should lose 9 health (9 - 0)
+    }
+
+
+    @Test
+    public void testStrongDefender() {
+        // Arrange
+        Splurg attacker = mock(Splurg.class);
+        Splurg defender = mock(Splurg.class);
+
+        // Mocking the Attribute class for Strength and Toughness
+        Strength attackerStrength = mock(Strength.class);
+        when(attacker.getStrength()).thenReturn(attackerStrength);
+        when(attackerStrength.getValue()).thenReturn(10); // Attacker strength is 10
+
+        Toughness attackerToughness = mock(Toughness.class);
+        when(attacker.getToughness()).thenReturn(attackerToughness);
+        when(attackerToughness.getValue()).thenReturn(1); // Attacker toughness is 1
+
+        Strength defenderStrength = mock(Strength.class);
+        when(defender.getStrength()).thenReturn(defenderStrength);
+        when(defenderStrength.getValue()).thenReturn(10); // Defender strength is 10
+
+        Toughness defenderToughness = mock(Toughness.class);
+        when(defender.getToughness()).thenReturn(defenderToughness);
+        when(defenderToughness.getValue()).thenReturn(10); // Defender toughness is 10
 
         // Act
         attack(attacker, defender);
 
         // Assert
-        verify(attacker).reduceHealth(-9);
-        verify(defender).reduceHealth(9);
+        verify(attacker).reduceHealth(9);
+        verify(defender).reduceHealth(-9);
     }
 }

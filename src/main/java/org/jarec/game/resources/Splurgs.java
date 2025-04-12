@@ -62,6 +62,14 @@ public class Splurgs {
         }
     }
 
+    public void healSplurgs() {
+        synchronized (splurgList) {
+            for (Splurg splurg : splurgList) {
+                splurg.heal();
+            }
+        }
+    }
+
     public void removeDeadSplurgs() {
         synchronized (splurgList) {
             splurgList.removeIf(splurg -> {

@@ -7,6 +7,7 @@ public abstract class Life {
     private int age = 0;
     private int health = 0;
     private int maxHealth = 0;
+    private int energy = 0;
     private Location location;
     private Heading heading = Heading.getRandomHeading();
 
@@ -34,11 +35,14 @@ public abstract class Life {
     public void setHealth(int health) {
         this.health = health;
         if (this.health > maxHealth) {
+            increaseEnergy(health - maxHealth);
             this.health = maxHealth;
         }
     }
 
-    public int getHealth() { return health; }
+    public int getHealth() {
+        return health;
+    }
 
     public void recoverHealth(int recovery) {
         setHealth(health + recovery);
@@ -50,6 +54,30 @@ public abstract class Life {
             return false;
         }
         return true;
+    }
+
+    public void heal() {
+        if (health < maxHealth) {
+            health += takeEnergy(1);
+        }
+    }
+
+    public void increaseEnergy(int bonus) {
+        energy += bonus;
+    }
+
+    public int takeEnergy(int drain) {
+        if (drain <= energy) {
+            energy -= drain;
+            return drain;
+        }
+        drain = energy;
+        energy = 0;
+        return drain;
+    }
+
+    public int getEnergy() {
+        return energy;
     }
 
     public void setLocation(Location location) {
