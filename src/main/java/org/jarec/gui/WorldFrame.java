@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.net.URL;
 
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
@@ -21,6 +22,8 @@ public class WorldFrame extends JFrame {
     private static int nestCount = Integer.parseInt(PropertyHandler.get("gui.nest.default.number", "2"));
     private static int nestFood = Integer.parseInt(PropertyHandler.get("nest.default.setup.food", "100"));
 
+    private JLabel splashLabel; // This will hold the splash image label
+
     // Private constructor ensures no auto-start
     private WorldFrame() throws HeadlessException {
         setTitle("Splurg World");
@@ -31,8 +34,25 @@ public class WorldFrame extends JFrame {
         );
         setLayout(new BorderLayout());
 
-        world = new WorldPanel();
-        add(world, BorderLayout.CENTER);
+        // Initialize the splash image label
+        splashLabel = new JLabel();
+        URL imageUrl = getClass().getClassLoader().getResource("splash_image.png");
+
+        if (imageUrl != null) {
+            ImageIcon splashIcon = new ImageIcon(imageUrl);
+
+            // Resize the image to fit the panel size
+            Image image = splashIcon.getImage(); // Get the original image
+            Image scaledImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH); // Scale the image
+            splashIcon = new ImageIcon(scaledImage); // Create a new ImageIcon with the scaled image
+
+            splashLabel.setIcon(splashIcon);
+            splashLabel.setHorizontalAlignment(JLabel.CENTER);
+            splashLabel.setVerticalAlignment(JLabel.CENTER);
+            add(splashLabel, BorderLayout.CENTER);  // Add splash image to the frame
+        } else {
+            System.err.println("Splash image not found!");
+        }
 
         statsPanel = new JTextArea();
         statsPanel.append("Splurg World Stats");
@@ -143,6 +163,12 @@ public class WorldFrame extends JFrame {
 
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
+            // Remove the splash image and add the game world
+            remove(splashLabel);  // Remove the splash image
+            world = new WorldPanel();   // Create the game world panel
+            add(world, BorderLayout.CENTER);  // Add the WorldPanel
+            revalidate();  // Revalidate the frame to apply the changes
+            repaint();  // Repaint the frame
             new GameStart(nestCount, nestFood);
             updateStatus("Game started");
             updateMenuItemsState();
@@ -255,8 +281,6 @@ public class WorldFrame extends JFrame {
 
         updateMenuItemsState();
     }
-
-
 
     private void setNestFood(int food) {
         nestFood = food;
