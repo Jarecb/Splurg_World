@@ -1,9 +1,7 @@
 package org.jarec.gui;
 
-import org.jarec.data.Nest;
 import org.jarec.game.GameLoop;
 import org.jarec.game.GameStart;
-import org.jarec.game.resources.Splurgs;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,15 +9,16 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.util.Map;
 
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
 
     private static WorldFrame instance;
     private WorldPanel world;
+    private static JTextArea statsPanel;
     private JLabel statusBar;
     private JMenuItem startItem, pauseItem, stopItem;
+    private static int nestCount = Integer.parseInt(PropertyHandler.get("gui.nest.default.number", "2"));
 
     // Private constructor ensures no auto-start
     private WorldFrame() throws HeadlessException {
@@ -33,6 +32,17 @@ public class WorldFrame extends JFrame {
 
         world = new WorldPanel();
         add(world, BorderLayout.CENTER);
+
+        statsPanel = new JTextArea();
+        statsPanel.append("Splurg World Stats");
+        statsPanel.setEditable(false);
+        statsPanel.setFocusable(false);
+        statsPanel.setPreferredSize(new Dimension(200, getHeight()));
+        statsPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLoweredBevelBorder(),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+        ));
+        add(statsPanel, BorderLayout.EAST);
 
         setupKeyBindings();
         setupMenuBar();
@@ -52,6 +62,11 @@ public class WorldFrame extends JFrame {
             }
         }
         return instance;
+    }
+
+    public static void updateStats(String stats) {
+        var output = "Splurg Word Stats\n";
+        statsPanel.setText(output + stats);
     }
 
     private void setupKeyBindings() {
@@ -99,6 +114,15 @@ public class WorldFrame extends JFrame {
                 GameLoop.getInstance().setGameSpeed(-5);
             }
         });
+
+        // UP arrow key
+        inputMap.put(KeyStroke.getKeyStroke("UP"), "upArrowPressed");
+        actionMap.put("upArrowPressed", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GameLoop.getInstance().resetGameSpeed();
+            }
+        });
     }
 
     private void setupMenuBar() {
@@ -118,7 +142,7 @@ public class WorldFrame extends JFrame {
 
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
-            new GameStart();
+            new GameStart(nestCount);
             updateStatus("Game started");
             updateMenuItemsState();
         });
@@ -166,22 +190,6 @@ public class WorldFrame extends JFrame {
         }
     }
 
-    private String getStats(){
-        Map<Nest, Long> counts = Splurgs.getInstance().getCounts();
-        StringBuilder stats = new StringBuilder();
-
-        counts.forEach((nest, count) -> {
-            if (stats.length() > 0) {
-                stats.append(" | ");
-            }
-            stats.append(nest.getName()).append(": ").append(count);
-        });
-
-        stats.append("      ");
-
-        return stats.toString();
-    }
-
     private String getTurn() {
         return "Turn: " + GameLoop.getInstance().getTurn() + "      ";
     }
@@ -193,10 +201,10 @@ public class WorldFrame extends JFrame {
     }
 
     public void updateStatus(String message) {
-        statusBar.setText(getTurn() + getStats() + message);
+        statusBar.setText(getTurn() + message);
     }
 
-    public WorldPanel getWorldPanel(){
+    public WorldPanel getWorldPanel() {
         return world;
     }
 }

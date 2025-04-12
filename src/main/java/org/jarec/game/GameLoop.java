@@ -1,5 +1,6 @@
 package org.jarec.game;
 
+import org.jarec.data.Nest;
 import org.jarec.game.resources.Nests;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
@@ -7,6 +8,8 @@ import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class GameLoop {
     private static final Logger log = LoggerFactory.getLogger(GameLoop.class);
@@ -81,6 +84,8 @@ public class GameLoop {
                 WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
                 worldPanel.publish();
 
+                WorldFrame.updateStats(getStats());
+
                 Thread.sleep(loopSleepTime);
             } else {
                 Thread.sleep(loopPauseTime);
@@ -113,5 +118,50 @@ public class GameLoop {
         } else if (this.loopSleepTime > 2000) {
             this.loopSleepTime = 2000;
         }
+    }
+
+    public void resetGameSpeed() {
+        loopSleepTime = Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000"));
+    }
+
+
+
+    private String getStats(){
+        StringBuilder sb = new StringBuilder("\n");
+
+        Splurgs splurgs = Splurgs.getInstance();
+
+        Map<Nest, Integer> energy = splurgs.getTotalEnergyPerNest();
+        for (Map.Entry<Nest, Integer> entry : energy.entrySet()) {
+            sb.append(entry.getKey().getName())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append(" Energy\n");
+        }
+
+        sb.append("\n");
+        sb.append(getSplurgs());
+
+        sb.append("\n\nAve. Aggression: ").append(splurgs.getAverageSplurgAggression());
+        sb.append("\nAve. Strength: ").append(splurgs.getAverageSplurgStrength());
+        sb.append("\nAve. Toughness: ").append(splurgs.getAverageSplurgToughness());
+        sb.append("\nAve. Speed: ").append(splurgs.getAverageSplurgSpeed());
+        sb.append("\nAve. Size: ").append(splurgs.getAverageSplurgSize());
+
+        return sb.toString();
+    }
+
+    private String getSplurgs(){
+        Map<Nest, Long> counts = Splurgs.getInstance().getCounts();
+        StringBuilder stats = new StringBuilder();
+
+        counts.forEach((nest, count) -> {
+            if (stats.length() > 0) {
+                stats.append("\n");
+            }
+            stats.append(nest.getName()).append(": ").append(count).append(" Splurgs");
+        });
+
+        return stats.toString();
     }
 }

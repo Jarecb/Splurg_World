@@ -188,4 +188,84 @@ public class Splurgs {
 
         g2.dispose();
     }
+
+    public Map<Nest, Integer> getTotalEnergyPerNest() {
+        synchronized (splurgList) {
+            return splurgList.stream()
+                    .collect(Collectors.groupingBy(
+                            Splurg::getHomeNest,
+                            Collectors.summingInt(Splurg::getEnergy)
+                    ));
+        }
+    }
+
+    public int getAverageSplurgSize() {
+        synchronized (splurgList) {
+            if (splurgList.isEmpty()) {
+                return 0;
+            }
+
+            double totalSize = splurgList.stream()
+                    .mapToInt(splurg -> splurg.getSize().getValue())
+                    .sum();
+
+            return (int)(totalSize / splurgList.size());
+        }
+    }
+
+    public int getAverageSplurgSpeed() {
+        synchronized (splurgList) {
+            if (splurgList.isEmpty()) {
+                return 0;
+            }
+
+            double totalSize = splurgList.stream()
+                    .mapToInt(splurg -> splurg.getSpeed().getValue())
+                    .sum();
+
+            return (int)(totalSize / splurgList.size());
+        }
+    }
+
+    public int getAverageSplurgToughness() {
+        synchronized (splurgList) {
+            if (splurgList.isEmpty()) {
+                return 0;
+            }
+
+            double totalSize = splurgList.stream()
+                    .mapToInt(splurg -> splurg.getToughness().getValue())
+                    .sum();
+
+            return (int)(totalSize / splurgList.size());
+        }
+    }
+
+    public int getAverageSplurgStrength() {
+        synchronized (splurgList) {
+            if (splurgList.isEmpty()) {
+                return 0;
+            }
+
+            double totalSize = splurgList.stream()
+                    .mapToInt(splurg -> splurg.getStrength().getValue())
+                    .sum();
+
+            return (int)(totalSize / splurgList.size());
+        }
+    }
+
+    public int getAverageSplurgAggression() {
+        synchronized (splurgList) {
+            if (splurgList.isEmpty()) {
+                return 0;
+            }
+
+            double totalSize = splurgList.stream()
+                    .mapToInt(splurg -> splurg.getAggression().getValue())
+                    .sum();
+
+            return (int)(totalSize / splurgList.size());
+        }
+    }
 }
