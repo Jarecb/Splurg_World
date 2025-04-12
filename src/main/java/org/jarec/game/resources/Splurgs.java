@@ -89,6 +89,21 @@ public class Splurgs {
                 }
                 return isDead;
             });
+            updateNestColorsForEmptyNests();
+        }
+    }
+
+    private void updateNestColorsForEmptyNests() {
+        Map<Nest, Long> livingCounts = splurgList.stream()
+                .collect(Collectors.groupingBy(Splurg::getHomeNest, Collectors.counting()));
+
+        List<Nest> allNests = Nests.getInstance().getNests();
+
+        for (Nest nest : allNests) {
+            if ((!livingCounts.containsKey(nest) || livingCounts.get(nest) == 0) &&
+                    nest.getFoodReserve() < Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"))) {
+                nest.setColor(Color.GRAY);
+            }
         }
     }
 

@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class Nest {
     private final Location location;
-    private final Color color;
+    private Color color;
     private final String name;
     private int foodReserve = 0;
     private int spawnCountdown = 0;
@@ -17,6 +17,10 @@ public class Nest {
         this.location = location;
         this.color = color;
         this.name = name;
+    }
+
+    public void setColor(Color color){
+        this.color = color;
     }
 
     public void spawn() {

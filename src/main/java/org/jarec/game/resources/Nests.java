@@ -59,10 +59,10 @@ public class Nests {
         int nestSize = Integer.parseInt(PropertyHandler.get("nest.default.size", "20"));
 
         Graphics2D g2 = worldPanel.getBackgroundGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // optional for smooth edges
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Stroke originalStroke = g2.getStroke();
-        Stroke thickStroke = new BasicStroke(2); // Thicker outline
+        Stroke thickStroke = new BasicStroke(2);
 
         synchronized (nestList) {
             for (Nest nest : nestList) {
@@ -84,7 +84,7 @@ public class Nests {
             }
         }
 
-        g2.setStroke(originalStroke); // Restore original stroke
+        g2.setStroke(originalStroke);
         g2.dispose();
     }
 }
