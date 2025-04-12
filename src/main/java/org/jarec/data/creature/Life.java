@@ -45,7 +45,7 @@ public abstract class Life {
     }
 
     public boolean reduceHealth(int reduction) {
-        health = health - reduction;
+        setHealth(health - reduction);
         if (health <= 0) {
             return false;
         }

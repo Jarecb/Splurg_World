@@ -6,11 +6,12 @@ import org.jarec.data.HeadingUtils;
 import org.jarec.data.Location;
 import org.jarec.data.Nest;
 import org.jarec.data.creature.attributes.*;
-import org.jarec.game.GameLoop;
 import org.jarec.game.Combat;
+import org.jarec.game.GameLoop;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
+import org.jarec.util.RandomNameGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ public class Splurg extends Life {
     private Size size;
     private Speed speed;
     private Nest homeNest;
+    private String name = RandomNameGenerator.generateName();
 
     public Splurg(Nest nest) {
         var homeLocation = nest.getLocation();
@@ -35,20 +37,20 @@ public class Splurg extends Life {
         commonSetup(nest);
     }
 
-    public Splurg (Splurg parent1, Splurg parent2){
-        if (parent1.getAggression().getValue() == parent2.getAggression().getValue()){
+    public Splurg(Splurg parent1, Splurg parent2) {
+        if (parent1.getAggression().getValue() == parent2.getAggression().getValue()) {
             aggression.setValue(parent1.getAggression().getValue());
         }
 
-        if (parent1.getForaging().getValue() == parent2.getForaging().getValue()){
+        if (parent1.getForaging().getValue() == parent2.getForaging().getValue()) {
             foraging.setValue(parent1.getForaging().getValue());
         }
 
-        if (parent1.getStrength().getValue() == parent2.getStrength().getValue()){
+        if (parent1.getStrength().getValue() == parent2.getStrength().getValue()) {
             strength.setValue(parent1.getStrength().getValue());
         }
 
-        if (parent1.getToughness().getValue() == parent2.getToughness().getValue()){
+        if (parent1.getToughness().getValue() == parent2.getToughness().getValue()) {
             toughness.setValue(parent1.getToughness().getValue());
         }
 
@@ -67,7 +69,7 @@ public class Splurg extends Life {
 
         homeNest = nest;
 
-        log.info("A Splurg has spawned on turn {} {}", GameLoop.getInstance().getTurn(), this);
+        log.info("{} has spawned on turn {} {}", name, GameLoop.getInstance().getTurn(), this);
     }
 
     private void setAgeAtBirth() {
@@ -76,10 +78,10 @@ public class Splurg extends Life {
 
     private void setMaxHealth() {
         setMaxHealth(Integer.parseInt((PropertyHandler.get("splurg.default.base.health", "10")))
-            + toughness.getValue());
+                + toughness.getValue());
     }
 
-    public void move(){
+    public void move() {
         var targetAcquired = findNearest();
         if (!targetAcquired) {
             var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
@@ -105,6 +107,7 @@ public class Splurg extends Life {
             Splurg nearestSplurg = splurgs.stream()
                     // Exclude the same splurg
                     .filter(candidate -> candidate != this)
+                    // Exclude same Nest
                     .filter(candidate -> !candidate.getHomeNest().equals(homeNest))
                     // Calculate the distance and check if it's within the threshold
                     .filter(candidate -> {
@@ -122,17 +125,19 @@ public class Splurg extends Life {
                     .orElse(null);
 
             if (nearestSplurg != null) {
-                Heading newHeading = (HeadingUtils.getHeadingTo(getLocation(), nearestSplurg.getLocation()));
-                if (newHeading == null){
+                Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), nearestSplurg.getLocation());
+                if (newHeading == null) {
                     Combat.attack(this, nearestSplurg);
                 } else {
                     setHeading(newHeading);
+                    setHeading(getHeading().getRandomTurn());
                 }
                 return true;
             }
         }
         return false;
     }
+
 
     // Helper method to calculate Euclidean distance
     private double calculateDistance(Location loc1, Location loc2) {
@@ -157,6 +162,10 @@ public class Splurg extends Life {
     @VisibleForTesting
     void setForaging(int value) {
         foraging.setValue(value);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Size getSize() {
@@ -192,7 +201,9 @@ public class Splurg extends Life {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("[");
-        sb.append("Nest:");
+        sb.append("Name:");
+        sb.append(name);
+        sb.append("; Nest:");
         sb.append(homeNest.getName());
         sb.append("; Agg:");
         sb.append(aggression.getValue());

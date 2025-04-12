@@ -67,7 +67,7 @@ public class Splurgs {
             splurgList.removeIf(splurg -> {
                 boolean isDead = splurg.getHealth() <= 0;
                 if (isDead) {
-                    log.info("A Splurg from {} has died", splurg.getHomeNest().getName());
+                    log.info("{} from {} has died", splurg.getName(), splurg.getHomeNest().getName());
                 }
                 return isDead;
             });

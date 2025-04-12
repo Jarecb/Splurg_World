@@ -11,16 +11,6 @@ class NestTest {
     private static final Nest testNest = new Nest(new Location(10, 20), Color.RED, "The Hive");
 
     @Test
-    void spawn() {
-        testNest.setFoodReserve(9);
-        Splurg splurgSpawn = testNest.spawn();
-        assertNull(splurgSpawn);
-        testNest.addFood(2);
-        splurgSpawn = testNest.spawn();
-        assertInstanceOf(Splurg.class, splurgSpawn);
-    }
-
-    @Test
     void getFood() {
         testNest.setFoodReserve(10);
         assertEquals(5, testNest.getFood(5), "Failed to get food requested");

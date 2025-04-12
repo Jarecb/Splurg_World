@@ -10,15 +10,47 @@ public class HeadingUtils {
         return null;
     }
 
-    public static Heading getHeadingTo(Location fromLocation, Location toLocation) {
-        int dx = toLocation.getX() - fromLocation.getX();
-        int dy = toLocation.getY() - fromLocation.getY();
+    public static Heading getHeadingTo(Location from, Location to) {
+        int dx = to.getX() - from.getX();
+        int dy = to.getY() - from.getY();
 
-        // Normalize dx and dy to be in the range of [-1, 0, 1]
-        int headingDx = Integer.compare(dx, 0);  // -1, 0, or 1
-        int headingDy = Integer.compare(dy, 0);  // -1, 0, or 1
+        if (dx == 0 && dy == 0) {
+            // No movement needed
+            return null; // or Heading.NONE if you have a "no move" heading
+        }
 
-        // Use getHeadingFromVector to return the corresponding Heading
-        return getHeadingFromVector(headingDx, headingDy);
+        // Determine the direction of movement
+        int dxDirection = Integer.compare(dx, 0);  // -1 for left, 1 for right, 0 for no move
+        int dyDirection = Integer.compare(dy, 0);  // -1 for down, 1 for up, 0 for no move
+
+        // Use the dx and dy directions to select the right heading
+        if (dxDirection == 0) {
+            if (dyDirection > 0) {
+                return Heading.NORTH;
+            } else {
+                return Heading.SOUTH;
+            }
+        } else if (dyDirection == 0) {
+            if (dxDirection > 0) {
+                return Heading.EAST;
+            } else {
+                return Heading.WEST;
+            }
+        } else {
+            // Determine the diagonal heading
+            if (dxDirection > 0) {
+                if (dyDirection > 0) {
+                    return Heading.NORTH_EAST;
+                } else {
+                    return Heading.SOUTH_EAST;
+                }
+            } else {
+                if (dyDirection > 0) {
+                    return Heading.NORTH_WEST;
+                } else {
+                    return Heading.SOUTH_WEST;
+                }
+            }
+        }
     }
 }
