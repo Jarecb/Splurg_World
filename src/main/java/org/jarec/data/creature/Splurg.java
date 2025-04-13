@@ -146,7 +146,7 @@ public class Splurg extends Life {
         Location currentLocation = getLocation();
 
         double distanceThreshold = getForaging().getValue() *
-                Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
+                Integer.parseInt(PropertyHandler.get("splurg.default.aggression.multiplier", "5"));
 
         List<Splurg> splurgs = Splurgs.getInstance().getSplurgs();
 
