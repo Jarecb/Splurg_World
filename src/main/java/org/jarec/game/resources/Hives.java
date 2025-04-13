@@ -1,6 +1,6 @@
 package org.jarec.game.resources;
 
-import org.jarec.data.Nest;
+import org.jarec.data.Hive;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
@@ -10,53 +10,53 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Nests {
+public class Hives {
 
     // Singleton instance - eagerly initialized and final for thread safety
-    private static final Nests INSTANCE = new Nests();
+    private static final Hives INSTANCE = new Hives();
 
     // Thread-safe list to handle concurrent access if needed
-    private final List<Nest> nestList = Collections.synchronizedList(new ArrayList<>());
+    private final List<Hive> hiveList = Collections.synchronizedList(new ArrayList<>());
 
     // Private constructor to prevent instantiation
-    private Nests() {}
+    private Hives() {}
 
     // Correctly declared as static to access without instance
-    public static Nests getInstance() {
+    public static Hives getInstance() {
         return INSTANCE;
     }
 
-    public void addNest(Nest nest) {
-        if (nest != null) {
-            nestList.add(nest);
+    public void addHive(Hive hive) {
+        if (hive != null) {
+            hiveList.add(hive);
         }
     }
 
-    public List<Nest> getNests() {
+    public List<Hive> getHives() {
         // Return a copy to preserve encapsulation
-        synchronized (nestList) {
-            return new ArrayList<>(nestList);
+        synchronized (hiveList) {
+            return new ArrayList<>(hiveList);
         }
     }
 
-    public void clearNests() {
-        synchronized (nestList) {
-            nestList.clear();
+    public void clearHives() {
+        synchronized (hiveList) {
+            hiveList.clear();
         }
     }
 
-    public void spawnNests() {
-        synchronized (nestList) {
-            for (Nest nest : nestList) {
-                nest.spawn();
+    public void spawnHives() {
+        synchronized (hiveList) {
+            for (Hive hive : hiveList) {
+                hive.spawn();
             }
         }
     }
 
-    public void drawNests() {
+    public void drawHives() {
         WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
 
-        int nestSize = Integer.parseInt(PropertyHandler.get("nest.default.size", "20"));
+        int hiveSize = Integer.parseInt(PropertyHandler.get("hive.default.size", "20"));
 
         Graphics2D g2 = worldPanel.getBackgroundGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -67,28 +67,28 @@ public class Nests {
         Font energyFont = new Font("Arial", Font.BOLD, 12);
         g2.setFont(energyFont);
 
-        synchronized (nestList) {
-            for (Nest nest : nestList) {
-                int x = nest.getLocation().getX();
-                int y = nest.getLocation().getY();
+        synchronized (hiveList) {
+            for (Hive hive : hiveList) {
+                int x = hive.getLocation().getX();
+                int y = hive.getLocation().getY();
 
-                int drawX = x - (nestSize / 2);
-                int drawY = y - (nestSize / 2);
+                int drawX = x - (hiveSize / 2);
+                int drawY = y - (hiveSize / 2);
 
-                // Fill circle if nest alive
-                if (nest.getColor() != null) {
-                    Color color = nest.getColor();
+                // Fill circle if hive alive
+                if (hive.getColor() != null) {
+                    Color color = hive.getColor();
                     g2.setColor(color);
-                    g2.fillOval(drawX, drawY, nestSize, nestSize);
+                    g2.fillOval(drawX, drawY, hiveSize, hiveSize);
                 }
 
                 // Draw border
                 g2.setColor(new Color(0, 0, 0, 128));
                 g2.setStroke(thickStroke);
-                g2.drawOval(drawX, drawY, nestSize, nestSize);
+                g2.drawOval(drawX, drawY, hiveSize, hiveSize);
 
                 // Draw energy text (centered)
-                String energyText = String.valueOf(nest.getFoodReserve());
+                String energyText = String.valueOf(hive.getEnergyReserve());
                 FontMetrics fm = g2.getFontMetrics();
                 int textWidth = fm.stringWidth(energyText);
                 int textHeight = fm.getAscent();

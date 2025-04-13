@@ -8932,3 +8932,624 @@
 2025-04-13 18:58:56 [main] INFO  org.jarec.gui.WorldFrame - Ithwenian of The Hive was spawned on turn 0
 2025-04-13 18:58:56 [main] INFO  org.jarec.gui.WorldFrame - Kridiriel of The Hive was spawned on turn 0
 2025-04-13 18:58:56 [main] INFO  org.jarec.gui.WorldFrame - Eriwenian of The Hive was spawned on turn 0
+2025-04-13 19:29:57 [main] INFO  org.jarec.Main - Starting Splurg World
+2025-04-13 19:29:57 [main] INFO  org.jarec.Main - Author: Jarec
+2025-04-13 19:29:57 [main] INFO  org.jarec.Main - Version: 01.01
+2025-04-13 19:29:57 [main] INFO  org.jarec.Main - Creating Splurg World
+2025-04-13 19:29:58 [main] INFO  org.jarec.gui.WorldFrame - World Frame created
+2025-04-13 19:30:01 [AWT-EventQueue-0] INFO  org.jarec.gui.WorldFrame - Game started
+2025-04-13 19:30:01 [Thread-0] INFO  org.jarec.game.GameLoop - Game starting
+2025-04-13 19:30:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nornorgar of Red Hive was spawned on turn 1
+2025-04-13 19:30:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fennorda of Blue Hive was spawned on turn 1
+2025-04-13 19:30:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erithararion of Red Hive was spawned on turn 7
+2025-04-13 19:30:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylvenan of Blue Hive was spawned on turn 7
+2025-04-13 19:30:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Northarith of Red Hive was spawned on turn 13
+2025-04-13 19:30:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eriwenorath of Blue Hive was spawned on turn 13
+2025-04-13 19:30:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alnoror of Red Hive was spawned on turn 19
+2025-04-13 19:30:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithathriel of Blue Hive was spawned on turn 19
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nordraor of Red Hive was spawned on turn 25
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helnorda of Blue Hive was spawned on turn 25
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvianoth of Red Hive was spawned on turn 31
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alvorda of Blue Hive was spawned on turn 31
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lauthariel of Red Hive was spawned on turn 37
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldirar of Blue Hive was spawned on turn 37
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Bridraarion of Red Hive was spawned on turn 43
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mormiros of Blue Hive was spawned on turn 43
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithdraarion of Red Hive was spawned on turn 49
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Hellianrath of Blue Hive was spawned on turn 49
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brilianan of Red Hive was spawned on turn 55
+2025-04-13 19:30:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Bridirrath of Blue Hive was spawned on turn 55
+2025-04-13 19:30:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylvenan of Blue Hive has died
+2025-04-13 21:10:39 [main] INFO  org.jarec.Main - Starting Splurg World
+2025-04-13 21:10:39 [main] INFO  org.jarec.Main - Author: Jarec
+2025-04-13 21:10:39 [main] INFO  org.jarec.Main - Version: 01.01
+2025-04-13 21:10:39 [main] INFO  org.jarec.Main - Creating Splurg World
+2025-04-13 21:10:39 [main] INFO  org.jarec.gui.WorldFrame - World Frame created
+2025-04-13 21:10:42 [AWT-EventQueue-0] INFO  org.jarec.gui.WorldFrame - Game started
+2025-04-13 21:10:42 [Thread-0] INFO  org.jarec.game.GameLoop - Game starting
+2025-04-13 21:10:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laulianda of Red Hive was spawned on turn 1
+2025-04-13 21:10:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galwenor of Blue Hive was spawned on turn 1
+2025-04-13 21:10:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivdarriel of Yellow Hive was spawned on turn 1
+2025-04-13 21:10:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivdarriel of Green Hive was spawned on turn 1
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordirorath of Red Hive was spawned on turn 7
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivdraian of Blue Hive was spawned on turn 7
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Vallianos of Yellow Hive was spawned on turn 7
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morvenor of Green Hive was spawned on turn 7
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianrath of Red Hive was spawned on turn 13
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Althosan of Blue Hive was spawned on turn 13
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivwenos of Yellow Hive was spawned on turn 13
+2025-04-13 21:10:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalthariel of Green Hive was spawned on turn 13
+2025-04-13 21:10:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galdiroth of Red Hive was spawned on turn 19
+2025-04-13 21:10:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Northosorath of Blue Hive was spawned on turn 19
+2025-04-13 21:10:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Briathrath of Yellow Hive was spawned on turn 19
+2025-04-13 21:10:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brinorgar of Green Hive was spawned on turn 19
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phathosiel of Red Hive was spawned on turn 25
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalmiros of Blue Hive was spawned on turn 25
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krimirriel of Yellow Hive was spawned on turn 25
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erivianorath of Green Hive was spawned on turn 25
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brilianan of Red Hive was spawned on turn 31
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nordrariel of Blue Hive was spawned on turn 31
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordiroth of Yellow Hive was spawned on turn 31
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alvoriel of Green Hive was spawned on turn 31
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavenan of Red Hive was spawned on turn 37
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylnoros of Blue Hive was spawned on turn 37
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Almirriel of Yellow Hive was spawned on turn 37
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norathgar of Green Hive was spawned on turn 37
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldirrath of Red Hive was spawned on turn 43
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivthararion of Blue Hive was spawned on turn 43
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavianos of Yellow Hive was spawned on turn 43
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Normiran of Green Hive was spawned on turn 43
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivnoror of Red Hive was spawned on turn 49
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvorar of Blue Hive was spawned on turn 49
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syltharor of Yellow Hive was spawned on turn 49
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Iththosda of Green Hive was spawned on turn 49
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenmiriel of Red Hive was spawned on turn 55
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galeloth of Blue Hive was spawned on turn 55
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morvorrius of Yellow Hive was spawned on turn 55
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norathith of Green Hive was spawned on turn 55
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvianrath of Red Hive was spawned on turn 61
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nornorriel of Blue Hive was spawned on turn 61
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norliangar of Yellow Hive was spawned on turn 61
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavorrath of Green Hive was spawned on turn 61
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithvorith of Red Hive was spawned on turn 67
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Heltharith of Blue Hive was spawned on turn 67
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Allianorath of Yellow Hive was spawned on turn 67
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norathgar of Green Hive was spawned on turn 67
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helathoth of Red Hive was spawned on turn 73
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Althargar of Blue Hive was spawned on turn 73
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvorith of Yellow Hive was spawned on turn 73
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morthararion of Green Hive was spawned on turn 73
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Aldaroth of Red Hive was spawned on turn 79
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivlianith of Blue Hive was spawned on turn 79
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phadarith of Yellow Hive was spawned on turn 79
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridaros of Green Hive was spawned on turn 79
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morveniel of Red Hive was spawned on turn 85
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morvoror of Blue Hive was spawned on turn 85
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valathar of Yellow Hive was spawned on turn 85
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivelriel of Green Hive was spawned on turn 85
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erielan of Red Hive was spawned on turn 91
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithviangar of Blue Hive was spawned on turn 91
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridraith of Yellow Hive was spawned on turn 91
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenweniel of Green Hive was spawned on turn 91
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudarrius of Red Hive was spawned on turn 97
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Northosiel of Blue Hive was spawned on turn 97
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivthosar of Yellow Hive was spawned on turn 97
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivdirith of Green Hive was spawned on turn 97
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norlianrius of Red Hive was spawned on turn 103
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordarith of Blue Hive was spawned on turn 103
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brimirith of Yellow Hive was spawned on turn 103
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithlianos of Green Hive was spawned on turn 103
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helathan of Red Hive was spawned on turn 109
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phadarriel of Blue Hive was spawned on turn 109
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erivoran of Yellow Hive was spawned on turn 109
+2025-04-13 21:10:45 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eritharar of Green Hive was spawned on turn 109
+2025-04-13 21:10:46 [Thread-0] INFO  org.jarec.gui.WorldFrame - Althosda of Red Hive was spawned on turn 115
+2025-04-13 21:10:46 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvianos of Blue Hive was spawned on turn 115
+2025-04-13 21:10:46 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldargar of Yellow Hive was spawned on turn 115
+2025-04-13 21:10:46 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morvoriel of Green Hive was spawned on turn 115
+2025-04-13 21:10:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivwenos of Yellow Hive has died
+2025-04-13 21:10:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridaros of Green Hive has died
+2025-04-13 21:10:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norathgar of Green Hive has died
+2025-04-13 21:10:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norliangar of Yellow Hive has died
+2025-04-13 21:10:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morveniel of Red Hive has died
+2025-04-13 21:10:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Normiran of Green Hive has died
+2025-04-13 21:10:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galwenor of Blue Hive has died
+2025-04-13 21:10:50 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudarrius of Red Hive has died
+2025-04-13 21:10:50 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianrath of Red Hive has died
+2025-04-13 21:10:50 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivdraian of Blue Hive has died
+2025-04-13 21:10:51 [Thread-0] INFO  org.jarec.gui.WorldFrame - Iththosda of Green Hive has died
+2025-04-13 21:10:51 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithlianos of Green Hive has died
+2025-04-13 21:10:52 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erivianorath of Green Hive has died
+2025-04-13 21:10:52 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brimirith of Yellow Hive has died
+2025-04-13 21:10:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Althargar of Blue Hive has died
+2025-04-13 21:10:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phathosiel of Red Hive has died
+2025-04-13 21:10:54 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brivianoth of Blue Hive was spawned on turn 1288
+2025-04-13 21:10:54 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Brivianoth spawned from Northosorath and Ithviangar of Blue Hive
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alvoriel deposited 20 energy at Green Hive
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Aldirriel of Green Hive was spawned on turn 1293
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridarorath of Green Hive was spawned on turn 1299
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valathar of Yellow Hive has died
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erielan of Red Hive has died
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivthararion of Blue Hive has died
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Almirriel of Yellow Hive has died
+2025-04-13 21:10:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivthosar of Yellow Hive has died
+2025-04-13 21:10:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brivianoth of Blue Hive has died
+2025-04-13 21:10:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valnoriel of Red Hive was spawned on turn 1492
+2025-04-13 21:10:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Valnoriel spawned from Ithvorith and Norlianrius of Red Hive
+2025-04-13 21:10:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valnoriel of Red Hive has died
+2025-04-13 21:10:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordarith of Blue Hive has died
+2025-04-13 21:10:57 [Thread-0] INFO  org.jarec.gui.WorldFrame - Vallianos of Yellow Hive has died
+2025-04-13 21:10:57 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavianos of Yellow Hive has died
+2025-04-13 21:10:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivelriel of Green Hive has died
+2025-04-13 21:10:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithviangar deposited 25 energy at Blue Hive
+2025-04-13 21:10:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Iththosgar of Blue Hive was spawned on turn 1781
+2025-04-13 21:10:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lauthosrath of Blue Hive was spawned on turn 1787
+2025-04-13 21:10:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eriveniel of Red Hive was spawned on turn 1795
+2025-04-13 21:10:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Eriveniel spawned from Norlianrius and Laulianda of Red Hive
+2025-04-13 21:10:59 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivlianith of Blue Hive has died
+2025-04-13 21:10:59 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norathgar deposited 21 energy at Green Hive
+2025-04-13 21:10:59 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norwenith of Green Hive was spawned on turn 1844
+2025-04-13 21:10:59 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldargar of Green Hive was spawned on turn 1850
+2025-04-13 21:11:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - Aldirriel of Green Hive has died
+2025-04-13 21:11:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morvorrius of Yellow Hive has died
+2025-04-13 21:11:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galeloth of Blue Hive has died
+2025-04-13 21:11:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvianos of Blue Hive has died
+2025-04-13 21:11:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lauthosrath of Blue Hive has died
+2025-04-13 21:11:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenathos of Blue Hive was spawned on turn 2360
+2025-04-13 21:11:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Fenathos spawned from Northosorath and Nordrariel of Blue Hive
+2025-04-13 21:11:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - Heltharith of Blue Hive has died
+2025-04-13 21:11:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordiroth of Yellow Hive has died
+2025-04-13 21:11:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylelgar of Red Hive was spawned on turn 2448
+2025-04-13 21:11:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Sylelgar spawned from Norlianrius and Laulianda of Red Hive
+2025-04-13 21:11:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivdarriel deposited 1 energy at Green Hive
+2025-04-13 21:11:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridraith of Yellow Hive has died
+2025-04-13 21:11:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvorith of Yellow Hive has died
+2025-04-13 21:11:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nordraiel of Blue Hive was spawned on turn 2906
+2025-04-13 21:11:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Nordraiel spawned from Sylnoros and Nordrariel of Blue Hive
+2025-04-13 21:11:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phaelrius of Blue Hive was spawned on turn 2956
+2025-04-13 21:11:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Phaelrius spawned from Nordrariel and Sylnoros of Blue Hive
+2025-04-13 21:11:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nornorriel of Blue Hive has died
+2025-04-13 21:11:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:11:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:11:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eriveniel of Red Hive has died
+2025-04-13 21:11:08 [Thread-0] INFO  org.jarec.gui.WorldFrame - Allianorath of Yellow Hive has died
+2025-04-13 21:11:08 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivdarriel of Green Hive has died
+2025-04-13 21:11:09 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phadarriel of Blue Hive has died
+2025-04-13 21:11:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morvoriel of Green Hive has died
+2025-04-13 21:11:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldargar of Green Hive has died
+2025-04-13 21:11:12 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenathos of Blue Hive has died
+2025-04-13 21:11:12 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lauwenrath of Green Hive was spawned on turn 3642
+2025-04-13 21:11:12 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Lauwenrath spawned from Eritharar and Alvoriel of Green Hive
+2025-04-13 21:11:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erivoran of Red Hive was spawned on turn 3663
+2025-04-13 21:11:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Erivoran spawned from Aldaroth and Laulianda of Red Hive
+2025-04-13 21:11:18 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erivoran of Yellow Hive has died
+2025-04-13 21:11:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldirrath of Red Hive has died
+2025-04-13 21:11:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Iththosgar of Blue Hive has died
+2025-04-13 21:11:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helathan of Red Hive has died
+2025-04-13 21:11:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brinorgar deposited 2 energy at Green Hive
+2025-04-13 21:11:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Aldaroth of Red Hive has died
+2025-04-13 21:11:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krithosriel of Red Hive was spawned on turn 4443
+2025-04-13 21:11:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Krithosriel spawned from Ithvorith and Helathoth of Red Hive
+2025-04-13 21:19:37 [main] INFO  org.jarec.Main - Starting Splurg World
+2025-04-13 21:19:37 [main] INFO  org.jarec.Main - Author: Jarec
+2025-04-13 21:19:37 [main] INFO  org.jarec.Main - Version: 01.01
+2025-04-13 21:19:37 [main] INFO  org.jarec.Main - Creating Splurg World
+2025-04-13 21:19:38 [main] INFO  org.jarec.gui.WorldFrame - World Frame created
+2025-04-13 21:19:41 [AWT-EventQueue-0] INFO  org.jarec.gui.WorldFrame - Game started
+2025-04-13 21:19:41 [Thread-0] INFO  org.jarec.game.GameLoop - Game starting
+2025-04-13 21:19:41 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvenith of Red Hive was spawned on turn 1
+2025-04-13 21:19:41 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galviangar of Blue Hive was spawned on turn 1
+2025-04-13 21:19:41 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldarian of Yellow Hive was spawned on turn 1
+2025-04-13 21:19:41 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenveniel of Green Hive was spawned on turn 1
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalwenian of Red Hive was spawned on turn 7
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldrarath of Blue Hive was spawned on turn 7
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithmirarion of Yellow Hive was spawned on turn 7
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erinorith of Green Hive was spawned on turn 7
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alvoroth of Red Hive was spawned on turn 13
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valnororath of Blue Hive was spawned on turn 13
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Briwenan of Yellow Hive was spawned on turn 13
+2025-04-13 21:19:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalnorrius of Green Hive was spawned on turn 13
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nornoriel of Red Hive was spawned on turn 19
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Allianrath of Blue Hive was spawned on turn 19
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalwenorath of Yellow Hive was spawned on turn 19
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldraoth of Green Hive was spawned on turn 19
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fennorith of Red Hive was spawned on turn 25
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galvianarion of Blue Hive was spawned on turn 25
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brithosarion of Yellow Hive was spawned on turn 25
+2025-04-13 21:19:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalvoros of Green Hive was spawned on turn 25
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridrariel of Red Hive was spawned on turn 31
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brielda of Blue Hive was spawned on turn 31
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valmirgar of Yellow Hive was spawned on turn 31
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridirian of Green Hive was spawned on turn 31
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithwenrath of Red Hive was spawned on turn 37
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helwenith of Blue Hive was spawned on turn 37
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phalianda of Yellow Hive was spawned on turn 37
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenwenarion of Green Hive was spawned on turn 37
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylelorath of Red Hive was spawned on turn 43
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eriathgar of Blue Hive was spawned on turn 43
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvenda of Yellow Hive was spawned on turn 43
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvorarion of Green Hive was spawned on turn 43
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phadargar of Red Hive was spawned on turn 49
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phawengar of Blue Hive was spawned on turn 49
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norvianar of Yellow Hive was spawned on turn 49
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alnoroth of Green Hive was spawned on turn 49
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Bridarith of Red Hive was spawned on turn 55
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylthararion of Blue Hive was spawned on turn 55
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvoran of Yellow Hive was spawned on turn 55
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylnorgar of Green Hive was spawned on turn 55
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianoth of Red Hive was spawned on turn 61
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalathorath of Blue Hive was spawned on turn 61
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithathos of Yellow Hive was spawned on turn 61
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mornoror of Green Hive was spawned on turn 61
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norvorian of Red Hive was spawned on turn 67
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galelos of Blue Hive was spawned on turn 67
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavianian of Yellow Hive was spawned on turn 67
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridirith of Green Hive was spawned on turn 67
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alvoror of Red Hive was spawned on turn 73
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thallianian of Blue Hive was spawned on turn 73
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvorrath of Yellow Hive was spawned on turn 73
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morlianrath of Green Hive was spawned on turn 73
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenlianith of Red Hive was spawned on turn 79
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phaathan of Blue Hive was spawned on turn 79
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridirriel of Yellow Hive was spawned on turn 79
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krithosoth of Green Hive was spawned on turn 79
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudarar of Red Hive was spawned on turn 85
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norwenrath of Blue Hive was spawned on turn 85
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brinorgar of Yellow Hive was spawned on turn 85
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kriwenrius of Green Hive was spawned on turn 85
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lautharoth of Red Hive was spawned on turn 91
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvorian of Blue Hive was spawned on turn 91
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordraarion of Yellow Hive was spawned on turn 91
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mornorarion of Green Hive was spawned on turn 91
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mornoros of Red Hive was spawned on turn 97
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Vallianarion of Blue Hive was spawned on turn 97
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalmirgar of Yellow Hive was spawned on turn 97
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erinorriel of Green Hive was spawned on turn 97
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithvengar of Red Hive was spawned on turn 103
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fendarian of Blue Hive was spawned on turn 103
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudaros of Yellow Hive was spawned on turn 103
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudirar of Green Hive was spawned on turn 103
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalthosor of Red Hive was spawned on turn 109
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alnorarion of Blue Hive was spawned on turn 109
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galelor of Yellow Hive was spawned on turn 109
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithdraar of Green Hive was spawned on turn 109
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fennorrath of Red Hive was spawned on turn 115
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalliangar of Blue Hive was spawned on turn 115
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krinoror of Yellow Hive was spawned on turn 115
+2025-04-13 21:19:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norlianan of Green Hive was spawned on turn 115
+2025-04-13 21:19:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenwenarion of Green Hive has died
+2025-04-13 21:19:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helwenith of Blue Hive has died
+2025-04-13 21:19:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valnororath of Blue Hive has died
+2025-04-13 21:19:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Briwenan of Yellow Hive has died
+2025-04-13 21:19:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithdraar of Green Hive has died
+2025-04-13 21:19:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krinoror of Yellow Hive has died
+2025-04-13 21:19:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordraarion of Yellow Hive has died
+2025-04-13 21:19:48 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithwenrath of Red Hive has died
+2025-04-13 21:19:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galvianarion of Blue Hive has died
+2025-04-13 21:19:50 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvorian of Blue Hive has died
+2025-04-13 21:19:50 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erinorriel of Green Hive has died
+2025-04-13 21:19:51 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldarian of Yellow Hive has died
+2025-04-13 21:19:52 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valmirgar of Yellow Hive has died
+2025-04-13 21:19:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianoth of Red Hive has died
+2025-04-13 21:19:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kriwenrius of Green Hive has died
+2025-04-13 21:19:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithmirarion of Yellow Hive has died
+2025-04-13 21:19:54 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenlianith of Red Hive has died
+2025-04-13 21:19:54 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galthosan of Red Hive was spawned on turn 1450
+2025-04-13 21:19:54 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Galthosan spawned from Kridrariel and Rivvenith of Red Hive
+2025-04-13 21:19:54 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krithosoth of Green Hive has died
+2025-04-13 21:19:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvorrath of Yellow Hive has died
+2025-04-13 21:19:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erinorith of Green Hive has died
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norwenrath deposited 48 energy at Blue Hive
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvenrath of Blue Hive was spawned on turn 1642
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alnoroth of Blue Hive was spawned on turn 1648
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivmirrath of Blue Hive was spawned on turn 1654
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brithosarion of Yellow Hive has died
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylelorath of Red Hive has died
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norwenrath deposited 4 energy at Blue Hive
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianda of Blue Hive was spawned on turn 1660
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Helvianda spawned from Syldrarath and Alnorarion of Blue Hive
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lauthosarion of Blue Hive was spawned on turn 1660
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brivenriel of Blue Hive was spawned on turn 1666
+2025-04-13 21:19:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudaros of Yellow Hive has died
+2025-04-13 21:19:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavianian of Yellow Hive has died
+2025-04-13 21:19:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norvorith of Green Hive was spawned on turn 1967
+2025-04-13 21:19:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Norvorith spawned from Mornoror and Morlianrath of Green Hive
+2025-04-13 21:19:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvorarion of Green Hive has died
+2025-04-13 21:19:59 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brinorgar of Yellow Hive has died
+2025-04-13 21:19:59 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phawengar of Blue Hive has died
+2025-04-13 21:20:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivmirrath of Blue Hive has died
+2025-04-13 21:20:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvoran of Yellow Hive has died
+2025-04-13 21:20:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thallianith of Yellow Hive was spawned on turn 2267
+2025-04-13 21:20:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Thallianith spawned from Rivvenda and Phalianda of Yellow Hive
+2025-04-13 21:20:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phalianda deposited 23 energy at Yellow Hive
+2025-04-13 21:20:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valmirorath of Yellow Hive was spawned on turn 2280
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phathosiel of Yellow Hive was spawned on turn 2286
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thallianian of Blue Hive has died
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridirriel of Yellow Hive has died
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thallianith of Yellow Hive has died
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phalianda deposited 5 energy at Yellow Hive
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phalianda deposited 5 energy at Yellow Hive
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erimirrius of Yellow Hive was spawned on turn 2345
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudarar of Red Hive has died
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phalianda deposited 15 energy at Yellow Hive
+2025-04-13 21:20:01 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galtharoth of Yellow Hive was spawned on turn 2351
+2025-04-13 21:20:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erimirrath of Red Hive was spawned on turn 2478
+2025-04-13 21:20:02 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Erimirrath spawned from Rivvenith and Bridarith of Red Hive
+2025-04-13 21:20:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fendarian of Blue Hive has died
+2025-04-13 21:20:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalmirgar of Yellow Hive has died
+2025-04-13 21:20:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erimirrius of Yellow Hive has died
+2025-04-13 21:20:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithathos of Yellow Hive has died
+2025-04-13 21:20:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phathosiel of Yellow Hive has died
+2025-04-13 21:20:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norvorith of Green Hive has died
+2025-04-13 21:20:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvenda of Yellow Hive has died
+2025-04-13 21:20:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fennorith of Red Hive has died
+2025-04-13 21:20:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valdirorath of Green Hive was spawned on turn 2833
+2025-04-13 21:20:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Valdirorath spawned from Morlianrath and Mornoror of Green Hive
+2025-04-13 21:20:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phanorian of Red Hive was spawned on turn 2904
+2025-04-13 21:20:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Phanorian spawned from Ithvengar and Alvoror of Red Hive
+2025-04-13 21:20:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galtharoth of Yellow Hive has died
+2025-04-13 21:20:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galelor of Yellow Hive has died
+2025-04-13 21:20:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldraos of Green Hive was spawned on turn 3135
+2025-04-13 21:20:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Syldraos spawned from Norlianan and Thalvoros of Green Hive
+2025-04-13 21:20:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylvorgar of Green Hive was spawned on turn 3224
+2025-04-13 21:20:07 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Sylvorgar spawned from Thalvoros and Norlianan of Green Hive
+2025-04-13 21:20:08 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laudirar of Green Hive has died
+2025-04-13 21:20:08 [Thread-0] INFO  org.jarec.gui.WorldFrame - Aldirorath of Red Hive was spawned on turn 3337
+2025-04-13 21:20:08 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Aldirorath spawned from Kridrariel and Bridarith of Red Hive
+2025-04-13 21:20:10 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalnorrius of Green Hive has died
+2025-04-13 21:20:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvorrius of Yellow Hive was spawned on turn 3682
+2025-04-13 21:20:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Helvorrius spawned from Valmirorath and Thalwenorath of Yellow Hive
+2025-04-13 21:20:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridirian of Green Hive has died
+2025-04-13 21:20:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenveniel of Green Hive has died
+2025-04-13 21:20:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morlianrath of Green Hive has died
+2025-04-13 21:20:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nordarith of Blue Hive was spawned on turn 3790
+2025-04-13 21:20:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Nordarith spawned from Thalliangar and Rivvenrath of Blue Hive
+2025-04-13 21:20:12 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galvorriel of Red Hive was spawned on turn 3850
+2025-04-13 21:20:12 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Galvorriel spawned from Alvoror and Bridarith of Red Hive
+2025-04-13 21:20:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eriathos of Blue Hive was spawned on turn 3999
+2025-04-13 21:20:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Eriathos spawned from Alnoroth and Rivvenrath of Blue Hive
+2025-04-13 21:20:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erilianor of Red Hive was spawned on turn 4065
+2025-04-13 21:20:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Erilianor spawned from Bridarith and Phanorian of Red Hive
+2025-04-13 21:20:14 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lauthosarion of Blue Hive has died
+2025-04-13 21:20:14 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridirith of Green Hive has died
+2025-04-13 21:20:15 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brivenriel of Blue Hive has died
+2025-04-13 21:20:15 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alnoroth of Green Hive has died
+2025-04-13 21:20:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phalianda of Yellow Hive has died
+2025-04-13 21:20:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eriathos of Blue Hive has died
+2025-04-13 21:20:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldraoth of Green Hive has died
+2025-04-13 21:20:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alnorarion of Blue Hive has died
+2025-04-13 21:20:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phadargar of Red Hive has died
+2025-04-13 21:20:17 [Thread-0] INFO  org.jarec.gui.WorldFrame - Allianrath of Blue Hive has died
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alvoror of Red Hive has died
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:20 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylthararion of Blue Hive has died
+2025-04-13 21:20:20 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galvorriel of Red Hive has died
+2025-04-13 21:20:20 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalwenorath deposited 22 energy at Yellow Hive
+2025-04-13 21:20:20 [Thread-0] INFO  org.jarec.gui.WorldFrame - Launorian of Yellow Hive was spawned on turn 5024
+2025-04-13 21:20:20 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridaroth of Yellow Hive was spawned on turn 5030
+2025-04-13 21:20:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phanorian deposited 6 energy at Red Hive
+2025-04-13 21:20:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norvianar of Yellow Hive has died
+2025-04-13 21:20:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Launorian of Yellow Hive has died
+2025-04-13 21:20:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eriathgar of Blue Hive has died
+2025-04-13 21:20:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylnorgar of Green Hive has died
+2025-04-13 21:20:25 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norvorian of Red Hive has died
+2025-04-13 21:20:26 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldrarath of Blue Hive has died
+2025-04-13 21:20:27 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brielda of Blue Hive has died
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvorrius deposited 65 energy at Yellow Hive
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Heldargar of Yellow Hive was spawned on turn 6160
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridraos of Yellow Hive was spawned on turn 6166
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erinoran of Yellow Hive was spawned on turn 6172
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvorrius of Yellow Hive has died
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavenorath of Yellow Hive was spawned on turn 6178
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phadrarius of Yellow Hive was spawned on turn 6184
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helelarion of Yellow Hive was spawned on turn 6190
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erinoran of Yellow Hive has died
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridraos of Yellow Hive has died
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phanorar of Green Hive was spawned on turn 6229
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Phanorar spawned from Norlianan and Thalvoros of Green Hive
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krithosan of Red Hive was spawned on turn 6299
+2025-04-13 21:20:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Krithosan spawned from Thalthosor and Kridrariel of Red Hive
+2025-04-13 21:20:31 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldraos deposited 4 energy at Green Hive
+2025-04-13 21:20:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krilianos of Green Hive was spawned on turn 6602
+2025-04-13 21:20:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Krilianos spawned from Thalvoros and Mornoror of Green Hive
+2025-04-13 21:20:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:20:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:20:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Heldargar of Yellow Hive has died
+2025-04-13 21:20:33 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:33 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:33 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:33 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valmirorath deposited 18 energy at Yellow Hive
+2025-04-13 21:20:33 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valliangar of Yellow Hive was spawned on turn 6826
+2025-04-13 21:20:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:20:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:20:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:20:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:20:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalwenian of Red Hive has died
+2025-04-13 21:20:35 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mornorarion of Green Hive has died
+2025-04-13 21:20:35 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erilianor of Red Hive has died
+2025-04-13 21:20:36 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mornoror of Green Hive has died
+2025-04-13 21:20:37 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvenrath of Blue Hive has died
+2025-04-13 21:20:38 [Thread-0] INFO  org.jarec.gui.WorldFrame - Bridarith of Red Hive has died
+2025-04-13 21:20:39 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laulianar of Yellow Hive was spawned on turn 7607
+2025-04-13 21:20:39 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Laulianar spawned from Thalwenorath and Phavenorath of Yellow Hive
+2025-04-13 21:20:39 [Thread-0] INFO  org.jarec.gui.WorldFrame - Vallianarion of Blue Hive has died
+2025-04-13 21:20:41 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalathorath deposited 22 energy at Blue Hive
+2025-04-13 21:20:41 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvianda of Blue Hive was spawned on turn 7938
+2025-04-13 21:20:41 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galviangar of Blue Hive was spawned on turn 7944
+2025-04-13 21:20:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phadrarius of Yellow Hive has died
+2025-04-13 21:20:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylelor of Blue Hive was spawned on turn 8128
+2025-04-13 21:20:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Sylelor spawned from Helvianda and Galviangar of Blue Hive
+2025-04-13 21:20:43 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galviangar of Blue Hive has died
+2025-04-13 21:20:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fenvianda of Blue Hive has died
+2025-04-13 21:20:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Lautharoth of Red Hive has died
+2025-04-13 21:20:44 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Blue Hive
+2025-04-13 21:20:46 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helelarion of Yellow Hive has died
+2025-04-13 21:20:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalliangar deposited 10 energy at Blue Hive
+2025-04-13 21:20:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridaros of Blue Hive was spawned on turn 8713
+2025-04-13 21:20:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylvorgar of Green Hive has died
+2025-04-13 21:20:47 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalliangar deposited 2 energy at Blue Hive
+2025-04-13 21:20:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:20:49 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalathorath of Blue Hive has died
+2025-04-13 21:20:52 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krilianos of Green Hive has died
+2025-04-13 21:20:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:20:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:20:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thallianrius of Yellow Hive was spawned on turn 9653
+2025-04-13 21:20:53 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Thallianrius spawned from Phavenorath and Thalwenorath of Yellow Hive
+2025-04-13 21:20:54 [Thread-0] INFO  org.jarec.gui.WorldFrame - Aldirorath of Red Hive has died
+2025-04-13 21:20:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phanoror of Red Hive was spawned on turn 9913
+2025-04-13 21:20:55 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Phanoror spawned from Rivvenith and Kridrariel of Red Hive
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridaroth of Yellow Hive has died
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Green Hive is feeding from Blue Hive
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Green Hive is feeding from Blue Hive
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Green Hive is feeding from Blue Hive
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Green Hive is feeding from Blue Hive
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Green Hive is feeding from Blue Hive
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phaathan of Blue Hive has died
+2025-04-13 21:20:56 [Thread-0] INFO  org.jarec.gui.WorldFrame - Syldraos of Green Hive has died
+2025-04-13 21:20:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krimirith of Yellow Hive was spawned on turn 10324
+2025-04-13 21:20:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Krimirith spawned from Valmirorath and Thalwenorath of Yellow Hive
+2025-04-13 21:20:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Sylelor of Blue Hive has died
+2025-04-13 21:20:58 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianda of Blue Hive has died
+2025-04-13 21:21:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morvengar of Red Hive was spawned on turn 10586
+2025-04-13 21:21:00 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Morvengar spawned from Alvoroth and Krithosan of Red Hive
+2025-04-13 21:21:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krithargar of Blue Hive was spawned on turn 11013
+2025-04-13 21:21:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Krithargar spawned from Eridaros and Galelos of Blue Hive
+2025-04-13 21:21:03 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridaros of Blue Hive has died
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalvoros deposited 21 energy at Green Hive
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nordarar of Green Hive was spawned on turn 11145
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krilianan of Green Hive was spawned on turn 11151
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordirriel of Yellow Hive was spawned on turn 11166
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Mordirriel spawned from Thalwenorath and Thallianrius of Yellow Hive
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Nornoriel of Red Hive has died
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalwenorath deposited 20 energy at Yellow Hive
+2025-04-13 21:21:04 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavorian of Yellow Hive was spawned on turn 11270
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galvenian of Yellow Hive was spawned on turn 11276
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thallianrius deposited 11 energy at Yellow Hive
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvenian of Yellow Hive was spawned on turn 11282
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivvenian of Yellow Hive has died
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridrariel deposited 26 energy at Red Hive
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalthosrath of Red Hive was spawned on turn 11360
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Green Hive
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror of Red Hive was spawned on turn 11366
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Morathoth of Red Hive was spawned on turn 11372
+2025-04-13 21:21:05 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 1 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mordirriel of Yellow Hive has died
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 6 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 2 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithdiror of Red Hive was spawned on turn 11435
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 2 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 3 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 4 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalnorarion of Red Hive was spawned on turn 11441
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 2 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 4 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phanorian deposited 2 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 1 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 2 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivnorarion of Red Hive was spawned on turn 11449
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 1 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 1 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavoror deposited 1 energy at Red Hive
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galviangar of Blue Hive has died
+2025-04-13 21:21:06 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krithosan of Red Hive has died
+2025-04-13 21:21:08 [Thread-0] INFO  org.jarec.gui.WorldFrame - Galthosan of Red Hive has died
+2025-04-13 21:21:09 [Thread-0] INFO  org.jarec.gui.WorldFrame - Kridrariel of Red Hive has died
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krimirith deposited 25 energy at Yellow Hive
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldarorath of Yellow Hive was spawned on turn 12217
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krimirith deposited 2 energy at Yellow Hive
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krimirith deposited 4 energy at Yellow Hive
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krimirith deposited 4 energy at Yellow Hive
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Briathar of Yellow Hive was spawned on turn 12223
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fentharor of Yellow Hive was spawned on turn 12229
+2025-04-13 21:21:11 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalliangar of Blue Hive has died
+2025-04-13 21:21:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norwenrath deposited 2 energy at Blue Hive
+2025-04-13 21:21:13 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krimirith of Yellow Hive has died
+2025-04-13 21:21:14 [Thread-0] INFO  org.jarec.gui.WorldFrame - Krilianan of Green Hive has died
+2025-04-13 21:21:15 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alnoroth of Blue Hive has died
+2025-04-13 21:21:15 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norlianan of Green Hive has died
+2025-04-13 21:21:15 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalvoros deposited 1 energy at Green Hive
+2025-04-13 21:21:15 [Thread-0] INFO  org.jarec.gui.WorldFrame - Alvoroth of Red Hive has died
+2025-04-13 21:21:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Phavenorath of Yellow Hive has died
+2025-04-13 21:21:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valdirorath deposited 3 energy at Green Hive
+2025-04-13 21:21:16 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalvoros deposited 3 energy at Green Hive
+2025-04-13 21:21:18 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brivenrius of Red Hive was spawned on turn 13119
+2025-04-13 21:21:18 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Brivenrius spawned from Morathoth and Fennorrath of Red Hive
+2025-04-13 21:21:18 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fentharor of Yellow Hive has died
+2025-04-13 21:21:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:19 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:20 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldarorath of Yellow Hive has died
+2025-04-13 21:21:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:21:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:21:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:21:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:21:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helmiriel of Yellow Hive was spawned on turn 13647
+2025-04-13 21:21:21 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Helmiriel spawned from Thalwenorath and Valliangar of Yellow Hive
+2025-04-13 21:21:22 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helmiriel deposited 2 energy at Yellow Hive
+2025-04-13 21:21:22 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erimirrath of Red Hive has died
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thallianrius of Yellow Hive has died
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldraan of Red Hive was spawned on turn 13852
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Thaldraan spawned from Mornoros and Thalnorarion of Red Hive
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Green Hive
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianiel of Red Hive was spawned on turn 13962
+2025-04-13 21:21:23 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Helvianiel spawned from Mornoros and Ithvengar of Red Hive
+2025-04-13 21:21:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalthosor deposited 2 energy at Red Hive
+2025-04-13 21:21:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - Rivnoran of Red Hive was spawned on turn 14022
+2025-04-13 21:21:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Rivnoran spawned from Thalnorarion and Ithvengar of Red Hive
+2025-04-13 21:21:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - Valmirorath deposited 6 energy at Yellow Hive
+2025-04-13 21:21:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridirgar of Red Hive was spawned on turn 14072
+2025-04-13 21:21:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Eridirgar spawned from Thaldraan and Mornoros of Red Hive
+2025-04-13 21:21:24 [Thread-0] INFO  org.jarec.gui.WorldFrame - Laulianar of Yellow Hive has died
+2025-04-13 21:21:25 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thaldrarath of Red Hive was spawned on turn 14140
+2025-04-13 21:21:25 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Thaldrarath spawned from Mornoros and Thalnorarion of Red Hive
+2025-04-13 21:21:26 [Thread-0] INFO  org.jarec.gui.WorldFrame - Blue Hive is feeding from Yellow Hive
+2025-04-13 21:21:28 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Blue Hive
+2025-04-13 21:21:28 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Blue Hive
+2025-04-13 21:21:29 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridirgar of Red Hive has died
+2025-04-13 21:21:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:32 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:33 [Thread-0] INFO  org.jarec.gui.WorldFrame - Red Hive is feeding from Yellow Hive
+2025-04-13 21:21:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Red Hive
+2025-04-13 21:21:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Red Hive
+2025-04-13 21:21:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Red Hive
+2025-04-13 21:21:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Red Hive
+2025-04-13 21:21:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Red Hive
+2025-04-13 21:21:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Red Hive
+2025-04-13 21:21:34 [Thread-0] INFO  org.jarec.gui.WorldFrame - Mornoros of Red Hive has died
+2025-04-13 21:21:35 [Thread-0] INFO  org.jarec.gui.WorldFrame - Helvianiel deposited 7 energy at Red Hive
+2025-04-13 21:21:36 [Thread-0] INFO  org.jarec.gui.WorldFrame - Yellow Hive is feeding from Red Hive
+2025-04-13 21:21:38 [Thread-0] INFO  org.jarec.gui.WorldFrame - Brivenrius deposited 2 energy at Red Hive
+2025-04-13 21:21:39 [Thread-0] INFO  org.jarec.gui.WorldFrame - Erimirarion of Red Hive was spawned on turn 16223
+2025-04-13 21:21:39 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Erimirarion spawned from Morathoth and Rivnorarion of Red Hive
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Fennorrius of Red Hive was spawned on turn 16653
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - A new Splurg called Fennorrius spawned from Fennorrath and Thaldraan of Red Hive
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Norwenrath deposited 20 energy at Blue Hive
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithdirarion of Blue Hive was spawned on turn 16655
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithdirarion deposited 4 energy at Blue Hive
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalwenorath of Yellow Hive has died
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Ithdirarion deposited 12 energy at Blue Hive
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Eridraos of Blue Hive was spawned on turn 16661
+2025-04-13 21:21:42 [Thread-0] INFO  org.jarec.gui.WorldFrame - Thalvianrath of Blue Hive was spawned on turn 16667

@@ -1,6 +1,6 @@
 # TO DO
-1. Rename Nest to Hive for consistency
-2. Rename Food to Energy for consistency
+1. ~~Rename Nest to Hive for consistency~~
+2. ~~Rename Food to Energy for consistency~~
 3. Remove unnecessary comments
 4. Reduce code warnings
 5. Add some default welcome text in the Stat Panel on simulation load
