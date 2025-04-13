@@ -414,6 +414,7 @@ public class WorldFrame extends JFrame {
         currentStatusMessage = message;
         messageTurnSet = GameLoop.getInstance().getTurn();
         statusBar.setText(getTurn() + message);
+        log.info(message);
     }
 
     public void refreshStatus() {
