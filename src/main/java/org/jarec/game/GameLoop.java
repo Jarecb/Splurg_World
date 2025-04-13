@@ -9,6 +9,7 @@ import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 public class GameLoop {
@@ -160,13 +161,17 @@ public class GameLoop {
     private String getSplurgs() {
         Map<Nest, Long> counts = Splurgs.getInstance().getCounts();
         StringBuilder stats = new StringBuilder();
+        List<Nest> nests = Nests.getInstance().getNests();
 
-        counts.forEach((nest, count) -> {
+        nests.forEach((nest) -> {
             if (stats.length() > 0) {
                 stats.append("\n");
             }
+            // Get the count for the current nest, defaulting to 0 if not found
+            long count = counts.getOrDefault(nest, 0L);
             stats.append(nest.getName()).append(": ").append(count).append(" Splurgs");
         });
+
         long totalSplurgs = counts.values().stream().mapToLong(Long::longValue).sum();
         stats.append("\nTotal Splurgs: ").append(totalSplurgs);
 
