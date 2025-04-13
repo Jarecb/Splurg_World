@@ -179,6 +179,9 @@ public class Splurg extends Life {
                 return true;
             }
         }
+        if (getHeading() == null) {
+            setHeading(getHeading().getRandomTurn());
+        }
         return false;
     }
 
@@ -211,7 +214,12 @@ public class Splurg extends Life {
         Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemy.getLocation());
 
         if (newHeading == null) {
-            Combat.attack(this, enemy);
+            var combatBreak = Integer.parseInt(PropertyHandler.get("splurg.default.stuck.break", "10"));
+            if (RandomInt.getRandomInt(combatBreak) % combatBreak == 0) {
+                setHeading(getHeading().getRandomTurn());
+            } else {
+                Combat.attack(this, enemy);
+            }
         } else {
             setInCombat(false);
             setHeading(newHeading);
@@ -224,9 +232,14 @@ public class Splurg extends Life {
         Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemyNest.getLocation());
 
         if (newHeading == null) {
-            this.increaseEnergy(enemyNest.getFood(Integer.parseInt(PropertyHandler.get("splurg.default.feeding.volume", "5"))));
-            var statusMessage = getHomeNest().getName() + " is feeding from " + enemyNest.getName();
-            WorldFrame.getInstance().updateStatus(statusMessage);
+            var combatBreak = Integer.parseInt(PropertyHandler.get("splurg.default.stuck.break", "10"));
+            if (RandomInt.getRandomInt(combatBreak) % combatBreak == 0) {
+                setHeading(getHeading().getRandomTurn());
+            } else {
+                this.increaseEnergy(enemyNest.getFood(Integer.parseInt(PropertyHandler.get("splurg.default.feeding.volume", "5"))));
+                var statusMessage = getHomeNest().getName() + " is feeding from " + enemyNest.getName();
+                WorldFrame.getInstance().updateStatus(statusMessage);
+            }
         } else {
             setHeading(newHeading);
             setHeading(getHeading().getRandomTurn());
