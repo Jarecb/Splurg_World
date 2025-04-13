@@ -11,6 +11,7 @@ import org.jarec.game.GameLoop;
 import org.jarec.game.resources.Nests;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
+import org.jarec.util.GameMath;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 import org.jarec.util.RandomNameGenerator;
@@ -190,7 +191,7 @@ public class Splurg extends Life {
                 .filter(candidate -> !candidate.equals(homeNest))
                 .filter(candidate -> candidate.getFoodReserve() > 0)
                 .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), threshold))
-                .min(Comparator.comparingDouble(candidate -> calculateDistance(currentLocation, candidate.getLocation())))
+                .min(Comparator.comparingDouble(candidate -> GameMath.calculateHypotenuse(currentLocation, candidate.getLocation())))
                 .orElse(null);
     }
 
@@ -199,7 +200,7 @@ public class Splurg extends Life {
                 .filter(candidate -> candidate != this)
                 .filter(candidate -> !candidate.getHomeNest().equals(homeNest))
                 .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), threshold))
-                .min(Comparator.comparingDouble(candidate -> calculateDistance(currentLocation, candidate.getLocation())))
+                .min(Comparator.comparingDouble(candidate -> GameMath.calculateHypotenuse(currentLocation, candidate.getLocation())))
                 .orElse(null);
     }
 
@@ -213,7 +214,8 @@ public class Splurg extends Life {
     private void handleEnemySplurgFound(Splurg enemy) {
         Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemy.getLocation());
 
-        if (newHeading == null) {
+        if (newHeading == null || GameMath.calculateHypotenuse(getLocation(),
+                enemy.getLocation()) < (getSize().getValue() + enemy.getSize().getValue() - 1)) {
             var combatBreak = Integer.parseInt(PropertyHandler.get("splurg.default.stuck.break", "10"));
             if (RandomInt.getRandomInt(combatBreak) % combatBreak == 0) {
                 setHeading(getHeading().getRandomTurn());
@@ -231,7 +233,8 @@ public class Splurg extends Life {
         setInCombat(false);
         Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemyNest.getLocation());
 
-        if (newHeading == null) {
+        if (newHeading == null || GameMath.calculateHypotenuse(getLocation(),
+                enemyNest.getLocation()) < getSize().getValue())  {
             var combatBreak = Integer.parseInt(PropertyHandler.get("splurg.default.stuck.break", "10"));
             if (RandomInt.getRandomInt(combatBreak) % combatBreak == 0) {
                 setHeading(getHeading().getRandomTurn());
@@ -244,13 +247,6 @@ public class Splurg extends Life {
             setHeading(newHeading);
             setHeading(getHeading().getRandomTurn());
         }
-    }
-
-    // Helper method to calculate Euclidean distance
-    private double calculateDistance(Location loc1, Location loc2) {
-        double dx = loc1.getX() - loc2.getX();
-        double dy = loc1.getY() - loc2.getY();
-        return Math.sqrt(dx * dx + dy * dy);
     }
 
     public Aggression getAggression() {

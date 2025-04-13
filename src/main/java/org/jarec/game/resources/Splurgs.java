@@ -10,13 +10,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.jarec.util.Math.calculateHypotenuse;
+import static org.jarec.util.GameMath.calculateHypotenuse;
 
 public class Splurgs {
 
@@ -27,6 +25,10 @@ public class Splurgs {
 
     private final List<Splurg> splurgList = new ArrayList<>();
     private Splurgs() {
+    }
+
+    public void reorder() {
+        Collections.shuffle(splurgList);
     }
 
     private static class Holder {
