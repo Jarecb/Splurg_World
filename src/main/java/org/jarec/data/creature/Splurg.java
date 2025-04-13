@@ -305,8 +305,7 @@ public class Splurg extends Life {
         sb.append("\"Spd\":").append(speed != null ? speed.getValue() : 0).append(",");
         sb.append("\"Hth\":").append(getHealth()).append(",");
         sb.append("\"Eng\":").append(getEnergy()).append(",");
-        sb.append("\"Location\":").append(getLocation() != null ? getLocation().toString() : "null").append(",");
-        sb.append("\"Combat\":").append(isInCombat());
+        sb.append("\"Location\":").append(getLocation() != null ? getLocation().toString() : "null");
         sb.append("}");
         return sb.toString();
     }
