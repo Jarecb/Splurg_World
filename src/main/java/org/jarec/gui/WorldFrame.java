@@ -22,12 +22,14 @@ public class WorldFrame extends JFrame {
     private JLabel statusBar;
     private JMenuItem startItem, pauseItem, stopItem;
     private JLabel splashImage;
+    private JPanel wrapper;
 
     private static int nestCount = Integer.parseInt(PropertyHandler.get("gui.nest.default.number", "2"));
     private static int nestFood = Integer.parseInt(PropertyHandler.get("nest.default.setup.food", "100"));
     private String currentStatusMessage = "";
     private int messageTurnSet = -1;
     private static final int MESSAGE_DURATION_TURNS = 50;
+    private boolean startup = true;
 
 
     // Private constructor ensures no auto-start
@@ -39,8 +41,6 @@ public class WorldFrame extends JFrame {
                 Integer.parseInt(PropertyHandler.get("gui.frame.height", "600"))
         );
         setLayout(new BorderLayout());
-
-        splashImage = new JLabel();
 
         statsPanel = new JTextArea();
         statsPanel.append("Splurg World Stats");
@@ -58,22 +58,27 @@ public class WorldFrame extends JFrame {
         setupStatusBar();
 
         setVisible(true);
-        // Add this to your constructor after setVisible(true)
-        addComponentListener(new ComponentAdapter() {
-            @Override
-            public void componentResized(ComponentEvent e) {
-                // Only redraw if we're showing the splash screen
-                if (splashImage != null && splashImage.getParent() != null && world == null) {
-                    displaySplashImage();
+
+        if (startup) {
+            // Add this to your constructor after setVisible(true)
+            addComponentListener(new ComponentAdapter() {
+                @Override
+                public void componentResized(ComponentEvent e) {
+                    // Only redraw if we're showing the splash screen
+                    if (splashImage != null && splashImage.getParent() != null && world == null) {
+                        displaySplashImage();
+                    }
                 }
-            }
-        });
-        displaySplashImage();
+            });
+            displaySplashImage();
+            startup = false;
+        }
         log.info("World Frame created");
         statusBar.setText("Welcome to Splurg World");
     }
 
     private void displaySplashImage() {
+        splashImage = new JLabel();
         URL imageUrl = getClass().getClassLoader().getResource("splash_image.png");
 
         if (imageUrl != null) {
@@ -115,7 +120,7 @@ public class WorldFrame extends JFrame {
             splashImage.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
 
             // Use a wrapper panel with GridBagLayout for perfect centering
-            JPanel wrapper = new JPanel(new GridBagLayout());
+            wrapper = new JPanel(new GridBagLayout());
             wrapper.add(splashImage);
 
             // Remove any existing center component first
@@ -222,13 +227,12 @@ public class WorldFrame extends JFrame {
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
             // Remove the splash image and add the game world
-            remove(splashImage);  // Remove the splash image
             world = new WorldPanel();   // Create the game world panel
             add(world, BorderLayout.CENTER);  // Add the WorldPanel
             revalidate();  // Revalidate the frame to apply the changes
             repaint();  // Repaint the frame
             new GameStart(nestCount, nestFood);
-            remove(splashImage);
+            remove(wrapper);
             updateStatus("Game started");
             updateMenuItemsState();
         });
