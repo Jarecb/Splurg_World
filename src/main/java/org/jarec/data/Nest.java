@@ -32,7 +32,6 @@ public class Nest {
                 getFood(spawnFood);
                 spawnCountdown = Integer.parseInt(PropertyHandler.get("nest.default.spawn.rate", "5"));
                 var splurgSpawn = new Splurg(this);
-                Splurgs.getInstance().addSplurg(splurgSpawn);
             }
         }
     }
@@ -68,5 +67,25 @@ public class Nest {
 
     public void addFood(int food) {
         foodReserve += food;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "{\"Nest\": {" +
+                        "\"name\": \"%s\"," +
+                        "\"location\": %s," +
+                        "\"color\": {\"r\": %d, \"g\": %d, \"b\": %d}," +
+                        "\"foodReserve\": %d," +
+                        "\"spawnCountdown\": %d" +
+                        "}}",
+                name,
+                location != null ? location.toString() : "null",
+                color != null ? color.getRed() : 0,
+                color != null ? color.getGreen() : 0,
+                color != null ? color.getBlue() : 0,
+                foodReserve,
+                spawnCountdown
+        );
     }
 }

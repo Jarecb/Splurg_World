@@ -154,6 +154,8 @@ public class GameLoop {
 
         sb.append("\n");
         sb.append(getSplurgs());
+        sb.append("\nDeaths: ").append(splurgs.getDeaths());
+        sb.append("\nSpawns: ").append(splurgs.getSpawns());
 
         sb.append("\n\nAve. Aggression: ").append(splurgs.getAverageSplurgAggression());
         sb.append("\nAve. Foraging: ").append(splurgs.getAverageSplurgForaging());
@@ -180,7 +182,7 @@ public class GameLoop {
         });
 
         long totalSplurgs = counts.values().stream().mapToLong(Long::longValue).sum();
-        stats.append("\nTotal Splurgs: ").append(totalSplurgs);
+        stats.append("\nLive Splurgs: ").append(totalSplurgs);
 
         return stats.toString();
     }

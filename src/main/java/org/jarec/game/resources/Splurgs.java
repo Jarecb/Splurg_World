@@ -22,6 +22,9 @@ public class Splurgs {
 
     private static final Logger log = LoggerFactory.getLogger(Splurgs.class);
 
+    private static int deaths = 0;
+    private static int spawns = 0;
+
     private final List<Splurg> splurgList = new ArrayList<>();
     private Splurgs() {
     }
@@ -38,8 +41,17 @@ public class Splurgs {
         if (splurg != null) {
             synchronized (splurgList) {
                 splurgList.add(splurg);
+                spawns++;
             }
         }
+    }
+
+    public int getDeaths() {
+        return deaths;
+    }
+
+    public int getSpawns() {
+        return spawns;
     }
 
     public List<Splurg> getSplurgs() {
@@ -86,6 +98,7 @@ public class Splurgs {
                     var statusMessage = splurg.getName() + " of " + splurg.getHomeNest().getName() + " has died";
                     log.info(statusMessage);
                     WorldFrame.getInstance().updateStatus(statusMessage);
+                    deaths++;
                 }
                 return isDead;
             });
@@ -171,7 +184,7 @@ public class Splurgs {
                     int midY = (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2;
                     child.setLocation(new Location(midX, midY));
 
-                    splurgList.add(child);
+//                    splurgList.add(child);
                     var statusMessage = "A new Splurg called " + child.getName() + " spawned from " + parent1.getName() + " and " + parent2.getName() + " of " + parent1.getHomeNest().getName();
                     log.info(statusMessage);
                     WorldFrame.getInstance().updateStatus(statusMessage);
