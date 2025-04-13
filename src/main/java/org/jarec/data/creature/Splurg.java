@@ -145,8 +145,11 @@ public class Splurg extends Life {
     public boolean findNearest() {
         Location currentLocation = getLocation();
 
-        double distanceThreshold = getForaging().getValue() *
+        double aggressionDistanceThreshold = getAggression().getValue() *
                 Integer.parseInt(PropertyHandler.get("splurg.default.aggression.multiplier", "5"));
+
+        double foragingDistanceThreshold = getForaging().getValue() *
+                Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
 
         List<Splurg> splurgs = Splurgs.getInstance().getSplurgs();
 
@@ -162,7 +165,7 @@ public class Splurg extends Life {
                         double dx = currentLocation.getX() - candidate.getLocation().getX();
                         double dy = currentLocation.getY() - candidate.getLocation().getY();
                         double distance = Math.sqrt(dx * dx + dy * dy);
-                        return distance <= distanceThreshold;
+                        return distance <= aggressionDistanceThreshold;
                     })
                     // Find the closest Splurg by distance
                     .min((splurg1, splurg2) -> {
