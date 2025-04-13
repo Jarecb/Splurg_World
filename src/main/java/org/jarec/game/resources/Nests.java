@@ -63,29 +63,48 @@ public class Nests {
 
         Stroke originalStroke = g2.getStroke();
         Stroke thickStroke = new BasicStroke(2);
+        Font originalFont = g2.getFont();
+        Font energyFont = new Font("Arial", Font.BOLD, 12);
+        g2.setFont(energyFont);
 
         synchronized (nestList) {
             for (Nest nest : nestList) {
                 int x = nest.getLocation().getX();
                 int y = nest.getLocation().getY();
-                Color color = nest.getColor();
 
                 int drawX = x - (nestSize / 2);
                 int drawY = y - (nestSize / 2);
 
-                // Fill circle
-                g2.setColor(color);
-                g2.fillOval(drawX, drawY, nestSize, nestSize);
+                // Fill circle if nest alive
+                if (nest.getColor() != null) {
+                    Color color = nest.getColor();
+                    g2.setColor(color);
+                    g2.fillOval(drawX, drawY, nestSize, nestSize);
+                }
 
                 // Draw border
                 g2.setColor(Color.BLACK);
                 g2.setStroke(thickStroke);
                 g2.drawOval(drawX, drawY, nestSize, nestSize);
+
+                // Draw energy text (centered)
+                String energyText = String.valueOf(nest.getFoodReserve());
+                FontMetrics fm = g2.getFontMetrics();
+                int textWidth = fm.stringWidth(energyText);
+                int textHeight = fm.getAscent();
+
+                int textX = x - textWidth / 2;
+                int textY = y + textHeight / 2 - 2;
+
+                g2.setColor(Color.BLACK); // Text color
+                g2.drawString(energyText, textX, textY);
             }
         }
 
+        g2.setFont(originalFont);
         g2.setStroke(originalStroke);
         g2.dispose();
     }
+
 }
 

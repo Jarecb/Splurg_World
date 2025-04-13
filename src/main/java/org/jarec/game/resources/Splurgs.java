@@ -102,7 +102,7 @@ public class Splurgs {
         for (Nest nest : allNests) {
             if ((!livingCounts.containsKey(nest) || livingCounts.get(nest) == 0) &&
                     nest.getFoodReserve() < Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"))) {
-                nest.setColor(Color.GRAY);
+                nest.setColor(null);
             }
         }
     }
@@ -120,7 +120,7 @@ public class Splurgs {
                         return calculateHypotenuse(targetPoint, splurg.getLocation()) <= searchRadius;
                     })
                     .sorted(orderingComparator)
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
 
