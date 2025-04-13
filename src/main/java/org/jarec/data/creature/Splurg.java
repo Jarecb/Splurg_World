@@ -8,6 +8,7 @@ import org.jarec.data.Nest;
 import org.jarec.data.creature.attributes.*;
 import org.jarec.game.Combat;
 import org.jarec.game.GameLoop;
+import org.jarec.game.resources.Nests;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
 import org.jarec.util.PropertyHandler;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class Splurg extends Life {
@@ -87,7 +89,6 @@ public class Splurg extends Life {
         Splurgs.getInstance().addSplurg(this);
 
         var statusMessage = name + " of " + homeNest.getName() + " was spawned on turn " + GameLoop.getInstance().getTurn();
-        log.info(statusMessage + " " + this);
         WorldFrame.getInstance().updateStatus(statusMessage);
     }
 
@@ -134,7 +135,8 @@ public class Splurg extends Life {
             homeNest.addFood(energyTransfer);
             takeEnergy(energyTransfer);
             setHeading(Heading.getRandomHeading());
-            log.info("{} deposited {} energy at {}", name, energyTransfer, homeNest.getName());
+            var statusMessage = name + " deposited " + energyTransfer + " energy at " + homeNest.getName();
+            WorldFrame.getInstance().updateStatus(statusMessage);
         }
     }
 
@@ -149,51 +151,87 @@ public class Splurg extends Life {
     public boolean findNearest() {
         Location currentLocation = getLocation();
 
-        double aggressionDistanceThreshold = getAggression().getValue() *
-                Integer.parseInt(PropertyHandler.get("splurg.default.aggression.multiplier", "5"));
+        int aggressionMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.aggression.multiplier", "5"));
+        int foragingMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
 
-        double foragingDistanceThreshold = getForaging().getValue() *
-                Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
+        double foragingThreshold = getForaging().getValue() * foragingMultiplier;
+        List<Nest> allNests = Nests.getInstance().getNests();
 
-        List<Splurg> splurgs = Splurgs.getInstance().getSplurgs();
+        if (!isInCombat()) {
+            synchronized (allNests) {
+                Nest nearestNest = findNearestEnemyHive(currentLocation, allNests, foragingThreshold);
 
-        // Find the nearest Splurg within the distance threshold
-        synchronized (splurgs) {
-            Splurg nearestSplurg = splurgs.stream()
-                    // Exclude the same splurg
-                    .filter(candidate -> candidate != this)
-                    // Exclude same Nest
-                    .filter(candidate -> !candidate.getHomeNest().equals(homeNest))
-                    // Calculate the distance and check if it's within the threshold
-                    .filter(candidate -> {
-                        double dx = currentLocation.getX() - candidate.getLocation().getX();
-                        double dy = currentLocation.getY() - candidate.getLocation().getY();
-                        double distance = Math.sqrt(dx * dx + dy * dy);
-                        return distance <= aggressionDistanceThreshold;
-                    })
-                    // Find the closest Splurg by distance
-                    .min((splurg1, splurg2) -> {
-                        double distance1 = calculateDistance(currentLocation, splurg1.getLocation());
-                        double distance2 = calculateDistance(currentLocation, splurg2.getLocation());
-                        return Double.compare(distance1, distance2);
-                    })
-                    .orElse(null);
-
-            if (nearestSplurg != null) {
-                Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), nearestSplurg.getLocation());
-                if (newHeading == null) {
-                    Combat.attack(this, nearestSplurg);
-                } else {
-                    setInCombat(false);
-                    setHeading(newHeading);
-                    setHeading(getHeading().getRandomTurn());
+                if (nearestNest != null) {
+                    handleEnemyNestFound(nearestNest);
+                    return true;
                 }
+            }
+        }
+
+        double aggressionThreshold = getAggression().getValue() * aggressionMultiplier;
+        List<Splurg> allSplurgs = Splurgs.getInstance().getSplurgs();
+
+        synchronized (allSplurgs) {
+            Splurg nearestEnemy = findNearestEnemySplurg(currentLocation, allSplurgs, aggressionThreshold);
+
+            if (nearestEnemy != null) {
+                handleEnemySplurgFound(nearestEnemy);
                 return true;
             }
         }
         return false;
     }
 
+    private Nest findNearestEnemyHive(Location currentLocation, List<Nest> nests, double threshold) {
+        return nests.stream()
+                .filter(candidate -> !candidate.equals(homeNest))
+                .filter(candidate -> candidate.getFoodReserve() > 0)
+                .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), threshold))
+                .min(Comparator.comparingDouble(candidate -> calculateDistance(currentLocation, candidate.getLocation())))
+                .orElse(null);
+    }
+
+    private Splurg findNearestEnemySplurg(Location currentLocation, List<Splurg> splurgs, double threshold) {
+        return splurgs.stream()
+                .filter(candidate -> candidate != this)
+                .filter(candidate -> !candidate.getHomeNest().equals(homeNest))
+                .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), threshold))
+                .min(Comparator.comparingDouble(candidate -> calculateDistance(currentLocation, candidate.getLocation())))
+                .orElse(null);
+    }
+
+    private boolean isWithinThreshold(Location current, Location candidate, double threshold) {
+        double dx = current.getX() - candidate.getX();
+        double dy = current.getY() - candidate.getY();
+        double distance = Math.sqrt(dx * dx + dy * dy);
+        return distance <= threshold;
+    }
+
+    private void handleEnemySplurgFound(Splurg enemy) {
+        Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemy.getLocation());
+
+        if (newHeading == null) {
+            Combat.attack(this, enemy);
+        } else {
+            setInCombat(false);
+            setHeading(newHeading);
+            setHeading(getHeading().getRandomTurn());
+        }
+    }
+
+    private void handleEnemyNestFound(Nest enemyNest) {
+        setInCombat(false);
+        Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemyNest.getLocation());
+
+        if (newHeading == null) {
+            this.increaseEnergy(enemyNest.getFood(Integer.parseInt(PropertyHandler.get("splurg.default.feeding.volume", "5"))));
+            var statusMessage = getHomeNest().getName() + " is feeding from " + enemyNest.getName();
+            WorldFrame.getInstance().updateStatus(statusMessage);
+        } else {
+            setHeading(newHeading);
+            setHeading(getHeading().getRandomTurn());
+        }
+    }
 
     // Helper method to calculate Euclidean distance
     private double calculateDistance(Location loc1, Location loc2) {
@@ -267,7 +305,8 @@ public class Splurg extends Life {
         sb.append("\"Spd\":").append(speed != null ? speed.getValue() : 0).append(",");
         sb.append("\"Hth\":").append(getHealth()).append(",");
         sb.append("\"Eng\":").append(getEnergy()).append(",");
-        sb.append("\"Location\":").append(getLocation() != null ? getLocation().toString() : "null");
+        sb.append("\"Location\":").append(getLocation() != null ? getLocation().toString() : "null").append(",");
+        sb.append("\"Combat\":").append(isInCombat());
         sb.append("}");
         return sb.toString();
     }
