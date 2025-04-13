@@ -132,17 +132,23 @@ public class GameLoop {
 
         Splurgs splurgs = Splurgs.getInstance();
 
+        List<Nest> nests = Nests.getInstance().getNests();
         Map<Nest, Integer> energy = splurgs.getTotalEnergyPerNest();
-        int totalEnergy = 0; // Variable to store the total energy
+        int totalEnergy = 0;
 
-        for (Map.Entry<Nest, Integer> entry : energy.entrySet()) {
-            sb.append(entry.getKey().getName())
+        for (Nest nest : nests){
+            var nestEnergy = nest.getFoodReserve();
+
+            if (energy.containsKey(nest)) {
+                nestEnergy += energy.get(nest);
+            }
+
+            sb.append(nest.getName())
                     .append(": ")
-                    .append(entry.getValue())
+                    .append(nestEnergy)
                     .append(" Energy\n");
 
-            // Add each nest's energy to the total energy
-            totalEnergy += entry.getValue();
+            totalEnergy += nestEnergy;
         }
         sb.append("Total Energy: ").append(totalEnergy).append(" Energy\n");
 
@@ -150,10 +156,11 @@ public class GameLoop {
         sb.append(getSplurgs());
 
         sb.append("\n\nAve. Aggression: ").append(splurgs.getAverageSplurgAggression());
+        sb.append("\nAve. Foraging: ").append(splurgs.getAverageSplurgForaging());
+        sb.append("\nAve. Size: ").append(splurgs.getAverageSplurgSize());
+        sb.append("\nAve. Speed: ").append(splurgs.getAverageSplurgSpeed());
         sb.append("\nAve. Strength: ").append(splurgs.getAverageSplurgStrength());
         sb.append("\nAve. Toughness: ").append(splurgs.getAverageSplurgToughness());
-        sb.append("\nAve. Speed: ").append(splurgs.getAverageSplurgSpeed());
-        sb.append("\nAve. Size: ").append(splurgs.getAverageSplurgSize());
 
         return sb.toString();
     }

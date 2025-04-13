@@ -288,4 +288,18 @@ public class Splurgs {
             return (int)(totalSize / splurgList.size());
         }
     }
+
+    public int getAverageSplurgForaging() {
+        synchronized (splurgList) {
+            if (splurgList.isEmpty()) {
+                return 0;
+            }
+
+            double totalSize = splurgList.stream()
+                    .mapToInt(splurg -> splurg.getForaging().getValue())
+                    .sum();
+
+            return (int)(totalSize / splurgList.size());
+        }
+    }
 }
