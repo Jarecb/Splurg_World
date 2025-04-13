@@ -1,7 +1,7 @@
 package org.jarec.game;
 
-import org.jarec.data.Nest;
-import org.jarec.game.resources.Nests;
+import org.jarec.data.Hive;
+import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
@@ -81,8 +81,8 @@ public class GameLoop {
                 Splurgs.getInstance().depositEnergy();
                 Splurgs.getInstance().handleBreeding();
 
-                Nests.getInstance().drawNests();
-                Nests.getInstance().spawnNests();
+                Hives.getInstance().drawHives();
+                Hives.getInstance().spawnHives();
 
                 WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
                 worldPanel.publish();
@@ -134,23 +134,23 @@ public class GameLoop {
 
         Splurgs splurgs = Splurgs.getInstance();
 
-        List<Nest> nests = Nests.getInstance().getNests();
-        Map<Nest, Integer> energy = splurgs.getTotalEnergyPerNest();
+        List<Hive> hives = Hives.getInstance().getHives();
+        Map<Hive, Integer> energy = splurgs.getTotalEnergyPerHive();
         int totalEnergy = 0;
 
-        for (Nest nest : nests){
-            var nestEnergy = nest.getFoodReserve();
+        for (Hive hive : hives){
+            var hiveEnergy = hive.getEnergyReserve();
 
-            if (energy.containsKey(nest)) {
-                nestEnergy += energy.get(nest);
+            if (energy.containsKey(hive)) {
+                hiveEnergy += energy.get(hive);
             }
 
-            sb.append(nest.getName())
+            sb.append(hive.getName())
                     .append(": ")
-                    .append(nestEnergy)
+                    .append(hiveEnergy)
                     .append(" Energy\n");
 
-            totalEnergy += nestEnergy;
+            totalEnergy += hiveEnergy;
         }
         sb.append("Total Energy: ").append(totalEnergy).append(" Energy\n");
 
@@ -170,17 +170,17 @@ public class GameLoop {
     }
 
     private String getSplurgs() {
-        Map<Nest, Long> counts = Splurgs.getInstance().getCounts();
+        Map<Hive, Long> counts = Splurgs.getInstance().getCounts();
         StringBuilder stats = new StringBuilder();
-        List<Nest> nests = Nests.getInstance().getNests();
+        List<Hive> hives = Hives.getInstance().getHives();
 
-        nests.forEach((nest) -> {
+        hives.forEach((hive) -> {
             if (stats.length() > 0) {
                 stats.append("\n");
             }
-            // Get the count for the current nest, defaulting to 0 if not found
-            long count = counts.getOrDefault(nest, 0L);
-            stats.append(nest.getName()).append(": ").append(count).append(" Splurgs");
+            // Get the count for the current hive, defaulting to 0 if not found
+            long count = counts.getOrDefault(hive, 0L);
+            stats.append(hive.getName()).append(": ").append(count).append(" Splurgs");
         });
 
         long totalSplurgs = counts.values().stream().mapToLong(Long::longValue).sum();

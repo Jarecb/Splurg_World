@@ -1,7 +1,7 @@
 package org.jarec.game.resources;
 
+import org.jarec.data.Hive;
 import org.jarec.data.Location;
-import org.jarec.data.Nest;
 import org.jarec.data.creature.Splurg;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
@@ -97,26 +97,26 @@ public class Splurgs {
             splurgList.removeIf(splurg -> {
                 boolean isDead = splurg.getHealth() <= 0;
                 if (isDead) {
-                    var statusMessage = splurg.getName() + " of " + splurg.getHomeNest().getName() + " has died";
+                    var statusMessage = splurg.getName() + " of " + splurg.getHomeHive().getName() + " has died";
                     WorldFrame.getInstance().updateStatus(statusMessage);
                     deaths++;
                 }
                 return isDead;
             });
-            updateNestColorsForEmptyNests();
+            updateHiveColorsForEmptyHives();
         }
     }
 
-    private void updateNestColorsForEmptyNests() {
-        Map<Nest, Long> livingCounts = splurgList.stream()
-                .collect(Collectors.groupingBy(Splurg::getHomeNest, Collectors.counting()));
+    private void updateHiveColorsForEmptyHives() {
+        Map<Hive, Long> livingCounts = splurgList.stream()
+                .collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
 
-        List<Nest> allNests = Nests.getInstance().getNests();
+        List<Hive> allHives = Hives.getInstance().getHives();
 
-        for (Nest nest : allNests) {
-            if ((!livingCounts.containsKey(nest) || livingCounts.get(nest) == 0) &&
-                    nest.getFoodReserve() < Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"))) {
-                nest.setColor(null);
+        for (Hive hive : allHives) {
+            if ((!livingCounts.containsKey(hive) || livingCounts.get(hive) == 0) &&
+                    hive.getEnergyReserve() < Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"))) {
+                hive.setColor(null);
             }
         }
     }
@@ -125,7 +125,7 @@ public class Splurgs {
         var searchRadius = Integer.parseInt(PropertyHandler.get("gui.mouse.click.detection.range", "20"));
 
         Comparator<Splurg> orderingComparator = Comparator
-                .comparing((Splurg s) -> s.getHomeNest().getName(), String.CASE_INSENSITIVE_ORDER)
+                .comparing((Splurg s) -> s.getHomeHive().getName(), String.CASE_INSENSITIVE_ORDER)
                 .thenComparing(Comparator.comparingInt(Splurg::getHealth).reversed());
 
         synchronized (splurgList) {
@@ -143,25 +143,25 @@ public class Splurgs {
             // Make a snapshot of the current splurgs to prevent recursive breeding
             List<Splurg> originalSplurgs = new ArrayList<>(splurgList);
 
-            Map<Nest, List<Splurg>> splurgsByNest = originalSplurgs.stream()
-                    .collect(Collectors.groupingBy(Splurg::getHomeNest));
+            Map<Hive, List<Splurg>> splurgsByHive = originalSplurgs.stream()
+                    .collect(Collectors.groupingBy(Splurg::getHomeHive));
 
-            for (Map.Entry<Nest, List<Splurg>> nestEntry : splurgsByNest.entrySet()) {
-                List<Splurg> sameNestSplurgs = new ArrayList<>(nestEntry.getValue());
+            for (Map.Entry<Hive, List<Splurg>> hiveEntry : splurgsByHive.entrySet()) {
+                List<Splurg> sameHiveSplurgs = new ArrayList<>(hiveEntry.getValue());
                 List<Splurg[]> breedingPairs = new ArrayList<>();
                 List<Splurg> alreadyUsed = new ArrayList<>();
 
-                for (int i = 0; i < sameNestSplurgs.size(); i++) {
-                    for (int j = i + 1; j < sameNestSplurgs.size(); j++) {
-                        Splurg splurg1 = sameNestSplurgs.get(i);
-                        Splurg splurg2 = sameNestSplurgs.get(j);
+                for (int i = 0; i < sameHiveSplurgs.size(); i++) {
+                    for (int j = i + 1; j < sameHiveSplurgs.size(); j++) {
+                        Splurg splurg1 = sameHiveSplurgs.get(i);
+                        Splurg splurg2 = sameHiveSplurgs.get(j);
 
                         if (alreadyUsed.contains(splurg1) || alreadyUsed.contains(splurg2)) continue;
 
                         int sizeDistanceThreshold = splurg1.getSize().getValue() + splurg2.getSize().getValue();
                         double distance = calculateHypotenuse(splurg1.getLocation(), splurg2.getLocation());
 
-                        int spawnEnergyCost = Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"));
+                        int spawnEnergyCost = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
 
                         if (distance <= sizeDistanceThreshold &&
                                 splurg1.getEnergy() >= spawnEnergyCost &&
@@ -185,7 +185,7 @@ public class Splurgs {
                     int midY = (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2;
                     child.setLocation(new Location(midX, midY));
 
-                    var statusMessage = "A new Splurg called " + child.getName() + " spawned from " + parent1.getName() + " and " + parent2.getName() + " of " + parent1.getHomeNest().getName();
+                    var statusMessage = "A new Splurg called " + child.getName() + " spawned from " + parent1.getName() + " and " + parent2.getName() + " of " + parent1.getHomeHive().getName();
                     WorldFrame.getInstance().updateStatus(statusMessage);
 
                 }
@@ -193,10 +193,10 @@ public class Splurgs {
         }
     }
 
-    public Map<Nest, Long> getCounts() {
+    public Map<Hive, Long> getCounts() {
         synchronized (splurgList) {
             return splurgList.stream()
-                    .collect(Collectors.groupingBy(Splurg::getHomeNest, Collectors.counting()));
+                    .collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
         }
     }
 
@@ -211,7 +211,7 @@ public class Splurgs {
                 int size = splurg.getSize().getValue() * splurgSizeMultiplier;
                 int x = splurg.getLocation().getX();
                 int y = splurg.getLocation().getY();
-                Color color = splurg.getHomeNest().getColor();
+                Color color = splurg.getHomeHive().getColor();
 
                 g2.setColor(color);
                 g2.fillOval(x - (size / 2), y - (size / 2), size, size);
@@ -221,12 +221,12 @@ public class Splurgs {
         g2.dispose();
     }
 
-    public Map<Nest, Integer> getTotalEnergyPerNest() {
+    public Map<Hive, Integer> getTotalEnergyPerHive() {
         synchronized (splurgList) {
             return splurgList.stream()
                     .collect(Collectors.groupingBy(
-                            Splurg::getHomeNest,
-                            Collectors.summingInt(splurg -> splurg.getEnergy() + splurg.getHomeNest().getFoodReserve())
+                            Splurg::getHomeHive,
+                            Collectors.summingInt(splurg -> splurg.getEnergy() + splurg.getHomeHive().getEnergyReserve())
                     ));
         }
     }

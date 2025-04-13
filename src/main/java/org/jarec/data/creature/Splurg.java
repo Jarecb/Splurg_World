@@ -3,12 +3,12 @@ package org.jarec.data.creature;
 import com.google.common.annotations.VisibleForTesting;
 import org.jarec.data.Heading;
 import org.jarec.data.HeadingUtils;
+import org.jarec.data.Hive;
 import org.jarec.data.Location;
-import org.jarec.data.Nest;
 import org.jarec.data.creature.attributes.*;
 import org.jarec.game.Combat;
 import org.jarec.game.GameLoop;
-import org.jarec.game.resources.Nests;
+import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
 import org.jarec.util.GameMath;
@@ -31,17 +31,17 @@ public class Splurg extends Life {
     private final Toughness toughness = new Toughness();
     private Size size;
     private Speed speed;
-    private Nest homeNest;
+    private Hive homeHive;
     private String name = RandomNameGenerator.generateName();
     private int breedingDelay = 0;
     private boolean inCombat = false;
 
-    public Splurg(Nest nest) {
-        var homeLocation = nest.getLocation();
+    public Splurg(Hive hive) {
+        var homeLocation = hive.getLocation();
         var Location = new Location(homeLocation.getX(), homeLocation.getY());
         setLocation(Location);
 
-        commonSetup(nest);
+        commonSetup(hive);
     }
 
     public Splurg(Splurg parent1, Splurg parent2) {
@@ -66,17 +66,17 @@ public class Splurg extends Life {
         setLocation(new Location((location1.getInt("x") + location2.getInt("x")) / 2,
                 (location1.getInt("y") + location2.getInt("y")) / 2));
 
-        var spawnEnergyCost = Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"));
+        var spawnEnergyCost = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
         parent1.takeEnergy(spawnEnergyCost);
         parent1.takeEnergy(spawnEnergyCost);
 
         parent1.resetBreedingDelay();
         parent2.resetBreedingDelay();
 
-        commonSetup(parent1.getHomeNest());
+        commonSetup(parent1.getHomeHive());
     }
 
-    private void commonSetup(Nest nest) {
+    private void commonSetup(Hive hive) {
         size = new Size(toughness, strength);
         speed = new Speed(size);
 
@@ -85,11 +85,11 @@ public class Splurg extends Life {
 
         resetBreedingDelay();
 
-        homeNest = nest;
+        homeHive = hive;
 
         Splurgs.getInstance().addSplurg(this);
 
-        var statusMessage = name + " of " + homeNest.getName() + " was spawned on turn " + GameLoop.getInstance().getTurn();
+        var statusMessage = name + " of " + homeHive.getName() + " was spawned on turn " + GameLoop.getInstance().getTurn();
         WorldFrame.getInstance().updateStatus(statusMessage);
     }
 
@@ -119,7 +119,7 @@ public class Splurg extends Life {
                 setHeading(getHeading().getRandomTurn());
             }
         } else if (getEnergy() > getSize().getValue()) {
-            setHeading(HeadingUtils.getHeadingTo(location, homeNest.getLocation()));
+            setHeading(HeadingUtils.getHeadingTo(location, homeHive.getLocation()));
         }
         setHeading(location.updateLocation(getHeading()));
         setLocation(location);
@@ -152,13 +152,13 @@ public class Splurg extends Life {
 
     public void depositEnergy(){
         if (getEnergy() > getSize().getValue()
-                && getLocation().getX() == homeNest.getLocation().getX()
-                && getLocation().getY() == homeNest.getLocation().getY()) {
+                && getLocation().getX() == homeHive.getLocation().getX()
+                && getLocation().getY() == homeHive.getLocation().getY()) {
             var energyTransfer = getEnergy() - getSize().getValue();
-            homeNest.addFood(energyTransfer);
+            homeHive.addEnergy(energyTransfer);
             takeEnergy(energyTransfer);
             setHeading(Heading.getRandomHeading());
-            var statusMessage = name + " deposited " + energyTransfer + " energy at " + homeNest.getName();
+            var statusMessage = name + " deposited " + energyTransfer + " energy at " + homeHive.getName();
             WorldFrame.getInstance().updateStatus(statusMessage);
         }
     }
@@ -178,14 +178,14 @@ public class Splurg extends Life {
         int foragingMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
 
         double foragingThreshold = getForaging().getValue() * foragingMultiplier;
-        List<Nest> allNests = Nests.getInstance().getNests();
+        List<Hive> allHives = Hives.getInstance().getHives();
 
         if (!isInCombat()) {
-            synchronized (allNests) {
-                Nest nearestNest = findNearestEnemyHive(currentLocation, allNests, foragingThreshold);
+            synchronized (allHives) {
+                Hive nearestHive = findNearestEnemyHive(currentLocation, allHives, foragingThreshold);
 
-                if (nearestNest != null) {
-                    handleEnemyNestFound(nearestNest);
+                if (nearestHive != null) {
+                    handleEnemyHiveFound(nearestHive);
                     return true;
                 }
             }
@@ -208,10 +208,10 @@ public class Splurg extends Life {
         return false;
     }
 
-    private Nest findNearestEnemyHive(Location currentLocation, List<Nest> nests, double threshold) {
-        return nests.stream()
-                .filter(candidate -> !candidate.equals(homeNest))
-                .filter(candidate -> candidate.getFoodReserve() > 0)
+    private Hive findNearestEnemyHive(Location currentLocation, List<Hive> hives, double threshold) {
+        return hives.stream()
+                .filter(candidate -> !candidate.equals(homeHive))
+                .filter(candidate -> candidate.getEnergyReserve() > 0)
                 .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), threshold))
                 .min(Comparator.comparingDouble(candidate -> GameMath.calculateHypotenuse(currentLocation, candidate.getLocation())))
                 .orElse(null);
@@ -220,7 +220,7 @@ public class Splurg extends Life {
     private Splurg findNearestEnemySplurg(Location currentLocation, List<Splurg> splurgs, double threshold) {
         return splurgs.stream()
                 .filter(candidate -> candidate != this)
-                .filter(candidate -> !candidate.getHomeNest().equals(homeNest))
+                .filter(candidate -> !candidate.getHomeHive().equals(homeHive))
                 .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), threshold))
                 .min(Comparator.comparingDouble(candidate -> GameMath.calculateHypotenuse(currentLocation, candidate.getLocation())))
                 .orElse(null);
@@ -251,18 +251,18 @@ public class Splurg extends Life {
         }
     }
 
-    private void handleEnemyNestFound(Nest enemyNest) {
+    private void handleEnemyHiveFound(Hive enemyHive) {
         setInCombat(false);
-        Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemyNest.getLocation());
+        Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemyHive.getLocation());
 
         if (newHeading == null || GameMath.calculateHypotenuse(getLocation(),
-                enemyNest.getLocation()) < getSize().getValue())  {
+                enemyHive.getLocation()) < getSize().getValue())  {
             var combatBreak = Integer.parseInt(PropertyHandler.get("splurg.default.stuck.break", "10"));
             if (RandomInt.getRandomInt(combatBreak) % combatBreak == 0) {
                 setHeading(getHeading().getRandomTurn());
             } else {
-                this.increaseEnergy(enemyNest.getFood(Integer.parseInt(PropertyHandler.get("splurg.default.feeding.volume", "5"))));
-                var statusMessage = getHomeNest().getName() + " is feeding from " + enemyNest.getName();
+                this.increaseEnergy(enemyHive.getEnergy(Integer.parseInt(PropertyHandler.get("splurg.default.feeding.volume", "5"))));
+                var statusMessage = getHomeHive().getName() + " is feeding from " + enemyHive.getName();
                 WorldFrame.getInstance().updateStatus(statusMessage);
             }
         } else {
@@ -319,15 +319,15 @@ public class Splurg extends Life {
         toughness.setValue(value);
     }
 
-    public Nest getHomeNest() {
-        return homeNest;
+    public Hive getHomeHive() {
+        return homeHive;
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("{");
         sb.append("\"Name\":\"").append(name).append("\",");
-        sb.append("\"Nest\":\"").append(homeNest != null ? homeNest.getName() : "null").append("\",");
+        sb.append("\"Hive\":\"").append(homeHive != null ? homeHive.getName() : "null").append("\",");
         sb.append("\"Agg\":").append(aggression.getValue()).append(",");
         sb.append("\"For\":").append(foraging.getValue()).append(",");
         sb.append("\"Str\":").append(strength.getValue()).append(",");

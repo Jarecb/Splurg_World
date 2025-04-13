@@ -13,7 +13,7 @@ Splurgs love to fight, eat each other and steal energy from each others Hives, e
 # Spawning
 Creating new Splurgs is called spawning and can happen in 2 ways
 ## Hives
-Hives will spawn random Splurgs providing they have enough energy (nest.default.spawn.food)
+Hives will spawn random Splurgs providing they have enough energy (hive.default.spawn.energy)
 ## Splurg Breeding
 When 2 Splurgs meet, providing they have enough energy they will spawn a new Splurg.
 This Splurg is mostly random, however if the two parent Splurgs share a common attribute value then the
@@ -38,12 +38,12 @@ Various parameters can be set for the simulation. These are in the splurg.proper
 * gui.frame.width = Default window width
 * gui.frame.height = Default window height
 * gui.mouse.click.detection.range = Area of Splurgs detected when the mouse is clicked on the view
-* gui.nest.default.number = Default number of Hives, 2 or 4
+* gui.hive.default.number = Default number of Hives, 2 or 4
 * world.game.loop.sleeptime = Delay between each turn, effects simulation visual speed
 * world.game.loop.pausedelaytime = Delay in refresh loop when game is paused
-* nest.default.position.inset = Position of Hives from frame edges
-* nest.default.setup.food = Default starting energy in Hives at game start
-* nest.default.spawn.rate = Turns between Hive spawnings
-* nest.default.spawn.food = Energy cost to spawn a Splurg
-* nest.default.size = Visual size of Hives
+* hive.default.position.inset = Position of Hives from frame edges
+* hive.default.setup.energy = Default starting energy in Hives at game start
+* hive.default.spawn.rate = Turns between Hive spawnings
+* hive.default.spawn.energy = Energy cost to spawn a Splurg
+* hive.default.size = Visual size of Hives
 

@@ -1,19 +1,18 @@
 package org.jarec.data;
 
 import org.jarec.data.creature.Splurg;
-import org.jarec.game.resources.Splurgs;
 import org.jarec.util.PropertyHandler;
 
 import java.awt.*;
 
-public class Nest {
+public class Hive {
     private final Location location;
     private Color color;
     private final String name;
-    private int foodReserve = 0;
+    private int energyReserve = 0;
     private int spawnCountdown = 0;
 
-    public Nest(Location location, Color color, String name){
+    public Hive(Location location, Color color, String name){
         this.location = location;
         this.color = color;
         this.name = name;
@@ -24,13 +23,13 @@ public class Nest {
     }
 
     public void spawn() {
-        var spawnFood = Integer.parseInt(PropertyHandler.get("nest.default.spawn.food", "10"));
+        var spawnEnergy = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
         if (spawnCountdown > 0) {
             spawnCountdown--;
         } else {
-            if (foodReserve >= spawnFood) {
-                getFood(spawnFood);
-                spawnCountdown = Integer.parseInt(PropertyHandler.get("nest.default.spawn.rate", "5"));
+            if (energyReserve >= spawnEnergy) {
+                getEnergy(spawnEnergy);
+                spawnCountdown = Integer.parseInt(PropertyHandler.get("hive.default.spawn.rate", "5"));
                 var splurgSpawn = new Splurg(this);
             }
         }
@@ -48,35 +47,35 @@ public class Nest {
         return name;
     }
 
-    public int getFoodReserve() {
-        return foodReserve;
+    public int getEnergyReserve() {
+        return energyReserve;
     }
 
-    public int getFood(int requestedAmount) {
-        var foodTaken = requestedAmount;
-        if (requestedAmount > foodReserve) {
-            foodTaken = foodReserve;
+    public int getEnergy(int requestedAmount) {
+        var energyTaken = requestedAmount;
+        if (requestedAmount > energyReserve) {
+            energyTaken = energyReserve;
         }
-        foodReserve -= foodTaken;
-        return foodTaken;
+        energyReserve -= energyTaken;
+        return energyTaken;
     }
 
-    public void setFoodReserve(int foodReserve) {
-        this.foodReserve = foodReserve;
+    public void setEnergyReserve(int energyReserve) {
+        this.energyReserve = energyReserve;
     }
 
-    public void addFood(int food) {
-        foodReserve += food;
+    public void addEnergy(int energy) {
+        energyReserve += energy;
     }
 
     @Override
     public String toString() {
         return String.format(
-                "{\"Nest\": {" +
+                "{\"Hive\": {" +
                         "\"name\": \"%s\"," +
                         "\"location\": %s," +
                         "\"color\": {\"r\": %d, \"g\": %d, \"b\": %d}," +
-                        "\"foodReserve\": %d," +
+                        "\"energyReserve\": %d," +
                         "\"spawnCountdown\": %d" +
                         "}}",
                 name,
@@ -84,7 +83,7 @@ public class Nest {
                 color != null ? color.getRed() : 0,
                 color != null ? color.getGreen() : 0,
                 color != null ? color.getBlue() : 0,
-                foodReserve,
+                energyReserve,
                 spawnCountdown
         );
     }
