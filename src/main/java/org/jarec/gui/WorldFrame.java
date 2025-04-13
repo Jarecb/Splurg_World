@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.net.URL;
 
 public class WorldFrame extends JFrame {
@@ -38,25 +40,7 @@ public class WorldFrame extends JFrame {
         );
         setLayout(new BorderLayout());
 
-        // Initialize the splash image label
         splashLabel = new JLabel();
-        URL imageUrl = getClass().getClassLoader().getResource("splash_image.png");
-
-        if (imageUrl != null) {
-            ImageIcon splashIcon = new ImageIcon(imageUrl);
-
-            // Resize the image to fit the panel size
-            Image image = splashIcon.getImage(); // Get the original image
-            Image scaledImage = image.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH); // Scale the image
-            splashIcon = new ImageIcon(scaledImage); // Create a new ImageIcon with the scaled image
-
-            splashLabel.setIcon(splashIcon);
-            splashLabel.setHorizontalAlignment(JLabel.CENTER);
-            splashLabel.setVerticalAlignment(JLabel.CENTER);
-            add(splashLabel, BorderLayout.CENTER);  // Add splash image to the frame
-        } else {
-            log.error("Splash image not found!");
-        }
 
         statsPanel = new JTextArea();
         statsPanel.append("Splurg World Stats");
@@ -74,8 +58,78 @@ public class WorldFrame extends JFrame {
         setupStatusBar();
 
         setVisible(true);
+        // Add this to your constructor after setVisible(true)
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // Only redraw if we're showing the splash screen
+                if (splashLabel != null && splashLabel.getParent() != null && world == null) {
+                    displaySplashImage();
+                }
+            }
+        });
+        displaySplashImage();
         log.info("World Frame created");
         statusBar.setText("Welcome to Splurg World");
+    }
+
+    private void displaySplashImage() {
+        URL imageUrl = getClass().getClassLoader().getResource("splash_image.png");
+
+        if (imageUrl != null) {
+            ImageIcon originalIcon = new ImageIcon(imageUrl);
+            Image originalImage = originalIcon.getImage();
+
+            // Calculate available space (subtracting stats panel and status bar)
+            int containerWidth = getContentPane().getWidth() - statsPanel.getWidth();
+            int containerHeight = getContentPane().getHeight() - statusBar.getHeight();
+
+            int originalWidth = originalIcon.getIconWidth();
+            int originalHeight = originalIcon.getIconHeight();
+
+            // Calculate scaling factor to fit inside container (never crop)
+            double scale = Math.min(
+                    (double) containerWidth / originalWidth,
+                    (double) containerHeight / originalHeight
+            );
+
+            int scaledWidth = (int) (originalWidth * scale);
+            int scaledHeight = (int) (originalHeight * scale);
+
+            // Scale smoothly
+            Image scaledImage = originalImage.getScaledInstance(
+                    scaledWidth,
+                    scaledHeight,
+                    Image.SCALE_SMOOTH
+            );
+
+            // Create a new Icon with the scaled image
+            ImageIcon scaledIcon = new ImageIcon(scaledImage);
+            splashLabel.setIcon(scaledIcon);
+
+            // Center the label
+            splashLabel.setHorizontalAlignment(JLabel.CENTER);
+            splashLabel.setVerticalAlignment(JLabel.CENTER);
+
+            // Make sure the label doesn't stretch the image
+            splashLabel.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
+
+            // Use a wrapper panel with GridBagLayout for perfect centering
+            JPanel wrapper = new JPanel(new GridBagLayout());
+            wrapper.add(splashLabel);
+
+            // Remove any existing center component first
+            Component center = ((BorderLayout)getContentPane().getLayout()).getLayoutComponent(BorderLayout.CENTER);
+            if (center != null) {
+                remove(center);
+            }
+
+            add(wrapper, BorderLayout.CENTER);
+            revalidate();
+            repaint();
+        } else {
+            log.error("Splash image not found!");
+        }
     }
 
     public static synchronized WorldFrame getInstance() {
@@ -308,7 +362,7 @@ public class WorldFrame extends JFrame {
                 details of the Splurgs in that area
                 """);
         helpText.setEditable(false);
-        helpText.setCaretPosition(0);  // Scroll to the top
+        helpText.setCaretPosition(0);
         JOptionPane.showMessageDialog(this, new JScrollPane(helpText), "Help", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -323,7 +377,7 @@ public class WorldFrame extends JFrame {
                 back to their Hives to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.
                 """);
         aboutText.setEditable(false);
-        aboutText.setCaretPosition(0);  // Scroll to the top
+        aboutText.setCaretPosition(0);
         JOptionPane.showMessageDialog(this, new JScrollPane(aboutText), "About", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -366,8 +420,8 @@ public class WorldFrame extends JFrame {
         if (currentTurn - messageTurnSet < MESSAGE_DURATION_TURNS) {
             statusBar.setText(getTurn() + currentStatusMessage);
         } else {
-            currentStatusMessage = ""; // Optionally clear message
-            statusBar.setText(getTurn()); // Show only turn
+            currentStatusMessage = "";
+            statusBar.setText(getTurn());
         }
     }
 
