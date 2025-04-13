@@ -21,7 +21,7 @@ public class WorldFrame extends JFrame {
     private static JTextArea statsPanel;
     private JLabel statusBar;
     private JMenuItem startItem, pauseItem, stopItem;
-    private JLabel splashLabel;
+    private JLabel splashImage;
 
     private static int nestCount = Integer.parseInt(PropertyHandler.get("gui.nest.default.number", "2"));
     private static int nestFood = Integer.parseInt(PropertyHandler.get("nest.default.setup.food", "100"));
@@ -40,7 +40,7 @@ public class WorldFrame extends JFrame {
         );
         setLayout(new BorderLayout());
 
-        splashLabel = new JLabel();
+        splashImage = new JLabel();
 
         statsPanel = new JTextArea();
         statsPanel.append("Splurg World Stats");
@@ -63,7 +63,7 @@ public class WorldFrame extends JFrame {
             @Override
             public void componentResized(ComponentEvent e) {
                 // Only redraw if we're showing the splash screen
-                if (splashLabel != null && splashLabel.getParent() != null && world == null) {
+                if (splashImage != null && splashImage.getParent() != null && world == null) {
                     displaySplashImage();
                 }
             }
@@ -105,18 +105,18 @@ public class WorldFrame extends JFrame {
 
             // Create a new Icon with the scaled image
             ImageIcon scaledIcon = new ImageIcon(scaledImage);
-            splashLabel.setIcon(scaledIcon);
+            splashImage.setIcon(scaledIcon);
 
             // Center the label
-            splashLabel.setHorizontalAlignment(JLabel.CENTER);
-            splashLabel.setVerticalAlignment(JLabel.CENTER);
+            splashImage.setHorizontalAlignment(JLabel.CENTER);
+            splashImage.setVerticalAlignment(JLabel.CENTER);
 
             // Make sure the label doesn't stretch the image
-            splashLabel.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
+            splashImage.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
 
             // Use a wrapper panel with GridBagLayout for perfect centering
             JPanel wrapper = new JPanel(new GridBagLayout());
-            wrapper.add(splashLabel);
+            wrapper.add(splashImage);
 
             // Remove any existing center component first
             Component center = ((BorderLayout)getContentPane().getLayout()).getLayoutComponent(BorderLayout.CENTER);
@@ -222,12 +222,13 @@ public class WorldFrame extends JFrame {
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
             // Remove the splash image and add the game world
-            remove(splashLabel);  // Remove the splash image
+            remove(splashImage);  // Remove the splash image
             world = new WorldPanel();   // Create the game world panel
             add(world, BorderLayout.CENTER);  // Add the WorldPanel
             revalidate();  // Revalidate the frame to apply the changes
             repaint();  // Repaint the frame
             new GameStart(nestCount, nestFood);
+            remove(splashImage);
             updateStatus("Game started");
             updateMenuItemsState();
         });

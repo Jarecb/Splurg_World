@@ -83,7 +83,7 @@ public class Nests {
                 }
 
                 // Draw border
-                g2.setColor(Color.BLACK);
+                g2.setColor(new Color(0, 0, 0, 128));
                 g2.setStroke(thickStroke);
                 g2.drawOval(drawX, drawY, nestSize, nestSize);
 

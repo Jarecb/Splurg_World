@@ -1,13 +1,12 @@
 package org.jarec.data;
 
 import org.jarec.gui.WorldFrame;
-import org.jarec.gui.WorldPanel;
 
 public class Location {
     private int x;
     private int y;
 
-    public Location(int x, int y){
+    public Location(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -55,4 +54,12 @@ public class Location {
         return heading;
     }
 
+    @Override
+    public String toString() {
+        return String.format(
+                "{\"x\": %d, \"y\": %d}",
+                x,
+                y
+        );
+    }
 }
