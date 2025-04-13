@@ -107,6 +107,7 @@ public class Splurg extends Life {
     }
 
     public void move() {
+        degradation();
         breedingDelay--;
         if (breedingDelay < 0){ breedingDelay = 0;}
 
@@ -122,6 +123,27 @@ public class Splurg extends Life {
         }
         setHeading(location.updateLocation(getHeading()));
         setLocation(location);
+    }
+
+    private void degradation() {
+        var degradationChange = Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
+        if (degradationChange > 0) {
+            if (RandomInt.getRandomInt(degradationChange) % degradationChange == 0) {
+                if (RandomInt.getRandomInt(2) % 2 == 0) {
+                    var toughnessValue = toughness.getValue();
+                    if (toughnessValue > 2) {
+                        toughness.setValue(toughnessValue - 1);
+                    }
+                } else {
+                    var strengthValue = strength.getValue();
+                    if (strengthValue > 2) {
+                        strength.setValue(strengthValue - 1);
+                    }
+                }
+                size = new Size(toughness, strength);
+                speed = new Speed(size);
+            }
+        }
     }
 
     public boolean canBreed(){
