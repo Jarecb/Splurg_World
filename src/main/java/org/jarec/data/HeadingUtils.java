@@ -15,11 +15,9 @@ public class HeadingUtils {
         int dy = to.getY() - from.getY();
 
         if (dx == 0 && dy == 0) {
-            // No movement needed
-            return null; // or Heading.NONE if you have a "no move" heading
+            return null;
         }
 
-        // Determine the direction of movement
         int dxDirection = Integer.compare(dx, 0);  // -1 for left, 1 for right, 0 for no move
         int dyDirection = Integer.compare(dy, 0);  // -1 for down, 1 for up, 0 for no move
 

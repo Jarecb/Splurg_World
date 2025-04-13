@@ -72,6 +72,8 @@ public class GameLoop {
                 turn++;
                 WorldFrame.getInstance().refreshStatus();
 
+                Splurgs.getInstance().reorder();
+
                 Splurgs.getInstance().drawSplurges();
                 Splurgs.getInstance().moveSplurgs();
                 Splurgs.getInstance().removeDeadSplurgs();
