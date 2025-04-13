@@ -372,15 +372,17 @@ public class WorldFrame extends JFrame {
     }
 
     private void openAboutWindow() {
+        var author = PropertyHandler.get("author", "Jarec");
+        var version = PropertyHandler.get("version", "0.0");
         JTextArea aboutText = new JTextArea();
-        aboutText.setText("""
-                Splurg World
-                Version 1.0
-                Developed by Your Name\n
-                Welcome to Splurg World, a place populated by the Splurgs.
-                Splurgs are Amoeba that just like to float about and fight. Fighting gives them energy that they can take
-                back to their Hives to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.
-                """);
+        aboutText.setText(String.format("""
+            Splurg World
+            Version %s
+            Developed by %s\n
+            Welcome to Splurg World, a place populated by the Splurgs.
+            Splurgs are Amoeba that just like to float about and fight. Fighting gives them energy that they can take
+            back to their Hives to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.
+            """, version, author));
         aboutText.setEditable(false);
         aboutText.setCaretPosition(0);
         JOptionPane.showMessageDialog(this, new JScrollPane(aboutText), "About", JOptionPane.INFORMATION_MESSAGE);
