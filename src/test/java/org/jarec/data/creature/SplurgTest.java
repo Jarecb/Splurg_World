@@ -22,19 +22,6 @@ class SplurgTest {
         assertEquals(50, splurg2.getAge());
     }
 
-//    @Test
-//    void age() {
-//        Splurg splurg = new Splurg(TEST_HIVE);
-//        splurg.setAge(100);
-//        assertTrue(splurg.age());
-//        assertEquals(99, splurg.getAge());
-//        splurg.setAge(1);
-//        assertFalse(splurg.age());
-//        assertEquals(0, splurg.getAge());
-//    }
-
-
-
     @Test
     void health() {
         Splurg splurg = new Splurg(TEST_HIVE);

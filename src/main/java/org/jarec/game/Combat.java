@@ -1,11 +1,11 @@
 package org.jarec.game;
 
 import org.jarec.data.creature.Splurg;
-import org.jarec.game.resources.Splurgs;
 
 public class Combat {
 
-    private Combat(){}
+    private Combat() {
+    }
 
     // Method for attacking and determining the result of a combat round between two Splurgs
     public static void attack(Splurg splurgA, Splurg splurgB) {
