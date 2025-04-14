@@ -119,60 +119,89 @@ public class Splurgs {
         Comparator<Splurg> orderingComparator = Comparator.comparing((Splurg s) -> s.getHomeHive().getName(), String.CASE_INSENSITIVE_ORDER).thenComparing(Comparator.comparingInt(Splurg::getHealth).reversed());
 
         synchronized (splurgList) {
-            return splurgList.stream().filter(splurg -> {
-                return calculateHypotenuse(targetPoint, splurg.getLocation()) <= searchRadius;
-            }).sorted(orderingComparator).toList();
+            return splurgList.stream()
+                    .filter(splurg -> calculateHypotenuse(targetPoint, splurg.getLocation()) <= searchRadius)
+                    .sorted(orderingComparator)
+                    .toList();
         }
     }
 
     public void handleBreeding() {
         synchronized (splurgList) {
             List<Splurg> originalSplurgs = new ArrayList<>(splurgList);
-
-            Map<Hive, List<Splurg>> splurgsByHive = originalSplurgs.stream().collect(Collectors.groupingBy(Splurg::getHomeHive));
-
-            int spawnEnergyCost = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
+            Map<Hive, List<Splurg>> splurgsByHive = groupByHive(originalSplurgs);
+            int spawnEnergyCost = getSpawnEnergyCost();
 
             for (List<Splurg> sameHiveSplurgs : splurgsByHive.values()) {
-                List<Splurg[]> breedingPairs = new ArrayList<>();
-                Set<Splurg> used = new HashSet<>();
-
-                for (int i = 0; i < sameHiveSplurgs.size(); i++) {
-                    Splurg s1 = sameHiveSplurgs.get(i);
-                    if (used.contains(s1)) continue;
-
-                    for (int j = i + 1; j < sameHiveSplurgs.size(); j++) {
-                        Splurg s2 = sameHiveSplurgs.get(j);
-                        if (used.contains(s2)) continue;
-
-                        boolean canBreed = !s1.isInCombat() && !s2.isInCombat() && s1.canBreed() && s2.canBreed() && s1.getEnergy() >= spawnEnergyCost && s2.getEnergy() >= spawnEnergyCost;
-
-                        double distance = calculateHypotenuse(s1.getLocation(), s2.getLocation());
-                        int maxDistance = s1.getSize().getValue() + s2.getSize().getValue();
-
-                        if (canBreed && distance <= maxDistance) {
-                            breedingPairs.add(new Splurg[]{s1, s2});
-                            used.add(s1);
-                            used.add(s2);
-                            break; // Move on to next s1 since it's already used
-                        }
-                    }
-                }
-
-                for (Splurg[] pair : breedingPairs) {
-                    Splurg p1 = pair[0];
-                    Splurg p2 = pair[1];
-                    Splurg child = new Splurg(p1, p2);
-
-                    Location loc1 = p1.getLocation();
-                    Location loc2 = p2.getLocation();
-                    child.setLocation(new Location((loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2));
-
-                    String msg = String.format("A new Splurg called %s spawned from %s and %s of %s", child.getName(), p1.getName(), p2.getName(), p1.getHomeHive().getName());
-                    WorldFrame.getInstance().updateStatus(msg);
-                }
+                List<Splurg[]> breedingPairs = findBreedingPairs(sameHiveSplurgs, spawnEnergyCost);
+                spawnChildrenFromPairs(breedingPairs);
             }
         }
+    }
+
+    private Map<Hive, List<Splurg>> groupByHive(List<Splurg> splurgs) {
+        return splurgs.stream().collect(Collectors.groupingBy(Splurg::getHomeHive));
+    }
+
+    private int getSpawnEnergyCost() {
+        return Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
+    }
+
+    private List<Splurg[]> findBreedingPairs(List<Splurg> splurgs, int spawnEnergyCost) {
+        List<Splurg[]> pairs = new ArrayList<>();
+        Set<Splurg> used = new HashSet<>();
+
+        for (int i = 0; i < splurgs.size(); i++) {
+            Splurg s1 = splurgs.get(i);
+            if (used.contains(s1)) continue;
+
+            Optional<Splurg> partner = splurgs.subList(i + 1, splurgs.size()).stream()
+                    .filter(s2 -> !used.contains(s2))
+                    .filter(s2 -> canBreedTogether(s1, s2, spawnEnergyCost))
+                    .findFirst();
+
+            partner.ifPresent(s2 -> {
+                pairs.add(new Splurg[]{s1, s2});
+                used.add(s1);
+                used.add(s2);
+            });
+
+        }
+
+        return pairs;
+    }
+
+    private boolean canBreedTogether(Splurg s1, Splurg s2, int spawnEnergyCost) {
+        if (s1.isInCombat() || s2.isInCombat()) return false;
+        if (!s1.canBreed() || !s2.canBreed()) return false;
+        if (s1.getEnergy() < spawnEnergyCost || s2.getEnergy() < spawnEnergyCost) return false;
+
+        double distance = calculateHypotenuse(s1.getLocation(), s2.getLocation());
+        int maxDistance = s1.getSize().getValue() + s2.getSize().getValue();
+
+        return distance <= maxDistance;
+    }
+
+    private void spawnChildrenFromPairs(List<Splurg[]> pairs) {
+        for (Splurg[] pair : pairs) {
+            Splurg p1 = pair[0];
+            Splurg p2 = pair[1];
+            Splurg child = new Splurg(p1, p2);
+
+            Location mid = getMidpoint(p1.getLocation(), p2.getLocation());
+            child.setLocation(mid);
+
+            String msg = String.format(
+                    "A new Splurg called %s spawned from %s and %s of %s",
+                    child.getName(), p1.getName(), p2.getName(), p1.getHomeHive().getName()
+            );
+
+            WorldFrame.getInstance().updateStatus(msg);
+        }
+    }
+
+    private Location getMidpoint(Location a, Location b) {
+        return new Location((a.getX() + b.getX()) / 2, (a.getY() + b.getY()) / 2);
     }
 
     public Map<Hive, Long> getCounts() {
