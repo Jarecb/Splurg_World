@@ -28,7 +28,7 @@ public class Splurg extends Life {
     private Size size;
     private Speed speed;
     private Hive homeHive;
-    private String name = RandomNameGenerator.generateName();
+    private final String name = RandomNameGenerator.generateName();
     private int breedingDelay = 0;
     private boolean inCombat = false;
 
@@ -148,8 +148,7 @@ public class Splurg extends Life {
 
     public void depositEnergy() {
         if (getEnergy() > getSize().getValue()
-                && getLocation().getX() == homeHive.getLocation().getX()
-                && getLocation().getY() == homeHive.getLocation().getY()) {
+                && GameMath.calculateHypotenuse(getLocation(), homeHive.getLocation()) <= 2) {
             var energyTransfer = getEnergy() - getSize().getValue();
             homeHive.addEnergy(energyTransfer);
             takeEnergy(energyTransfer);
