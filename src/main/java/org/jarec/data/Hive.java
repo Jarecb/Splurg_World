@@ -12,13 +12,13 @@ public class Hive {
     private int energyReserve = 0;
     private int spawnCountdown = 0;
 
-    public Hive(Location location, Color color, String name){
+    public Hive(Location location, Color color, String name) {
         this.location = location;
         this.color = color;
         this.name = name;
     }
 
-    public void setColor(Color color){
+    public void setColor(Color color) {
         this.color = color;
     }
 
@@ -30,7 +30,7 @@ public class Hive {
             if (energyReserve >= spawnEnergy) {
                 getEnergy(spawnEnergy);
                 spawnCountdown = Integer.parseInt(PropertyHandler.get("hive.default.spawn.rate", "5"));
-                var splurgSpawn = new Splurg(this);
+                new Splurg(this);
             }
         }
     }

@@ -11,7 +11,7 @@ import static org.mockito.Mockito.*;
 class CombatTest {
 
     @Test
-    public void testStrongAttacker() {
+    void testStrongAttacker() {
         // Arrange
         Splurg attacker = mock(Splurg.class);
         Splurg defender = mock(Splurg.class);
@@ -42,7 +42,7 @@ class CombatTest {
 
 
     @Test
-    public void testStrongDefender() {
+    void testStrongDefender() {
         // Arrange
         Splurg attacker = mock(Splurg.class);
         Splurg defender = mock(Splurg.class);

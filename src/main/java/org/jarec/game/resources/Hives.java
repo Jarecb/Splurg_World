@@ -11,17 +11,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class Hives {
-
-    // Singleton instance - eagerly initialized and final for thread safety
     private static final Hives INSTANCE = new Hives();
 
     // Thread-safe list to handle concurrent access if needed
     private final List<Hive> hiveList = Collections.synchronizedList(new ArrayList<>());
 
-    // Private constructor to prevent instantiation
-    private Hives() {}
+    private static final int HIVE_SIZE = Integer.parseInt(PropertyHandler.get("hive.default.size", "20"));
 
-    // Correctly declared as static to access without instance
+    private Hives() {
+    }
+
     public static Hives getInstance() {
         return INSTANCE;
     }
@@ -33,7 +32,6 @@ public class Hives {
     }
 
     public List<Hive> getHives() {
-        // Return a copy to preserve encapsulation
         synchronized (hiveList) {
             return new ArrayList<>(hiveList);
         }
@@ -56,8 +54,6 @@ public class Hives {
     public void drawHives() {
         WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
 
-        int hiveSize = Integer.parseInt(PropertyHandler.get("hive.default.size", "20"));
-
         Graphics2D g2 = worldPanel.getBackgroundGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
@@ -72,20 +68,20 @@ public class Hives {
                 int x = hive.getLocation().getX();
                 int y = hive.getLocation().getY();
 
-                int drawX = x - (hiveSize / 2);
-                int drawY = y - (hiveSize / 2);
+                int drawX = x - (HIVE_SIZE / 2);
+                int drawY = y - (HIVE_SIZE / 2);
 
                 // Fill circle if hive alive
                 if (hive.getColor() != null) {
                     Color color = hive.getColor();
                     g2.setColor(color);
-                    g2.fillOval(drawX, drawY, hiveSize, hiveSize);
+                    g2.fillOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
                 }
 
                 // Draw border
                 g2.setColor(new Color(0, 0, 0, 128));
                 g2.setStroke(thickStroke);
-                g2.drawOval(drawX, drawY, hiveSize, hiveSize);
+                g2.drawOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
 
                 // Draw energy text (centered)
                 String energyText = String.valueOf(hive.getEnergyReserve());
@@ -96,7 +92,7 @@ public class Hives {
                 int textX = x - textWidth / 2;
                 int textY = y + textHeight / 2 - 2;
 
-                g2.setColor(Color.BLACK); // Text color
+                g2.setColor(Color.BLACK);
                 g2.drawString(energyText, textX, textY);
             }
         }
@@ -105,6 +101,4 @@ public class Hives {
         g2.setStroke(originalStroke);
         g2.dispose();
     }
-
 }
-
