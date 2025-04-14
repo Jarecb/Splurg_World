@@ -21,10 +21,7 @@ public abstract class Life {
 
     public boolean age() {
         age--;
-        if (age <= 0) {
-            return false;
-        }
-        return true;
+        return age > 0;
     }
 
     public void setMaxHealth(int maxHealth) {
@@ -50,10 +47,7 @@ public abstract class Life {
 
     public boolean reduceHealth(int reduction) {
         setHealth(health - reduction);
-        if (health <= 0) {
-            return false;
-        }
-        return true;
+        return health > 0;
     }
 
     public void heal() {

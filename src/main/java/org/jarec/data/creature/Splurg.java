@@ -16,15 +16,11 @@ import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 import org.jarec.util.RandomNameGenerator;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Comparator;
 import java.util.List;
 
 public class Splurg extends Life {
-    private static final Logger log = LoggerFactory.getLogger(Splurg.class);
-
     private final Aggression aggression = new Aggression();
     private final Foraging foraging = new Foraging();
     private final Strength strength = new Strength();
@@ -38,8 +34,8 @@ public class Splurg extends Life {
 
     public Splurg(Hive hive) {
         var homeLocation = hive.getLocation();
-        var Location = new Location(homeLocation.getX(), homeLocation.getY());
-        setLocation(Location);
+        var location = new Location(homeLocation.getX(), homeLocation.getY());
+        setLocation(location);
 
         commonSetup(hive);
     }
@@ -93,7 +89,7 @@ public class Splurg extends Life {
         WorldFrame.getInstance().updateStatus(statusMessage);
     }
 
-    public void resetBreedingDelay(){
+    public void resetBreedingDelay() {
         breedingDelay = Integer.parseInt(PropertyHandler.get("splurg.default.breeding.delay", "5"));
     }
 
@@ -109,7 +105,9 @@ public class Splurg extends Life {
     public void move() {
         degradation();
         breedingDelay--;
-        if (breedingDelay < 0){ breedingDelay = 0;}
+        if (breedingDelay < 0) {
+            breedingDelay = 0;
+        }
 
         var location = getLocation();
         var targetAcquired = findNearest();
@@ -127,30 +125,28 @@ public class Splurg extends Life {
 
     private void degradation() {
         var degradationChange = Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
-        if (degradationChange > 0) {
-            if (RandomInt.getRandomInt(degradationChange) % degradationChange == 0) {
-                if (RandomInt.getRandomInt(2) % 2 == 0) {
-                    var toughnessValue = toughness.getValue();
-                    if (toughnessValue > 2) {
-                        toughness.setValue(toughnessValue - 1);
-                    }
-                } else {
-                    var strengthValue = strength.getValue();
-                    if (strengthValue > 2) {
-                        strength.setValue(strengthValue - 1);
-                    }
+        if (degradationChange > 0 && RandomInt.getRandomInt(degradationChange) % degradationChange == 0) {
+            if (RandomInt.getRandomInt(2) % 2 == 0) {
+                var toughnessValue = toughness.getValue();
+                if (toughnessValue > 2) {
+                    toughness.setValue(toughnessValue - 1);
                 }
-                size = new Size(toughness, strength);
-                speed = new Speed(size);
+            } else {
+                var strengthValue = strength.getValue();
+                if (strengthValue > 2) {
+                    strength.setValue(strengthValue - 1);
+                }
             }
+            size = new Size(toughness, strength);
+            speed = new Speed(size);
         }
     }
 
-    public boolean canBreed(){
+    public boolean canBreed() {
         return breedingDelay == 0;
     }
 
-    public void depositEnergy(){
+    public void depositEnergy() {
         if (getEnergy() > getSize().getValue()
                 && getLocation().getX() == homeHive.getLocation().getX()
                 && getLocation().getY() == homeHive.getLocation().getY()) {
@@ -167,7 +163,7 @@ public class Splurg extends Life {
         this.inCombat = inCombat;
     }
 
-    public boolean isInCombat(){
+    public boolean isInCombat() {
         return this.inCombat;
     }
 
@@ -177,7 +173,7 @@ public class Splurg extends Life {
         int aggressionMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.aggression.multiplier", "5"));
         int foragingMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
 
-        double foragingThreshold = getForaging().getValue() * foragingMultiplier;
+        double foragingThreshold = getForaging().getValue() * (double) foragingMultiplier;
         List<Hive> allHives = Hives.getInstance().getHives();
 
         if (!isInCombat()) {
@@ -191,7 +187,7 @@ public class Splurg extends Life {
             }
         }
 
-        double aggressionThreshold = getAggression().getValue() * aggressionMultiplier;
+        double aggressionThreshold = getAggression().getValue() * (double) aggressionMultiplier;
         List<Splurg> allSplurgs = Splurgs.getInstance().getSplurgs();
 
         synchronized (allSplurgs) {
@@ -227,8 +223,8 @@ public class Splurg extends Life {
     }
 
     private boolean isWithinThreshold(Location current, Location candidate, double threshold) {
-        double dx = current.getX() - candidate.getX();
-        double dy = current.getY() - candidate.getY();
+        double dx = current.getX() - (double) candidate.getX();
+        double dy = current.getY() - (double) candidate.getY();
         double distance = Math.sqrt(dx * dx + dy * dy);
         return distance <= threshold;
     }
@@ -256,7 +252,7 @@ public class Splurg extends Life {
         Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemyHive.getLocation());
 
         if (newHeading == null || GameMath.calculateHypotenuse(getLocation(),
-                enemyHive.getLocation()) < getSize().getValue())  {
+                enemyHive.getLocation()) < getSize().getValue()) {
             var combatBreak = Integer.parseInt(PropertyHandler.get("splurg.default.stuck.break", "10"));
             if (RandomInt.getRandomInt(combatBreak) % combatBreak == 0) {
                 setHeading(getHeading().getRandomTurn());
