@@ -17,9 +17,6 @@ import java.util.stream.Collectors;
 import static org.jarec.util.GameMath.calculateHypotenuse;
 
 public class Splurgs {
-
-    private static final Logger log = LoggerFactory.getLogger(Splurgs.class);
-
     private static int deaths = 0;
     private static int spawns = 0;
 
@@ -31,12 +28,10 @@ public class Splurgs {
         Collections.shuffle(splurgList);
     }
 
-    private static class Holder {
-        private static final Splurgs INSTANCE = new Splurgs();
-    }
+    private static final Splurgs INSTANCE = new Splurgs();
 
     public static Splurgs getInstance() {
-        return Holder.INSTANCE;
+        return INSTANCE;
     }
 
     public void addSplurg(Splurg splurg) {
