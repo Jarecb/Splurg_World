@@ -13,12 +13,12 @@ public class PropertyHandler {
         if (!isLoaded) {
             try (InputStream input = PropertyHandler.class.getClassLoader().getResourceAsStream(resourcePath)) {
                 if (input == null) {
-                    throw new RuntimeException("Property file not found: " + resourcePath);
+                    throw new PropertyException("Property file not found: " + resourcePath);
                 }
                 properties.load(input);
                 isLoaded = true;
             } catch (IOException e) {
-                throw new RuntimeException("Failed to load properties from: " + resourcePath, e);
+                throw new PropertyException("Failed to load properties from: " + resourcePath, e);
             }
         }
     }
