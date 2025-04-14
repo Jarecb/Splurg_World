@@ -1,6 +1,8 @@
 package org.jarec.data;
 
 public class HeadingUtils {
+    private HeadingUtils() {}
+
     public static Heading getHeadingFromVector(int dx, int dy) {
         for (Heading h : Heading.values()) {
             if (h.getDx() == dx && h.getDy() == dy) {
