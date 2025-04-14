@@ -24,6 +24,13 @@ public class GameLoop {
     private volatile boolean started = false;
     private final AtomicInteger loopSleepTime = new AtomicInteger(0);
 
+    private boolean spawnPhase = true;
+    private int energyPeak = 0;
+
+    private int combatsPerTurn = 0;
+    private int maxCombatsPerTurn = 0;
+    private int maxSplurgs = 0;
+
     private GameLoop() {}
 
     public static GameLoop getInstance() {
@@ -74,6 +81,7 @@ public class GameLoop {
         while (started) {
             if (running.get()) {
                 turn++;
+                combatsPerTurn = 0;
                 WorldFrame.getInstance().refreshStatus();
 
                 Splurgs.getInstance().reorder();
@@ -100,6 +108,10 @@ public class GameLoop {
         }
 
         log.info("Game loop has stopped.");
+    }
+
+    public void incrementCombatsPerTurn(){
+        combatsPerTurn++;
     }
 
     public int getTurn() {
@@ -134,6 +146,8 @@ public class GameLoop {
     private String getStats(){
         StringBuilder sb = new StringBuilder("\n");
 
+        sb.append("Turn: ").append(turn).append("\n\n");
+
         Splurgs splurgs = Splurgs.getInstance();
 
         List<Hive> hives = Hives.getInstance().getHives();
@@ -154,7 +168,20 @@ public class GameLoop {
 
             totalEnergy += hiveEnergy;
         }
+        if (totalEnergy == 0){
+            spawnPhase = false;
+        }
+        if (!spawnPhase && totalEnergy > energyPeak){
+            energyPeak = totalEnergy;
+        }
         sb.append("Total Energy: ").append(totalEnergy).append(" Energy\n");
+        sb.append("Peak Energy: ").append(energyPeak).append(" Energy\n\n");
+
+        if (combatsPerTurn > maxCombatsPerTurn){
+            maxCombatsPerTurn = combatsPerTurn;
+        }
+        sb.append("Combats per Turn: ").append(combatsPerTurn).append("\n");
+        sb.append("Max Combats per Turn: ").append(maxCombatsPerTurn).append("\n");
 
         sb.append("\n");
         sb.append(getSplurgs());
@@ -172,7 +199,7 @@ public class GameLoop {
     }
 
     private String getSplurgs() {
-        Map<Hive, Long> counts = Splurgs.getInstance().getCounts();
+        Map<Hive, Integer> counts = Splurgs.getInstance().getCounts();
         StringBuilder stats = new StringBuilder();
         List<Hive> hives = Hives.getInstance().getHives();
 
@@ -180,13 +207,16 @@ public class GameLoop {
             if (stats.length() > 0) {
                 stats.append("\n");
             }
-            // Get the count for the current hive, defaulting to 0 if not found
-            long count = counts.getOrDefault(hive, 0L);
+            int count = counts.getOrDefault(hive, 0);
             stats.append(hive.getName()).append(": ").append(count).append(" Splurgs");
         });
 
-        long totalSplurgs = counts.values().stream().mapToLong(Long::longValue).sum();
+        int totalSplurgs = counts.values().stream().mapToInt(i -> Math.toIntExact(i)).sum();
+        if (totalSplurgs > maxSplurgs){
+            maxSplurgs = totalSplurgs;
+        }
         stats.append("\nLive Splurgs: ").append(totalSplurgs);
+        stats.append("\nMax Live Splurgs: ").append(maxSplurgs);
 
         return stats.toString();
     }
