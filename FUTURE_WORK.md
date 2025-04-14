@@ -1,8 +1,8 @@
 # TO DO
-1. Remove unnecessary comments
-2. Add some default welcome text in the Stat Panel on simulation load
-3. General code review
-4. More unit tests
+1. Add some default welcome text in the Stat Panel on simulation load
+2. General code review
+3. More unit tests
+4. Winner Screen
 
 # Concepts
 Things that I might like to add
