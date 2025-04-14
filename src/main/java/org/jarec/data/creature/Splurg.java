@@ -30,7 +30,6 @@ public class Splurg extends Life {
     private Hive homeHive;
     private final String name = RandomNameGenerator.generateName();
     private int breedingDelay = 0;
-    private boolean inCombat = false;
 
     public Splurg(Hive hive) {
         var homeLocation = hive.getLocation();
@@ -169,14 +168,6 @@ public class Splurg extends Life {
             WorldFrame.getInstance().updateStatus(statusMessage);
         }
     }
-
-//    public void setInCombat(boolean inCombat) {
-//        this.inCombat = inCombat;
-//    }
-//
-//    public boolean isInCombat() {
-//        return this.inCombat;
-//    }
 
     public boolean findTarget() {
         Location currentLocation = getLocation();

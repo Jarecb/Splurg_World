@@ -2,7 +2,6 @@ package org.jarec.data.creature;
 
 import org.jarec.data.Heading;
 import org.jarec.data.Location;
-import org.jarec.game.resources.Splurgs;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 
@@ -26,8 +25,8 @@ public abstract class Life {
         age--;
         if (age <= 0) {
             var deathChance = Integer.parseInt(PropertyHandler.get("splurg.default.death.chance", "500"));
-            if (RandomInt.getRandomInt(deathChance) % deathChance == 0){
-                if (getEnergy() > 0){
+            if (RandomInt.getRandomInt(deathChance) % deathChance == 0) {
+                if (getEnergy() > 0) {
                     takeEnergy(1);
                 } else {
                     reduceHealth(1);

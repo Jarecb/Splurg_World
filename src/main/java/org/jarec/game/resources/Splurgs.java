@@ -2,6 +2,7 @@ package org.jarec.game.resources;
 
 import org.jarec.data.Hive;
 import org.jarec.data.Location;
+import org.jarec.data.creature.Life;
 import org.jarec.data.creature.Splurg;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
@@ -172,7 +173,6 @@ public class Splurgs {
     }
 
     private boolean canBreedTogether(Splurg s1, Splurg s2, int spawnEnergyCost) {
-//        if (s1.isInCombat() || s2.isInCombat()) return false;
         if (!s1.canBreed() || !s2.canBreed()) return false;
         if (s1.getEnergy() < spawnEnergyCost || s2.getEnergy() < spawnEnergyCost) return false;
 
@@ -211,7 +211,7 @@ public class Splurgs {
                             Splurg::getHomeHive,
                             Collectors.collectingAndThen(
                                     Collectors.counting(),
-                                    count -> count.intValue()
+                                    Long::intValue
                             )
                     ));
         }
@@ -240,7 +240,7 @@ public class Splurgs {
 
     public Map<Hive, Integer> getTotalEnergyPerHive() {
         synchronized (splurgList) {
-            return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.summingInt(splurg -> splurg.getEnergy())));
+            return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.summingInt(Life::getEnergy)));
         }
     }
 
