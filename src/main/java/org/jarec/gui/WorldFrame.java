@@ -16,7 +16,7 @@ import java.net.URL;
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
 
-    private static WorldFrame instance;
+    private static final WorldFrame INSTANCE = new WorldFrame();
     private WorldPanel world;
     private static JTextArea statsPanel;
     private JLabel statusBar;
@@ -33,7 +33,7 @@ public class WorldFrame extends JFrame {
 
 
     // Private constructor ensures no auto-start
-    private WorldFrame() throws HeadlessException {
+    private WorldFrame() {
         setTitle("Splurg World");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(
@@ -138,14 +138,7 @@ public class WorldFrame extends JFrame {
     }
 
     public static synchronized WorldFrame getInstance() {
-        if (instance == null) {
-            try {
-                instance = new WorldFrame();
-            } catch (HeadlessException e) {
-                log.error("Error creating WorldFrame", e);
-            }
-        }
-        return instance;
+        return INSTANCE;
     }
 
     public static void updateStats(String stats) {
@@ -345,11 +338,11 @@ public class WorldFrame extends JFrame {
         updateMenuItemsState();
     }
 
-    private void setHiveEnergy(int energy) {
+    private static void setHiveEnergy(int energy) {
         hiveEnergy = energy;
     }
 
-    private void setHiveCount(int hives) {
+    private static void setHiveCount(int hives) {
         hiveCount = hives;
     }
 
@@ -357,12 +350,12 @@ public class WorldFrame extends JFrame {
         JTextArea helpText = new JTextArea();
         helpText.setText("""
                 This is the help text for the Splurg World game.
-                Use the Game menu to Start, Pause, or Stop the game.\n
+                Use the Game menu to Start, Pause, or Stop the game.
                 You can also use the following keys:
                 Space Bar: Pause/Unpause
                 Left and Right Arrow: Slow down and speed up the game
                 Up Arrow: Returns the game to its default speed
-                Esc: Ends the current game\n
+                Esc: Ends the current game
                 When paused you can mouse click on the world to see the
                 details of the Splurgs in that area
                 """);
@@ -378,7 +371,7 @@ public class WorldFrame extends JFrame {
         aboutText.setText(String.format("""
             Splurg World
             Version %s
-            Developed by %s\n
+            Developed by %s
             Welcome to Splurg World, a place populated by the Splurgs.
             Splurgs are Amoeba that just like to float about and fight. Fighting gives them energy that they can take
             back to their Hives to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.

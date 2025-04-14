@@ -11,26 +11,27 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameLoop {
     private static final Logger log = LoggerFactory.getLogger(GameLoop.class);
 
-    private static final GameLoop instance = new GameLoop();
+    private static final GameLoop INSTANCE = new GameLoop();
 
     private int turn = 0;
-    private volatile boolean running = false;
+    private AtomicBoolean running = new AtomicBoolean(false);
     private volatile boolean started = false;
     private volatile int loopSleepTime = 0;
 
     private GameLoop() {}
 
     public static GameLoop getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     public void start() {
         if (started) return;
-        running = true;
+        running = new AtomicBoolean(true);
         started = true;
         turn = 0;
         loopSleepTime = Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000"));
@@ -39,7 +40,7 @@ public class GameLoop {
             try {
                 run();
             } catch (InterruptedException e) {
-                log.error("Something went wrong in the game loop: {}", e);
+                log.error("Something went wrong in the game loop", e);
                 Thread.currentThread().interrupt();
             }
         });
@@ -49,13 +50,15 @@ public class GameLoop {
     }
 
     public void pause() {
-        running = !running;
-        if (running) {
+        boolean current = running.get();
+        running.set(!current);
+        if (!current) {
             log.info("Game unpaused");
         } else {
             log.info("Game paused");
         }
     }
+
 
     public void stop() {
         started = false;
@@ -68,7 +71,7 @@ public class GameLoop {
         log.info("Game starting");
 
         while (started) {
-            if (running) {
+            if (running.get()) {
                 turn++;
                 WorldFrame.getInstance().refreshStatus();
 
@@ -107,11 +110,11 @@ public class GameLoop {
     }
 
     public boolean isRunning() {
-        return running;
+        return running.get();
     }
 
     public boolean isPaused() {
-        return !running && started;
+        return !running.get() && started;
     }
 
     public void setGameSpeed(int loopSleepTime) {
@@ -174,7 +177,7 @@ public class GameLoop {
         StringBuilder stats = new StringBuilder();
         List<Hive> hives = Hives.getInstance().getHives();
 
-        hives.forEach((hive) -> {
+        hives.forEach(hive -> {
             if (stats.length() > 0) {
                 stats.append("\n");
             }

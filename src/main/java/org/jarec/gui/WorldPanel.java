@@ -4,8 +4,6 @@ import org.jarec.data.Location;
 import org.jarec.data.creature.Splurg;
 import org.jarec.game.GameLoop;
 import org.jarec.game.resources.Splurgs;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +17,8 @@ import java.util.List;
  * Coordinate 0:0 is top left corner
  */
 public class WorldPanel extends JPanel {
-    private static final Logger log = LoggerFactory.getLogger(WorldPanel.class);
-
-    private BufferedImage displayBuffer;     // What gets painted to screen
-    private BufferedImage backgroundBuffer;  // External classes can draw here
+    private transient BufferedImage displayBuffer;     // What gets painted to screen
+    private transient BufferedImage backgroundBuffer;  // External classes can draw here
 
     private final ArrayList<Drawable> drawables = new ArrayList<>();
 
@@ -30,6 +26,7 @@ public class WorldPanel extends JPanel {
         setBackground(Color.WHITE);
 
         addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent e) {
                 if (GameLoop.getInstance().isPaused()) {
                     Location clickLocation = new Location(e.getX(), e.getY());
@@ -79,7 +76,9 @@ public class WorldPanel extends JPanel {
         g2.dispose();
     }
 
-    /** Returns a Graphics2D object that external code can use to draw to the background. */
+    /**
+     * Returns a Graphics2D object that external code can use to draw to the background.
+     */
     public Graphics2D getBackgroundGraphics() {
         if (backgroundBuffer == null) {
             backgroundBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -87,7 +86,9 @@ public class WorldPanel extends JPanel {
         return backgroundBuffer.createGraphics();
     }
 
-    /** Pushes background buffer to display buffer and repaints. */
+    /**
+     * Pushes background buffer to display buffer and repaints.
+     */
     public void publish() {
         if (displayBuffer == null || backgroundBuffer == null) return;
 
@@ -117,7 +118,9 @@ public class WorldPanel extends JPanel {
     }
 
 
-    /** Clears the background buffer (call before drawing new stuff). */
+    /**
+     * Clears the background buffer (call before drawing new stuff).
+     */
     public void clearBackground() {
         clearBuffer(backgroundBuffer);
     }

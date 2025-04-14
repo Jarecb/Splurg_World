@@ -6,12 +6,10 @@ import org.jarec.data.creature.Splurg;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.jarec.util.GameMath.calculateHypotenuse;
@@ -21,6 +19,7 @@ public class Splurgs {
     private static int spawns = 0;
 
     private final List<Splurg> splurgList = new ArrayList<>();
+
     private Splurgs() {
     }
 
@@ -236,7 +235,7 @@ public class Splurgs {
                     .mapToInt(splurg -> splurg.getSize().getValue())
                     .sum();
 
-            return (int)(totalSize / splurgList.size());
+            return (int) (totalSize / splurgList.size());
         }
     }
 
@@ -250,7 +249,7 @@ public class Splurgs {
                     .mapToInt(splurg -> splurg.getSpeed().getValue())
                     .sum();
 
-            return (int)(totalSize / splurgList.size());
+            return (int) (totalSize / splurgList.size());
         }
     }
 
@@ -264,7 +263,7 @@ public class Splurgs {
                     .mapToInt(splurg -> splurg.getToughness().getValue())
                     .sum();
 
-            return (int)(totalSize / splurgList.size());
+            return (int) (totalSize / splurgList.size());
         }
     }
 
@@ -278,7 +277,7 @@ public class Splurgs {
                     .mapToInt(splurg -> splurg.getStrength().getValue())
                     .sum();
 
-            return (int)(totalSize / splurgList.size());
+            return (int) (totalSize / splurgList.size());
         }
     }
 
@@ -292,7 +291,7 @@ public class Splurgs {
                     .mapToInt(splurg -> splurg.getAggression().getValue())
                     .sum();
 
-            return (int)(totalSize / splurgList.size());
+            return (int) (totalSize / splurgList.size());
         }
     }
 
@@ -306,7 +305,7 @@ public class Splurgs {
                     .mapToInt(splurg -> splurg.getForaging().getValue())
                     .sum();
 
-            return (int)(totalSize / splurgList.size());
+            return (int) (totalSize / splurgList.size());
         }
     }
 }
