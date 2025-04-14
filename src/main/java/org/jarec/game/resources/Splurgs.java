@@ -102,14 +102,12 @@ public class Splurgs {
     }
 
     private void updateHiveColorsForEmptyHives() {
-        Map<Hive, Long> livingCounts = splurgList.stream()
-                .collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
+        Map<Hive, Long> livingCounts = splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
 
         List<Hive> allHives = Hives.getInstance().getHives();
 
         for (Hive hive : allHives) {
-            if ((!livingCounts.containsKey(hive) || livingCounts.get(hive) == 0) &&
-                    hive.getEnergyReserve() < Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"))) {
+            if ((!livingCounts.containsKey(hive) || livingCounts.get(hive) == 0) && hive.getEnergyReserve() < Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"))) {
                 hive.setColor(null);
             }
         }
@@ -118,70 +116,60 @@ public class Splurgs {
     public List<Splurg> getSplurgsInVicinity(Location targetPoint) {
         var searchRadius = Integer.parseInt(PropertyHandler.get("gui.mouse.click.detection.range", "20"));
 
-        Comparator<Splurg> orderingComparator = Comparator
-                .comparing((Splurg s) -> s.getHomeHive().getName(), String.CASE_INSENSITIVE_ORDER)
-                .thenComparing(Comparator.comparingInt(Splurg::getHealth).reversed());
+        Comparator<Splurg> orderingComparator = Comparator.comparing((Splurg s) -> s.getHomeHive().getName(), String.CASE_INSENSITIVE_ORDER).thenComparing(Comparator.comparingInt(Splurg::getHealth).reversed());
 
         synchronized (splurgList) {
-            return splurgList.stream()
-                    .filter(splurg -> {
-                        return calculateHypotenuse(targetPoint, splurg.getLocation()) <= searchRadius;
-                    })
-                    .sorted(orderingComparator)
-                    .toList();
+            return splurgList.stream().filter(splurg -> {
+                return calculateHypotenuse(targetPoint, splurg.getLocation()) <= searchRadius;
+            }).sorted(orderingComparator).toList();
         }
     }
 
     public void handleBreeding() {
         synchronized (splurgList) {
-            // Make a snapshot of the current splurgs to prevent recursive breeding
             List<Splurg> originalSplurgs = new ArrayList<>(splurgList);
 
-            Map<Hive, List<Splurg>> splurgsByHive = originalSplurgs.stream()
-                    .collect(Collectors.groupingBy(Splurg::getHomeHive));
+            Map<Hive, List<Splurg>> splurgsByHive = originalSplurgs.stream().collect(Collectors.groupingBy(Splurg::getHomeHive));
 
-            for (Map.Entry<Hive, List<Splurg>> hiveEntry : splurgsByHive.entrySet()) {
-                List<Splurg> sameHiveSplurgs = new ArrayList<>(hiveEntry.getValue());
+            int spawnEnergyCost = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
+
+            for (List<Splurg> sameHiveSplurgs : splurgsByHive.values()) {
                 List<Splurg[]> breedingPairs = new ArrayList<>();
-                List<Splurg> alreadyUsed = new ArrayList<>();
+                Set<Splurg> used = new HashSet<>();
 
                 for (int i = 0; i < sameHiveSplurgs.size(); i++) {
+                    Splurg s1 = sameHiveSplurgs.get(i);
+                    if (used.contains(s1)) continue;
+
                     for (int j = i + 1; j < sameHiveSplurgs.size(); j++) {
-                        Splurg splurg1 = sameHiveSplurgs.get(i);
-                        Splurg splurg2 = sameHiveSplurgs.get(j);
+                        Splurg s2 = sameHiveSplurgs.get(j);
+                        if (used.contains(s2)) continue;
 
-                        if (alreadyUsed.contains(splurg1) || alreadyUsed.contains(splurg2)) continue;
+                        boolean canBreed = !s1.isInCombat() && !s2.isInCombat() && s1.canBreed() && s2.canBreed() && s1.getEnergy() >= spawnEnergyCost && s2.getEnergy() >= spawnEnergyCost;
 
-                        int sizeDistanceThreshold = splurg1.getSize().getValue() + splurg2.getSize().getValue();
-                        double distance = calculateHypotenuse(splurg1.getLocation(), splurg2.getLocation());
+                        double distance = calculateHypotenuse(s1.getLocation(), s2.getLocation());
+                        int maxDistance = s1.getSize().getValue() + s2.getSize().getValue();
 
-                        int spawnEnergyCost = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
-
-                        if (distance <= sizeDistanceThreshold &&
-                                splurg1.getEnergy() >= spawnEnergyCost &&
-                                splurg2.getEnergy() >= spawnEnergyCost &&
-                                splurg1.canBreed() && splurg2.canBreed() &&
-                                !splurg1.isInCombat() && !splurg2.isInCombat()) {
-
-                            breedingPairs.add(new Splurg[]{splurg1, splurg2});
-                            alreadyUsed.add(splurg1);
-                            alreadyUsed.add(splurg2);
+                        if (canBreed && distance <= maxDistance) {
+                            breedingPairs.add(new Splurg[]{s1, s2});
+                            used.add(s1);
+                            used.add(s2);
+                            break; // Move on to next s1 since it's already used
                         }
                     }
                 }
 
                 for (Splurg[] pair : breedingPairs) {
-                    Splurg parent1 = pair[0];
-                    Splurg parent2 = pair[1];
+                    Splurg p1 = pair[0];
+                    Splurg p2 = pair[1];
+                    Splurg child = new Splurg(p1, p2);
 
-                    Splurg child = new Splurg(parent1, parent2);
-                    int midX = (parent1.getLocation().getX() + parent2.getLocation().getX()) / 2;
-                    int midY = (parent1.getLocation().getY() + parent2.getLocation().getY()) / 2;
-                    child.setLocation(new Location(midX, midY));
+                    Location loc1 = p1.getLocation();
+                    Location loc2 = p2.getLocation();
+                    child.setLocation(new Location((loc1.getX() + loc2.getX()) / 2, (loc1.getY() + loc2.getY()) / 2));
 
-                    var statusMessage = "A new Splurg called " + child.getName() + " spawned from " + parent1.getName() + " and " + parent2.getName() + " of " + parent1.getHomeHive().getName();
-                    WorldFrame.getInstance().updateStatus(statusMessage);
-
+                    String msg = String.format("A new Splurg called %s spawned from %s and %s of %s", child.getName(), p1.getName(), p2.getName(), p1.getHomeHive().getName());
+                    WorldFrame.getInstance().updateStatus(msg);
                 }
             }
         }
@@ -189,8 +177,7 @@ public class Splurgs {
 
     public Map<Hive, Long> getCounts() {
         synchronized (splurgList) {
-            return splurgList.stream()
-                    .collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
+            return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
         }
     }
 
@@ -217,11 +204,7 @@ public class Splurgs {
 
     public Map<Hive, Integer> getTotalEnergyPerHive() {
         synchronized (splurgList) {
-            return splurgList.stream()
-                    .collect(Collectors.groupingBy(
-                            Splurg::getHomeHive,
-                            Collectors.summingInt(splurg -> splurg.getEnergy() + splurg.getHomeHive().getEnergyReserve())
-                    ));
+            return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.summingInt(splurg -> splurg.getEnergy() + splurg.getHomeHive().getEnergyReserve())));
         }
     }
 
@@ -231,9 +214,7 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream()
-                    .mapToInt(splurg -> splurg.getSize().getValue())
-                    .sum();
+            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getSize().getValue()).sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -245,9 +226,7 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream()
-                    .mapToInt(splurg -> splurg.getSpeed().getValue())
-                    .sum();
+            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getSpeed().getValue()).sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -259,9 +238,7 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream()
-                    .mapToInt(splurg -> splurg.getToughness().getValue())
-                    .sum();
+            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getToughness().getValue()).sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -273,9 +250,7 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream()
-                    .mapToInt(splurg -> splurg.getStrength().getValue())
-                    .sum();
+            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getStrength().getValue()).sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -287,9 +262,7 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream()
-                    .mapToInt(splurg -> splurg.getAggression().getValue())
-                    .sum();
+            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getAggression().getValue()).sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -301,9 +274,7 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream()
-                    .mapToInt(splurg -> splurg.getForaging().getValue())
-                    .sum();
+            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getForaging().getValue()).sum();
 
             return (int) (totalSize / splurgList.size());
         }
