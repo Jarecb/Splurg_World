@@ -219,11 +219,10 @@ public class WorldFrame extends JFrame {
 
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
-            // Remove the splash image and add the game world
-            world = new WorldPanel();   // Create the game world panel
-            add(world, BorderLayout.CENTER);  // Add the WorldPanel
-            revalidate();  // Revalidate the frame to apply the changes
-            repaint();  // Repaint the frame
+            world = new WorldPanel();
+            add(world, BorderLayout.CENTER);
+            revalidate();
+            repaint();
             new GameStart(hiveCount, hiveEnergy);
             remove(wrapper);
             updateStatus("Game started");
@@ -248,73 +247,7 @@ public class WorldFrame extends JFrame {
         gameMenu.add(pauseItem);
         gameMenu.add(stopItem);
 
-        JMenu settingsMenu = new JMenu("Settings");
-
-        // Create ButtonGroup for radio buttons
-        ButtonGroup hiveGroup = new ButtonGroup();
-        ButtonGroup energyGroup = new ButtonGroup();
-
-        // Hive Configuration radio buttons
-        JRadioButtonMenuItem twoHivesItem = new JRadioButtonMenuItem("2 Hives", hiveCount == 2);
-        twoHivesItem.addActionListener(e -> {
-            if (twoHivesItem.isSelected()) {
-                setHiveCount(2);
-            }
-        });
-
-        JRadioButtonMenuItem fourHivesItem = new JRadioButtonMenuItem("4 Hives", hiveCount == 4);
-        fourHivesItem.addActionListener(e -> {
-            if (fourHivesItem.isSelected()) {
-                setHiveCount(4);
-            }
-        });
-
-        // Add radio buttons to the ButtonGroup
-        hiveGroup.add(twoHivesItem);
-        hiveGroup.add(fourHivesItem);
-
-        // Energy setup radio buttons
-        JRadioButtonMenuItem oneHundredEnergyItem = new JRadioButtonMenuItem("100 Energy", hiveEnergy == 100);
-        oneHundredEnergyItem.addActionListener(e -> {
-            if (oneHundredEnergyItem.isSelected()) {
-                setHiveEnergy(100);
-            }
-        });
-
-        JRadioButtonMenuItem twoHundredEnergyItem = new JRadioButtonMenuItem("200 Energy", hiveEnergy == 200);
-        twoHundredEnergyItem.addActionListener(e -> {
-            if (twoHundredEnergyItem.isSelected()) {
-                setHiveEnergy(200);
-            }
-        });
-
-        JRadioButtonMenuItem threeHundredEnergyItem = new JRadioButtonMenuItem("300 Energy", hiveEnergy == 300);
-        threeHundredEnergyItem.addActionListener(e -> {
-            if (threeHundredEnergyItem.isSelected()) {
-                setHiveEnergy(300);
-            }
-        });
-
-        JRadioButtonMenuItem fourHundredEnergyItem = new JRadioButtonMenuItem("400 Energy", hiveEnergy == 400);
-        fourHundredEnergyItem.addActionListener(e -> {
-            if (fourHundredEnergyItem.isSelected()) {
-                setHiveEnergy(400);
-            }
-        });
-
-        // Add Energy radio buttons to the ButtonGroup
-        energyGroup.add(oneHundredEnergyItem);
-        energyGroup.add(twoHundredEnergyItem);
-        energyGroup.add(threeHundredEnergyItem);
-        energyGroup.add(fourHundredEnergyItem);
-
-        settingsMenu.add(twoHivesItem);
-        settingsMenu.add(fourHivesItem);
-        settingsMenu.addSeparator();
-        settingsMenu.add(oneHundredEnergyItem);
-        settingsMenu.add(twoHundredEnergyItem);
-        settingsMenu.add(threeHundredEnergyItem);
-        settingsMenu.add(fourHundredEnergyItem);
+        JMenu settingsMenu = getSettingsMenu();
 
         // Help menu
         JMenu helpMenu = new JMenu("Help");
@@ -336,6 +269,76 @@ public class WorldFrame extends JFrame {
         setJMenuBar(menuBar);
 
         updateMenuItemsState();
+    }
+
+    private static JMenu getSettingsMenu() {
+        JMenu settingsMenu = new JMenu("Settings");
+
+        ButtonGroup hiveGroup = new ButtonGroup();
+        ButtonGroup energyGroup = new ButtonGroup();
+
+        var defaultHiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
+        var defaultHiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
+
+        JRadioButtonMenuItem twoHivesItem = new JRadioButtonMenuItem("2 Hives", defaultHiveCount == 2);
+        twoHivesItem.addActionListener(e -> {
+            if (twoHivesItem.isSelected()) {
+                setHiveCount(2);
+            }
+        });
+
+        JRadioButtonMenuItem fourHivesItem = new JRadioButtonMenuItem("4 Hives", defaultHiveCount == 4);
+        fourHivesItem.addActionListener(e -> {
+            if (fourHivesItem.isSelected()) {
+                setHiveCount(4);
+            }
+        });
+
+        hiveGroup.add(twoHivesItem);
+        hiveGroup.add(fourHivesItem);
+
+        // Energy setup radio buttons
+        JRadioButtonMenuItem oneHundredEnergyItem = new JRadioButtonMenuItem("100 Energy", defaultHiveEnergy == 100);
+        oneHundredEnergyItem.addActionListener(e -> {
+            if (oneHundredEnergyItem.isSelected()) {
+                setHiveEnergy(100);
+            }
+        });
+
+        JRadioButtonMenuItem twoHundredEnergyItem = new JRadioButtonMenuItem("200 Energy", defaultHiveEnergy == 200);
+        twoHundredEnergyItem.addActionListener(e -> {
+            if (twoHundredEnergyItem.isSelected()) {
+                setHiveEnergy(200);
+            }
+        });
+
+        JRadioButtonMenuItem threeHundredEnergyItem = new JRadioButtonMenuItem("300 Energy", defaultHiveEnergy == 300);
+        threeHundredEnergyItem.addActionListener(e -> {
+            if (threeHundredEnergyItem.isSelected()) {
+                setHiveEnergy(300);
+            }
+        });
+
+        JRadioButtonMenuItem fourHundredEnergyItem = new JRadioButtonMenuItem("400 Energy", defaultHiveEnergy == 400);
+        fourHundredEnergyItem.addActionListener(e -> {
+            if (fourHundredEnergyItem.isSelected()) {
+                setHiveEnergy(400);
+            }
+        });
+
+        energyGroup.add(oneHundredEnergyItem);
+        energyGroup.add(twoHundredEnergyItem);
+        energyGroup.add(threeHundredEnergyItem);
+        energyGroup.add(fourHundredEnergyItem);
+
+        settingsMenu.add(twoHivesItem);
+        settingsMenu.add(fourHivesItem);
+        settingsMenu.addSeparator();
+        settingsMenu.add(oneHundredEnergyItem);
+        settingsMenu.add(twoHundredEnergyItem);
+        settingsMenu.add(threeHundredEnergyItem);
+        settingsMenu.add(fourHundredEnergyItem);
+        return settingsMenu;
     }
 
     private static void setHiveEnergy(int energy) {
