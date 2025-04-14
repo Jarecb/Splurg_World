@@ -1,9 +1,7 @@
 package org.jarec;
 
-import org.jarec.game.GameLoop;
 import org.jarec.gui.WorldFrame;
 import org.jarec.util.PropertyHandler;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,8 +19,8 @@ public class Main {
             log.info("Version: {}", PropertyHandler.get("version", "??.??.??"));
 
             log.info("Creating Splurg World");
-            WorldFrame frame = WorldFrame.getInstance();
-        } catch(Exception e) {
+            WorldFrame.getInstance();
+        } catch (Exception e) {
             log.error(e.toString());
         }
     }
