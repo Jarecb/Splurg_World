@@ -46,4 +46,13 @@ Various parameters can be set for the simulation. These are in the splurg.proper
 * hive.default.spawn.rate = Turns between Hive spawnings
 * hive.default.spawn.energy = Energy cost to spawn a Splurg
 * hive.default.size = Visual size of Hives
+* game.default.zombie = true/false, controls the creation of Zombie Splurgs
+* game default.zombie.change = Change of a Splurg death creating a Zombie Splurg
 
+# Building
+Building Splurg World for deployment creates an executable jar file
+> mvn clean package
+
+# Technology Requirements
+* Java 21
+* Maven

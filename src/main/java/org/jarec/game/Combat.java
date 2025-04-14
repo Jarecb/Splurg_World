@@ -1,11 +1,10 @@
 package org.jarec.game;
 
 import org.jarec.data.creature.Splurg;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Combat {
-    private static final Logger log = LoggerFactory.getLogger(Combat.class);
+
+    private Combat(){}
 
     // Method for attacking and determining the result of a combat round between two Splurgs
     public static void attack(Splurg splurgA, Splurg splurgB) {
@@ -21,9 +20,6 @@ public class Combat {
         var strength = splurg1.getStrength().getValue();
         var toughness = splurg2.getToughness().getValue();
         var damage = strength - toughness;
-        if (damage > 0) {
-            return damage;
-        }
-        return 0;
+        return Math.max(0, damage);
     }
 }

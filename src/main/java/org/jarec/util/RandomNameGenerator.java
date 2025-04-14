@@ -3,6 +3,9 @@ package org.jarec.util;
 import java.util.Random;
 
 public class RandomNameGenerator {
+    private RandomNameGenerator() {
+    }
+
     // Arrays of possible prefixes and suffixes for creating fantasy names
     private static final String[] PREFIXES = {
             "Al", "Bri", "Eri", "Fen", "Gal", "Hel", "Ith", "Kri", "Lau", "Mor", "Nor", "Pha", "Riv", "Syl", "Thal", "Val"

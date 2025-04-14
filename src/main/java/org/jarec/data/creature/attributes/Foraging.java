@@ -4,7 +4,7 @@ import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 
 public class Foraging implements SettableAttribute {
-    private int foraging = RandomInt.getRandomInt(Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")));
+    private int foragingValue = RandomInt.getRandomInt(Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")));
 
     @Override
     public String getName() {
@@ -13,7 +13,7 @@ public class Foraging implements SettableAttribute {
 
     @Override
     public int getValue() {
-        return this.foraging;
+        return this.foragingValue;
     }
 
     @Override
@@ -23,6 +23,6 @@ public class Foraging implements SettableAttribute {
         {
             throw new IllegalArgumentException("Foraging outside of range: " + foraging);
         }
-        this.foraging = foraging;
+        this.foragingValue = foraging;
     }
 }
