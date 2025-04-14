@@ -172,7 +172,7 @@ public class Splurgs {
     }
 
     private boolean canBreedTogether(Splurg s1, Splurg s2, int spawnEnergyCost) {
-        if (s1.isInCombat() || s2.isInCombat()) return false;
+//        if (s1.isInCombat() || s2.isInCombat()) return false;
         if (!s1.canBreed() || !s2.canBreed()) return false;
         if (s1.getEnergy() < spawnEnergyCost || s2.getEnergy() < spawnEnergyCost) return false;
 
@@ -204,9 +204,16 @@ public class Splurgs {
         return new Location((a.getX() + b.getX()) / 2, (a.getY() + b.getY()) / 2);
     }
 
-    public Map<Hive, Long> getCounts() {
+    public Map<Hive, Integer> getCounts() {
         synchronized (splurgList) {
-            return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
+            return splurgList.stream()
+                    .collect(Collectors.groupingBy(
+                            Splurg::getHomeHive,
+                            Collectors.collectingAndThen(
+                                    Collectors.counting(),
+                                    count -> count.intValue()
+                            )
+                    ));
         }
     }
 
@@ -233,7 +240,7 @@ public class Splurgs {
 
     public Map<Hive, Integer> getTotalEnergyPerHive() {
         synchronized (splurgList) {
-            return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.summingInt(splurg -> splurg.getEnergy() + splurg.getHomeHive().getEnergyReserve())));
+            return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.summingInt(splurg -> splurg.getEnergy())));
         }
     }
 

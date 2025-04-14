@@ -104,18 +104,16 @@ public class Splurg extends Life {
 
     public void move() {
         degradation();
+        age();
         breedingDelay--;
         if (breedingDelay < 0) {
             breedingDelay = 0;
         }
 
         var location = getLocation();
-        var targetAcquired = findNearest();
+        var targetAcquired = findTarget();
         if (!targetAcquired) {
-            var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
-            if (RandomInt.getRandomInt(randomness) % randomness == 0) {
-                setHeading(getHeading().getRandomTurn());
-            }
+            randomisePath();
         } else if (getEnergy() > getSize().getValue()) {
             setHeading(HeadingUtils.getHeadingTo(location, homeHive.getLocation()));
         }
@@ -123,22 +121,36 @@ public class Splurg extends Life {
         setLocation(location);
     }
 
+    private void randomisePath(){
+        var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
+        if (RandomInt.getRandomInt(randomness) % randomness == 0) {
+            setHeading(getHeading().getRandomTurn());
+        }
+
+    }
+
     private void degradation() {
-        var degradationChange = Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
+        var degradationChange =
+                (Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")) - getSize().getValue()) *
+                Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
         if (degradationChange > 0 && RandomInt.getRandomInt(degradationChange) % degradationChange == 0) {
-            if (RandomInt.getRandomInt(2) % 2 == 0) {
-                var toughnessValue = toughness.getValue();
-                if (toughnessValue > 2) {
-                    toughness.setValue(toughnessValue - 1);
-                }
+            if (getEnergy() > getSize().getValue()){
+                takeEnergy(getSize().getValue());
             } else {
-                var strengthValue = strength.getValue();
-                if (strengthValue > 2) {
-                    strength.setValue(strengthValue - 1);
+                if (RandomInt.getRandomInt(2) % 2 == 0) {
+                    var toughnessValue = toughness.getValue();
+                    if (toughnessValue > 2) {
+                        toughness.setValue(toughnessValue - 1);
+                    }
+                } else {
+                    var strengthValue = strength.getValue();
+                    if (strengthValue > 2) {
+                        strength.setValue(strengthValue - 1);
+                    }
                 }
+                size = new Size(toughness, strength);
+                speed = new Speed(size);
             }
-            size = new Size(toughness, strength);
-            speed = new Speed(size);
         }
     }
 
@@ -158,49 +170,63 @@ public class Splurg extends Life {
         }
     }
 
-    public void setInCombat(boolean inCombat) {
-        this.inCombat = inCombat;
-    }
+//    public void setInCombat(boolean inCombat) {
+//        this.inCombat = inCombat;
+//    }
+//
+//    public boolean isInCombat() {
+//        return this.inCombat;
+//    }
 
-    public boolean isInCombat() {
-        return this.inCombat;
-    }
-
-    public boolean findNearest() {
+    public boolean findTarget() {
         Location currentLocation = getLocation();
 
         int aggressionMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.aggression.multiplier", "5"));
         int foragingMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.foraging.multiplier", "5"));
 
         double foragingThreshold = getForaging().getValue() * (double) foragingMultiplier;
+        double aggressionThreshold = getAggression().getValue() * (double) aggressionMultiplier;
+
+        // Raid enemy Hive
         List<Hive> allHives = Hives.getInstance().getHives();
-
-        if (!isInCombat()) {
-            synchronized (allHives) {
-                Hive nearestHive = findNearestEnemyHive(currentLocation, allHives, foragingThreshold);
-
-                if (nearestHive != null) {
-                    handleEnemyHiveFound(nearestHive);
-                    return true;
-                }
+        synchronized (allHives) {
+            Hive nearestHive = findNearestEnemyHive(currentLocation, allHives, foragingThreshold);
+            if (nearestHive != null) {
+                handleEnemyHiveFound(nearestHive);
+                return true;
             }
         }
 
-        double aggressionThreshold = getAggression().getValue() * (double) aggressionMultiplier;
+        // Fight enemy Splurgs
         List<Splurg> allSplurgs = Splurgs.getInstance().getSplurgs();
-
         synchronized (allSplurgs) {
             Splurg nearestEnemy = findNearestEnemySplurg(currentLocation, allSplurgs, aggressionThreshold);
-
             if (nearestEnemy != null) {
                 handleEnemySplurgFound(nearestEnemy);
                 return true;
             }
         }
-        if (getHeading() == null) {
-            setHeading(getHeading().getRandomTurn());
+
+        // Dump energy at Home Hive
+        if (getEnergy() > getSize().getValue() * Integer.parseInt(PropertyHandler.get("splurg.default.energy.capacity", "5"))) {
+            returnHome();
+            return true;
         }
+
+        if (getHeading() == null) {
+            setHeading(Heading.getRandomHeading());
+        }
+
         return false;
+    }
+
+    private void returnHome() {
+        if (RandomInt.getRandomInt(3) % 3 == 0) {
+            setHeading(getHeading().getRandomTurn());
+        } else {
+            Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), homeHive.getLocation());
+            setHeading(newHeading);
+        }
     }
 
     private Hive findNearestEnemyHive(Location currentLocation, List<Hive> hives, double threshold) {
@@ -240,14 +266,12 @@ public class Splurg extends Life {
                 Combat.attack(this, enemy);
             }
         } else {
-            setInCombat(false);
             setHeading(newHeading);
             setHeading(getHeading().getRandomTurn());
         }
     }
 
     private void handleEnemyHiveFound(Hive enemyHive) {
-        setInCombat(false);
         Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemyHive.getLocation());
 
         if (newHeading == null || GameMath.calculateHypotenuse(getLocation(),
