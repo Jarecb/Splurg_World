@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameLoop {
     private static final Logger log = LoggerFactory.getLogger(GameLoop.class);
@@ -21,7 +22,7 @@ public class GameLoop {
     private int turn = 0;
     private AtomicBoolean running = new AtomicBoolean(false);
     private volatile boolean started = false;
-    private volatile int loopSleepTime = 0;
+    private final AtomicInteger loopSleepTime = new AtomicInteger(0);
 
     private GameLoop() {}
 
@@ -34,7 +35,7 @@ public class GameLoop {
         running = new AtomicBoolean(true);
         started = true;
         turn = 0;
-        loopSleepTime = Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000"));
+        loopSleepTime.set(Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000")));
 
         Thread loopThread = new Thread(() -> {
             try {
@@ -92,7 +93,7 @@ public class GameLoop {
 
                 WorldFrame.updateStats(getStats());
 
-                Thread.sleep(loopSleepTime);
+                Thread.sleep(loopSleepTime.get());
             } else {
                 Thread.sleep(loopPauseTime);
             }
@@ -117,20 +118,18 @@ public class GameLoop {
         return !running.get() && started;
     }
 
-    public void setGameSpeed(int loopSleepTime) {
-        this.loopSleepTime += loopSleepTime;
-        if (this.loopSleepTime < 5) {
-            this.loopSleepTime = 5;
-        } else if (this.loopSleepTime > 2000) {
-            this.loopSleepTime = 2000;
+    public void setGameSpeed(int delta) {
+        int updated = loopSleepTime.addAndGet(delta);
+        if (updated < 5) {
+            loopSleepTime.set(5);
+        } else if (updated > 2000) {
+            loopSleepTime.set(2000);
         }
     }
 
     public void resetGameSpeed() {
-        loopSleepTime = Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000"));
+        loopSleepTime.set(Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000")));
     }
-
-
 
     private String getStats(){
         StringBuilder sb = new StringBuilder("\n");
