@@ -315,4 +315,29 @@ public class Splurgs {
             return (int) (totalSize / splurgList.size());
         }
     }
+
+    public int getLiveHiveCount() {
+        synchronized (splurgList) {
+            return (int) splurgList.stream()
+                    .collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()))
+                    .values().stream()
+                    .filter(count -> count > 0)
+                    .count();
+        }
+    }
+
+    public Hive getWinningHive() {
+        Map<Hive, Integer> counts = getCounts();
+
+        List<Hive> liveHives = counts.entrySet().stream()
+                .filter(entry -> entry.getValue() > 0)
+                .map(Map.Entry::getKey)
+                .toList();
+
+        if (liveHives.size() == 1) {
+            return liveHives.get(0);
+        }
+
+        return null; // No winner yet or tie
+    }
 }

@@ -1,5 +1,7 @@
 package org.jarec.gui;
 
+import org.jarec.data.Hive;
+import org.jarec.game.GameEndState;
 import org.jarec.game.GameLoop;
 import org.jarec.game.GameStart;
 import org.jarec.util.PropertyHandler;
@@ -41,6 +43,9 @@ public class WorldFrame extends JFrame {
                 Integer.parseInt(PropertyHandler.get("gui.frame.height", "600"))
         );
         setLayout(new BorderLayout());
+
+        // Center the frame on the screen
+        setLocationRelativeTo(null);
 
         statsPanel = new JTextArea();
         statsPanel.append("Splurg World Stats");
@@ -168,9 +173,9 @@ public class WorldFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 log.info("Escape key pressed. Stopping game loop.");
-                GameLoop.getInstance().stop();
                 updateStatus("Game stopped");
                 updateMenuItemsState();
+                displayEndGamePanel(null);
             }
         });
 
@@ -238,9 +243,9 @@ public class WorldFrame extends JFrame {
 
         stopItem = new JMenuItem("Stop");
         stopItem.addActionListener(e -> {
-            GameLoop.getInstance().stop();
             updateStatus("Game stopped");
             updateMenuItemsState();
+            displayEndGamePanel(null);
         });
 
         gameMenu.add(startItem);
@@ -269,6 +274,27 @@ public class WorldFrame extends JFrame {
         setJMenuBar(menuBar);
 
         updateMenuItemsState();
+    }
+
+    public void displayEndGamePanel(Hive winningHive) {
+        GameLoop.getInstance().stop();
+        GameEndState endState = determineEndState(winningHive);
+        SwingUtilities.invokeLater(() -> WinnerPanel.createAndShowWinnerPanel(endState));
+        updateMenuItemsState();
+    }
+
+    private GameEndState determineEndState(Hive winningHive) {
+        if (winningHive == null) {
+            return GameEndState.BOOM;
+        }
+
+        return switch (winningHive.getName().toLowerCase()) {
+            case String s when s.contains("red") -> GameEndState.RED;
+            case String s when s.contains("blue") -> GameEndState.BLUE;
+            case String s when s.contains("yellow") -> GameEndState.YELLOW;
+            case String s when s.contains("green") -> GameEndState.GREEN;
+            default -> GameEndState.ZOMBIE;
+        };
     }
 
     private static JMenu getSettingsMenu() {
@@ -352,7 +378,8 @@ public class WorldFrame extends JFrame {
     private void openHelpWindow() {
         JTextArea helpText = new JTextArea();
         helpText.setText("""
-                This is the help text for the Splurg World game.
+                How to run Splurg World.
+                
                 Use the Game menu to Start, Pause, or Stop the game.
                 You can also use the following keys:
                 Space Bar: Pause/Unpause
@@ -361,6 +388,9 @@ public class WorldFrame extends JFrame {
                 Esc: Ends the current game
                 When paused you can mouse click on the world to see the
                 details of the Splurgs in that area
+                
+                You can use the Settings Menu to choose how many Hives
+                to start the game with and their starting Energy.
                 """);
         helpText.setEditable(false);
         helpText.setCaretPosition(0);
@@ -375,9 +405,13 @@ public class WorldFrame extends JFrame {
             Splurg World
             Version %s
             Developed by %s
+            
             Welcome to Splurg World, a place populated by the Splurgs.
-            Splurgs are Amoeba that just like to float about and fight. Fighting gives them energy that they can take
-            back to their Hives to make more Splurgs. Splurgs can also sometimes spawn new Splurgs when they meet.
+            Splurgs are Amoeba that just like to float about, raid each
+            others Hives and fight. Fighting and raiding gives them
+            energy that they can take back to their Hives to make more
+            Splurgs. Splurgs can also sometimes spawn new Splurgs when
+            they meet.
             """, version, author));
         aboutText.setEditable(false);
         aboutText.setCaretPosition(0);
@@ -385,15 +419,12 @@ public class WorldFrame extends JFrame {
     }
 
     private void updateMenuItemsState() {
-        if (GameLoop.getInstance().isStarted()) {
-            startItem.setEnabled(false);
-            pauseItem.setEnabled(true);
-            stopItem.setEnabled(true);
-        } else {
-            startItem.setEnabled(true);
-            pauseItem.setEnabled(false);
-            stopItem.setEnabled(false);
-        }
+        boolean isRunning = GameLoop.getInstance().isRunning();
+        boolean isStarted = GameLoop.getInstance().isStarted();
+
+        startItem.setEnabled(!isStarted || !isRunning);
+        pauseItem.setEnabled(isStarted);
+        stopItem.setEnabled(isStarted);
 
         if (GameLoop.getInstance().isPaused()) {
             pauseItem.setText("Resume");
