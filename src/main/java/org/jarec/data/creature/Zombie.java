@@ -14,79 +14,38 @@ import org.jarec.gui.WorldFrame;
 import org.jarec.util.GameMath;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
-import org.jarec.util.RandomNameGenerator;
 import org.json.JSONObject;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class Splurg extends Life {
+public class Zombie extends Splurg {
     private final Aggression aggression = new Aggression();
-    private final Foraging foraging = new Foraging();
+//    private final Foraging foraging = new Foraging();
     private final Strength strength = new Strength();
     private final Toughness toughness = new Toughness();
     private Size size;
     private Speed speed;
-    private Hive homeHive;
-    private final String name = RandomNameGenerator.generateName();
-    private int breedingDelay = 0;
 
-    Splurg (){}
+    public Zombie(Splurg source) {
+        super();
 
-    public Splurg(Hive hive) {
-        var homeLocation = hive.getLocation();
-        var location = new Location(homeLocation.getX(), homeLocation.getY());
-        setLocation(location);
+        JSONObject sourceJson = new JSONObject(source.toString());
 
-        commonSetup(hive);
-    }
+        aggression.setValue(10);
 
-    public Splurg(Splurg parent1, Splurg parent2) {
-        JSONObject parent1Json = new JSONObject(parent1.toString());
-        JSONObject parent2Json = new JSONObject(parent2.toString());
+        strength.setValue(sourceJson.getInt("Str"));
+        toughness.setValue(sourceJson.getInt("Tgh"));
 
-        if (parent1Json.getInt("Agg") == parent2Json.getInt("Agg")) {
-            aggression.setValue(parent1Json.getInt("Agg"));
-        }
-        if (parent1Json.getInt("For") == parent2Json.getInt("For")) {
-            foraging.setValue(parent1Json.getInt("For"));
-        }
-        if (parent1Json.getInt("Str") == parent2Json.getInt("Str")) {
-            strength.setValue(parent1Json.getInt("Str"));
-        }
-        if (parent1Json.getInt("Tgh") == parent2Json.getInt("Tgh")) {
-            toughness.setValue(parent1Json.getInt("Tgh"));
-        }
+        JSONObject sourceLocation = sourceJson.getJSONObject("Location");
+        setLocation(new Location(sourceLocation.getInt("x"), sourceLocation.getInt("y")));
 
-        JSONObject location1 = parent1Json.getJSONObject("Location");
-        JSONObject location2 = parent2Json.getJSONObject("Location");
-        setLocation(new Location((location1.getInt("x") + location2.getInt("x")) / 2,
-                (location1.getInt("y") + location2.getInt("y")) / 2));
-
-        var spawnEnergyCost = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
-        parent1.takeEnergy(spawnEnergyCost);
-        parent1.takeEnergy(spawnEnergyCost);
-
-        parent1.resetBreedingDelay();
-        parent2.resetBreedingDelay();
-
-        commonSetup(parent1.getHomeHive());
-    }
-
-    private void commonSetup(Hive hive) {
         size = new Size(toughness, strength);
         speed = new Speed(size);
 
-        setAgeAtBirth();
-        setMaxHealth();
-
-        resetBreedingDelay();
-
-        homeHive = hive;
-
         Splurgs.getInstance().addSplurg(this);
 
-        var statusMessage = name + " of " + homeHive.getName() + " was spawned on turn " + GameLoop.getInstance().getTurn();
+        var statusMessage = "A Zombie Splurg was created on turn " + GameLoop.getInstance().getTurn();
         WorldFrame.getInstance().updateStatus(statusMessage);
     }
 
@@ -131,35 +90,28 @@ public class Splurg extends Life {
     }
 
     private void degradation() {
-        int maxAttribute = Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10"));
-        int degradationRate = Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
-        int sizeValue = getSize().getValue();
-
-        int degradationChance = (maxAttribute - sizeValue) * degradationRate;
-
-        if (degradationChance <= 0 || RandomInt.getRandomInt(degradationChance) % degradationChance != 0) {
-            return;
-        }
-
-        if (getEnergy() > sizeValue) {
-            takeEnergy(sizeValue);
-            return;
-        }
-
-        if (RandomInt.getRandomInt(2) % 2 == 0) {
-            int toughnessValue = toughness.getValue();
-            if (toughnessValue > 2) {
-                toughness.setValue(toughnessValue - 1);
-            }
-        } else {
-            int strengthValue = strength.getValue();
-            if (strengthValue > 2) {
-                strength.setValue(strengthValue - 1);
+        var degradationChange =
+                (Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")) - getSize().getValue()) *
+                        Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
+        if (degradationChange > 0 && RandomInt.getRandomInt(degradationChange) % degradationChange == 0) {
+            if (getEnergy() > getSize().getValue()){
+                takeEnergy(getSize().getValue());
+            } else {
+                if (RandomInt.getRandomInt(2) % 2 == 0) {
+                    var toughnessValue = toughness.getValue();
+                    if (toughnessValue > 2) {
+                        toughness.setValue(toughnessValue - 1);
+                    }
+                } else {
+                    var strengthValue = strength.getValue();
+                    if (strengthValue > 2) {
+                        strength.setValue(strengthValue - 1);
+                    }
+                }
+                size = new Size(toughness, strength);
+                speed = new Speed(size);
             }
         }
-
-        size = new Size(toughness, strength);
-        speed = new Speed(size);
     }
 
     public boolean canBreed() {
@@ -324,22 +276,12 @@ public class Splurg extends Life {
         return strength;
     }
 
-    @VisibleForTesting
-    void setStrength(int value) {
-        strength.setValue(value);
-    }
-
     public Toughness getToughness() {
         return toughness;
     }
 
-    @VisibleForTesting
-    void setToughness(int value) {
-        toughness.setValue(value);
-    }
-
     public Hive getHomeHive() {
-        return homeHive;
+        return null;
     }
 
     @Override

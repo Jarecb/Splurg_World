@@ -43,6 +43,9 @@ public class GameLoop {
         started = true;
         turn = 0;
         energyPeak = 0;
+        spawnPhase = true;
+        maxSplurgs = 0;
+        maxCombatsPerTurn = 0;
         loopSleepTime.set(Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000")));
 
         Thread loopThread = new Thread(() -> {
