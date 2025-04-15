@@ -42,6 +42,7 @@ public class GameLoop {
         running = new AtomicBoolean(true);
         started = true;
         turn = 0;
+        energyPeak = 0;
         loopSleepTime.set(Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000")));
 
         Thread loopThread = new Thread(() -> {
@@ -100,6 +101,9 @@ public class GameLoop {
                 worldPanel.publish();
 
                 WorldFrame.updateStats(getStats());
+                if(Splurgs.getInstance().getLiveHiveCount() <= 1) { // TODO add zombie check here so it doesn't end on 1 if there are zombies? Maybe
+                    WorldFrame.getInstance().displayEndGamePanel(Splurgs.getInstance().getWinningHive());
+                }
 
                 Thread.sleep(loopSleepTime.get());
             } else {
@@ -168,7 +172,7 @@ public class GameLoop {
 
             totalEnergy += hiveEnergy;
         }
-        if (totalEnergy == 0){
+        if (totalEnergy < 10){
             spawnPhase = false;
         }
         if (!spawnPhase && totalEnergy > energyPeak){
