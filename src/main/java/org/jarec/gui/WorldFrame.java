@@ -62,6 +62,15 @@ public class WorldFrame extends JFrame {
         setupMenuBar();
         setupStatusBar();
 
+        // Set custom window icon
+        URL iconURL = getClass().getClassLoader().getResource("icon.png");
+        if (iconURL != null) {
+            Image iconImage = Toolkit.getDefaultToolkit().getImage(iconURL);
+            setIconImage(iconImage);
+        } else {
+            log.warn("Custom icon image not found.");
+        }
+
         setVisible(true);
 
         if (startup) {
