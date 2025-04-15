@@ -17,6 +17,8 @@ import java.net.URL;
 public class WinnerPanel {
     private static final Logger log = LoggerFactory.getLogger(WinnerPanel.class);
 
+    private WinnerPanel(){}
+
     public static void createAndShowWinnerPanel(GameEndState gameEndStata) {
         try {
             BufferedImage image = loadImageFromResources(gameEndStata.getfileName());
@@ -39,6 +41,8 @@ public class WinnerPanel {
             log.error("Failed to load image: {}", e.getMessage());
         } catch (IllegalArgumentException e) {
             log.error(e.getMessage());
+        } catch (NullPointerException e) {
+            log.error("Failed to load the required image");
         }
     }
 
@@ -73,6 +77,7 @@ public class WinnerPanel {
 
         if (resourceUrl == null) {
             log.error("Image not found at: {} Make sure it's in your resources folder and the path is correct.", path);
+            return null;
         }
 
         try (InputStream inputStream = resourceUrl.openStream()) {

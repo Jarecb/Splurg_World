@@ -129,28 +129,35 @@ public class Splurg extends Life {
     }
 
     private void degradation() {
-        var degradationChange =
-                (Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")) - getSize().getValue()) *
-                Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
-        if (degradationChange > 0 && RandomInt.getRandomInt(degradationChange) % degradationChange == 0) {
-            if (getEnergy() > getSize().getValue()){
-                takeEnergy(getSize().getValue());
-            } else {
-                if (RandomInt.getRandomInt(2) % 2 == 0) {
-                    var toughnessValue = toughness.getValue();
-                    if (toughnessValue > 2) {
-                        toughness.setValue(toughnessValue - 1);
-                    }
-                } else {
-                    var strengthValue = strength.getValue();
-                    if (strengthValue > 2) {
-                        strength.setValue(strengthValue - 1);
-                    }
-                }
-                size = new Size(toughness, strength);
-                speed = new Speed(size);
+        int maxAttribute = Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10"));
+        int degradationRate = Integer.parseInt(PropertyHandler.get("splurg.degradation", "0"));
+        int sizeValue = getSize().getValue();
+
+        int degradationChance = (maxAttribute - sizeValue) * degradationRate;
+
+        if (degradationChance <= 0 || RandomInt.getRandomInt(degradationChance) % degradationChance != 0) {
+            return;
+        }
+
+        if (getEnergy() > sizeValue) {
+            takeEnergy(sizeValue);
+            return;
+        }
+
+        if (RandomInt.getRandomInt(2) % 2 == 0) {
+            int toughnessValue = toughness.getValue();
+            if (toughnessValue > 2) {
+                toughness.setValue(toughnessValue - 1);
+            }
+        } else {
+            int strengthValue = strength.getValue();
+            if (strengthValue > 2) {
+                strength.setValue(strengthValue - 1);
             }
         }
+
+        size = new Size(toughness, strength);
+        speed = new Speed(size);
     }
 
     public boolean canBreed() {
