@@ -11,11 +11,13 @@ public class Hive {
     private final String name;
     private int energyReserve = 0;
     private int spawnCountdown = 0;
+    private boolean zombieHive = false;
 
-    public Hive(Location location, Color color, String name) {
+    public Hive(Location location, Color color, String name, boolean zombie) {
         this.location = location;
         this.color = color;
         this.name = name;
+        zombieHive = zombie;
     }
 
     public void setColor(Color color) {
@@ -23,16 +25,22 @@ public class Hive {
     }
 
     public void spawn() {
-        var spawnEnergy = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
-        if (spawnCountdown > 0) {
-            spawnCountdown--;
-        } else {
-            if (energyReserve >= spawnEnergy) {
-                getEnergy(spawnEnergy);
-                spawnCountdown = Integer.parseInt(PropertyHandler.get("hive.default.spawn.rate", "5"));
-                new Splurg(this);
+        if (!zombieHive) {
+            var spawnEnergy = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
+            if (spawnCountdown > 0) {
+                spawnCountdown--;
+            } else {
+                if (energyReserve >= spawnEnergy) {
+                    getEnergy(spawnEnergy);
+                    spawnCountdown = Integer.parseInt(PropertyHandler.get("hive.default.spawn.rate", "5"));
+                    new Splurg(this);
+                }
             }
         }
+    }
+
+    public boolean isZombie() {
+        return zombieHive;
     }
 
     public Location getLocation() {
@@ -77,6 +85,7 @@ public class Hive {
                         "\"color\": {\"r\": %d, \"g\": %d, \"b\": %d}," +
                         "\"energyReserve\": %d," +
                         "\"spawnCountdown\": %d" +
+                        "\"zombie\": %b" +
                         "}}",
                 name,
                 location != null ? location.toString() : "null",
@@ -84,7 +93,8 @@ public class Hive {
                 color != null ? color.getGreen() : 0,
                 color != null ? color.getBlue() : 0,
                 energyReserve,
-                spawnCountdown
+                spawnCountdown,
+                zombieHive
         );
     }
 }

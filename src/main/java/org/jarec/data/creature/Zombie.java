@@ -21,11 +21,12 @@ import java.util.List;
 
 public class Zombie extends Splurg {
     private final Aggression aggression = new Aggression();
-//    private final Foraging foraging = new Foraging();
     private final Strength strength = new Strength();
     private final Toughness toughness = new Toughness();
     private Size size;
     private Speed speed;
+    private boolean active = false;
+    private int activationDelay = Integer.parseInt(PropertyHandler.get("zombie.default.activation.delay", "20"));
 
     public Zombie(Splurg source) {
         super();
@@ -41,7 +42,7 @@ public class Zombie extends Splurg {
         setLocation(new Location(sourceLocation.getInt("x"), sourceLocation.getInt("y")));
 
         size = new Size(toughness, strength);
-        speed = new Speed(size);
+        speed = new Speed(size,  Integer.parseInt(PropertyHandler.get("zombie.default.speed.multiplier", "2")));
 
         Splurgs.getInstance().addSplurg(this);
 
@@ -62,26 +63,16 @@ public class Zombie extends Splurg {
     }
 
     public void move() {
-
-        var location = getLocation();
-        var targetAcquired = findTarget();
-        if (!targetAcquired) {
-            randomisePath();
-        } else if (getEnergy() > getSize().getValue()) {
-//            setHeading(HeadingUtils.getHeadingTo(location, homeHive.getLocation()));
+        if(active) {
+            var location = getLocation();
+            var targetAcquired = findTarget();
+            if (!targetAcquired) {
+                setHeading(null);
+            }
+            setHeading(location.updateLocation(getHeading()));
+            setLocation(location);
         }
-        setHeading(location.updateLocation(getHeading()));
-        setLocation(location);
     }
-
-    private void randomisePath(){
-        var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
-        if (RandomInt.getRandomInt(randomness) % randomness == 0) {
-            setHeading(getHeading().getRandomTurn());
-        }
-
-    }
-
 
     public boolean canBreed() {
         return false;
@@ -107,19 +98,7 @@ public class Zombie extends Splurg {
             }
         }
 
-        if (getHeading() == null) {
-        }
-
         return false;
-    }
-
-    private Hive findNearestEnemyHive(Location currentLocation, List<Hive> hives, double threshold) {
-        return hives.stream()
-//                .filter(candidate -> !candidate.equals(homeHive))
-                .filter(candidate -> candidate.getEnergyReserve() > 0)
-                .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), threshold))
-                .min(Comparator.comparingDouble(candidate -> GameMath.calculateHypotenuse(currentLocation, candidate.getLocation())))
-                .orElse(null);
     }
 
     private Splurg findNearestEnemySplurg(Location currentLocation, List<Splurg> splurgs, double threshold) {
@@ -157,11 +136,6 @@ public class Zombie extends Splurg {
 
     public Aggression getAggression() {
         return aggression;
-    }
-
-    @VisibleForTesting
-    void setAggression(int value) {
-        aggression.setValue(value);
     }
 
     public Foraging getForaging() {

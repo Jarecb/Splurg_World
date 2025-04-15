@@ -28,6 +28,7 @@ public class WorldFrame extends JFrame {
 
     private static int hiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
     private static int hiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
+    private static boolean zombiesActive = Boolean.parseBoolean(PropertyHandler.get("game.default.zombie", "false"));
     private String currentStatusMessage = "";
     private int messageTurnSet = -1;
     private static final int MESSAGE_DURATION_TURNS = 50;
@@ -237,7 +238,7 @@ public class WorldFrame extends JFrame {
             add(world, BorderLayout.CENTER);
             revalidate();
             repaint();
-            new GameStart(hiveCount, hiveEnergy);
+            new GameStart(hiveCount, hiveEnergy, zombiesActive);
             remove(wrapper);
             updateStatus("Game started");
             updateMenuItemsState();
@@ -366,6 +367,11 @@ public class WorldFrame extends JFrame {
         energyGroup.add(threeHundredEnergyItem);
         energyGroup.add(fourHundredEnergyItem);
 
+        JCheckBoxMenuItem zombiesToggle = new JCheckBoxMenuItem("Zombies", zombiesActive);
+        zombiesToggle.addActionListener(e -> {
+            zombiesActive = zombiesToggle.isSelected();
+        });
+
         settingsMenu.add(twoHivesItem);
         settingsMenu.add(fourHivesItem);
         settingsMenu.addSeparator();
@@ -373,6 +379,9 @@ public class WorldFrame extends JFrame {
         settingsMenu.add(twoHundredEnergyItem);
         settingsMenu.add(threeHundredEnergyItem);
         settingsMenu.add(fourHundredEnergyItem);
+        settingsMenu.addSeparator();
+        settingsMenu.add(zombiesToggle);
+
         return settingsMenu;
     }
 

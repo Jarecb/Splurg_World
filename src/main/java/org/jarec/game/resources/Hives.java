@@ -65,35 +65,37 @@ public class Hives {
 
         synchronized (hiveList) {
             for (Hive hive : hiveList) {
-                int x = hive.getLocation().getX();
-                int y = hive.getLocation().getY();
+                if (!hive.isZombie()) {
+                    int x = hive.getLocation().getX();
+                    int y = hive.getLocation().getY();
 
-                int drawX = x - (HIVE_SIZE / 2);
-                int drawY = y - (HIVE_SIZE / 2);
+                    int drawX = x - (HIVE_SIZE / 2);
+                    int drawY = y - (HIVE_SIZE / 2);
 
-                // Fill circle if hive alive
-                if (hive.getColor() != null) {
-                    Color color = hive.getColor();
-                    g2.setColor(color);
-                    g2.fillOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
+                    // Fill circle if hive alive
+                    if (hive.getColor() != null) {
+                        Color color = hive.getColor();
+                        g2.setColor(color);
+                        g2.fillOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
+                    }
+
+                    // Draw border
+                    g2.setColor(new Color(0, 0, 0, 128));
+                    g2.setStroke(thickStroke);
+                    g2.drawOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
+
+                    // Draw energy text (centered)
+                    String energyText = String.valueOf(hive.getEnergyReserve());
+                    FontMetrics fm = g2.getFontMetrics();
+                    int textWidth = fm.stringWidth(energyText);
+                    int textHeight = fm.getAscent();
+
+                    int textX = x - textWidth / 2;
+                    int textY = y + textHeight / 2 - 2;
+
+                    g2.setColor(Color.BLACK);
+                    g2.drawString(energyText, textX, textY);
                 }
-
-                // Draw border
-                g2.setColor(new Color(0, 0, 0, 128));
-                g2.setStroke(thickStroke);
-                g2.drawOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
-
-                // Draw energy text (centered)
-                String energyText = String.valueOf(hive.getEnergyReserve());
-                FontMetrics fm = g2.getFontMetrics();
-                int textWidth = fm.stringWidth(energyText);
-                int textHeight = fm.getAscent();
-
-                int textX = x - textWidth / 2;
-                int textY = y + textHeight / 2 - 2;
-
-                g2.setColor(Color.BLACK);
-                g2.drawString(energyText, textX, textY);
             }
         }
 

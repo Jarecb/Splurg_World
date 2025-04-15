@@ -23,6 +23,7 @@ public class GameLoop {
     private AtomicBoolean running = new AtomicBoolean(false);
     private volatile boolean started = false;
     private final AtomicInteger loopSleepTime = new AtomicInteger(0);
+    private boolean zombiesActive;
 
     private boolean spawnPhase = true;
     private int energyPeak = 0;
@@ -37,8 +38,9 @@ public class GameLoop {
         return INSTANCE;
     }
 
-    public void start() {
+    public void start(boolean zombiesActive) {
         if (started) return;
+        this.zombiesActive = zombiesActive;
         running = new AtomicBoolean(true);
         started = true;
         turn = 0;
@@ -151,6 +153,8 @@ public class GameLoop {
     }
 
     private String getStats(){
+        // TODO Adjust stats for zombies
+
         StringBuilder sb = new StringBuilder("\n");
 
         sb.append("Turn: ").append(turn).append("\n\n");
@@ -202,7 +206,16 @@ public class GameLoop {
         sb.append("\nAve. Strength: ").append(splurgs.getAverageSplurgStrength());
         sb.append("\nAve. Toughness: ").append(splurgs.getAverageSplurgToughness());
 
+        sb.append("\n\nCurrent Zombies: ");
+        sb.append("\nZombies Spawned: ");
+        sb.append("\nZombies Killed: ");
+        sb.append("\nMax Zombies: ");
+
         return sb.toString();
+    }
+
+    public boolean areZombiesActive(){
+        return zombiesActive;
     }
 
     private String getSplurgs() {
