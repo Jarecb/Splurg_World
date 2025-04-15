@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SplurgTest {
 
-    private static final Hive TEST_HIVE = new Hive(new Location(0, 0), Color.RED, "The Hive");
+    private static final Hive TEST_HIVE = new Hive(new Location(0, 0), Color.RED, "The Hive", false);
 
     @Test
     void getAge() {

@@ -7,6 +7,10 @@ public class Speed implements Attribute {
         speedValue = Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")) - size.getValue();
     }
 
+    public Speed(Size size, int multiplier) {
+        speedValue = multiplier * Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")) - size.getValue();
+    }
+
     private final int speedValue;
 
     @Override

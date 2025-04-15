@@ -7,7 +7,7 @@ import java.awt.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HiveTest {
-    private static final Hive TEST_HIVE = new Hive(new Location(10, 20), Color.RED, "The Hive");
+    private static final Hive TEST_HIVE = new Hive(new Location(10, 20), Color.RED, "The Hive", false);
 
     @Test
     void getEnergy() {
