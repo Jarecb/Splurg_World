@@ -12,11 +12,13 @@ import java.util.List;
 
 public class Hives {
     private static final Hives INSTANCE = new Hives();
+    private static Hive zombieHive;
 
     // Thread-safe list to handle concurrent access if needed
     private final List<Hive> hiveList = Collections.synchronizedList(new ArrayList<>());
 
     private static final int HIVE_SIZE = Integer.parseInt(PropertyHandler.get("hive.default.size", "20"));
+    private static int activeHiveCount;
 
     private Hives() {
     }
@@ -25,9 +27,16 @@ public class Hives {
         return INSTANCE;
     }
 
+    public static Hive getZombieHive() {
+        return zombieHive;
+    }
+
     public void addHive(Hive hive) {
         if (hive != null) {
             hiveList.add(hive);
+        }
+        if (hive.isZombie()){
+            zombieHive = hive;
         }
     }
 
@@ -100,5 +109,13 @@ public class Hives {
         g2.setFont(originalFont);
         g2.setStroke(originalStroke);
         g2.dispose();
+    }
+
+    public void setHiveCount(int hiveCount) {
+        this.activeHiveCount = hiveCount;
+    }
+
+    public int getHiveCount() {
+        return this.activeHiveCount;
     }
 }

@@ -6,10 +6,12 @@ import org.jarec.data.creature.Life;
 import org.jarec.data.creature.Splurg;
 import org.jarec.data.creature.Zombie;
 import org.jarec.game.GameEndState;
+import org.jarec.game.GameLoop;
 import org.jarec.gui.WinnerPanel;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
+import org.jarec.util.RandomInt;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +24,9 @@ import static org.jarec.util.GameMath.calculateHypotenuse;
 public class Splurgs {
     private static int deaths = 0;
     private static int spawns = 0;
+    private static int zombieDeaths = 0;
+    private static int zombieSpawns = 0;
+    private static final int ZOMBIE_SPAWN_CHANCE = Integer.parseInt(PropertyHandler.get("zombie.default.change", "1000")) * Hives.getInstance().getHiveCount();
 
     private final List<Splurg> splurgList = new ArrayList<>();
 
@@ -57,6 +62,14 @@ public class Splurgs {
 
     public int getSpawns() {
         return spawns;
+    }
+
+    public int getZombieSpawns() {
+        return zombieSpawns;
+    }
+
+    public int getZombieDeaths() {
+        return zombieDeaths;
     }
 
     public List<Splurg> getSplurgs() {
@@ -96,29 +109,34 @@ public class Splurgs {
     }
 
     public void removeDeadSplurgs() {
+        List<Splurg> deadSplurgs = new ArrayList<>();
+        List<Splurg> newZombies = new ArrayList<>();
+
         synchronized (splurgList) {
-            splurgList.removeIf(splurg -> {
-                boolean isDead = splurg.getHealth() <= 0;
-                if (isDead) {
+            for (Splurg splurg : new ArrayList<>(splurgList)) {
+                if (splurg.getHealth() <= 0) {
+                    deadSplurgs.add(splurg);
+                    if(splurg instanceof Zombie){
+                        zombieDeaths++;
+                    }
+
                     var statusMessage = splurg.getName() + " of " + splurg.getHomeHive().getName() + " has died";
                     WorldFrame.getInstance().updateStatus(statusMessage);
                     deaths++;
+
+                    if (GameLoop.getInstance().areZombiesActive()) {
+                        if (RandomInt.getRandomInt(ZOMBIE_SPAWN_CHANCE) % ZOMBIE_SPAWN_CHANCE == 0 || splurg.isInfected()) {
+                            var zombie = new Zombie(splurg);
+                            zombieSpawns++;
+                            newZombies.add(zombie);
+                        }
+                    }
                 }
-                return isDead;
-            });
-            updateHiveColorsForEmptyHives();
-        }
-    }
-
-    private void updateHiveColorsForEmptyHives() {
-        Map<Hive, Long> livingCounts = splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()));
-
-        List<Hive> allHives = Hives.getInstance().getHives();
-
-        for (Hive hive : allHives) {
-            if ((!livingCounts.containsKey(hive) || livingCounts.get(hive) == 0) && hive.getEnergyReserve() < Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"))) {
-                hive.setColor(null);
             }
+
+            splurgList.removeAll(deadSplurgs);
+
+            splurgList.addAll(newZombies);
         }
     }
 
@@ -238,6 +256,9 @@ public class Splurgs {
                 int x = splurg.getLocation().getX();
                 int y = splurg.getLocation().getY();
                 Color color = splurg.getHomeHive().getColor();
+                if (splurg instanceof Zombie){
+                    color = Color.BLACK;
+                }
 
                 g2.setColor(color);
                 g2.fillOval(x - (size / 2), y - (size / 2), size, size);
@@ -365,7 +386,7 @@ public class Splurgs {
             return liveHives.get(0);
         }
 
-        if (getTotalSplurgs() > WorldFrame.getInstance().getMaxPopulation()) {
+        if (getTotalSplurgs() > WorldFrame.getMaxPopulation()) {
             SwingUtilities.invokeLater(() -> WinnerPanel.createAndShowWinnerPanel(GameEndState.STALEMATE));
         }
         return null; // No winner yet

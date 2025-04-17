@@ -21,17 +21,19 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Splurg extends Life {
-    private final Aggression aggression = new Aggression();
-    private final Foraging foraging = new Foraging();
-    private final Strength strength = new Strength();
-    private final Toughness toughness = new Toughness();
-    private Size size;
-    private Speed speed;
+    Aggression aggression = new Aggression();
+    Foraging foraging = new Foraging();
+    Strength strength = new Strength();
+    Toughness toughness = new Toughness();
+    Size size;
+    Speed speed;
     private Hive homeHive;
     String name = RandomNameGenerator.generateName();
     private int breedingDelay = 0;
+    private boolean infectedByZombie = false;
 
-    Splurg (){}
+    Splurg() {
+    }
 
     public Splurg(Hive hive) {
         var homeLocation = hive.getLocation();
@@ -103,6 +105,18 @@ public class Splurg extends Life {
                 + toughness.getValue());
     }
 
+    void setHomeHive(Hive hive) {
+        homeHive = hive;
+    }
+
+    public void setInfectedByZombie(boolean zombieAttack) {
+        infectedByZombie = zombieAttack;
+    }
+
+    public boolean isInfected() {
+        return infectedByZombie;
+    }
+
     public void move() {
         degradation();
         age();
@@ -122,7 +136,7 @@ public class Splurg extends Life {
         setLocation(location);
     }
 
-    private void randomisePath(){
+    private void randomisePath() {
         var randomness = Integer.parseInt(PropertyHandler.get("splurg.default.pathing.randomness", "5"));
         if (RandomInt.getRandomInt(randomness) % randomness == 0) {
             setHeading(getHeading().getRandomTurn());
@@ -238,7 +252,7 @@ public class Splurg extends Life {
                 .orElse(null);
     }
 
-    private Splurg findNearestEnemySplurg(Location currentLocation, List<Splurg> splurgs, double threshold) {
+    Splurg findNearestEnemySplurg(Location currentLocation, List<Splurg> splurgs, double threshold) {
         return splurgs.stream()
                 .filter(candidate -> candidate != this)
                 .filter(candidate -> !candidate.getHomeHive().equals(homeHive))
@@ -247,18 +261,18 @@ public class Splurg extends Life {
                 .orElse(null);
     }
 
-    private boolean isWithinThreshold(Location current, Location candidate, double threshold) {
+    boolean isWithinThreshold(Location current, Location candidate, double threshold) {
         double dx = current.getX() - (double) candidate.getX();
         double dy = current.getY() - (double) candidate.getY();
         double distance = Math.sqrt(dx * dx + dy * dy);
         return distance <= threshold;
     }
 
-    private void handleEnemySplurgFound(Splurg enemy) {
+    void handleEnemySplurgFound(Splurg enemy) {
         Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), enemy.getLocation());
 
-        if (newHeading == null || GameMath.calculateHypotenuse(getLocation(),
-                enemy.getLocation()) < (getSize().getValue() + enemy.getSize().getValue() - 1)) {
+        if (!(enemy instanceof Zombie) && (newHeading == null || GameMath.calculateHypotenuse(getLocation(),
+                enemy.getLocation()) < (getSize().getValue() + enemy.getSize().getValue() - 1))) {
             var combatBreak = Integer.parseInt(PropertyHandler.get("splurg.default.stuck.break", "10"));
             if (RandomInt.getRandomInt(combatBreak) % combatBreak == 0) {
                 setHeading(getHeading().getRandomTurn());

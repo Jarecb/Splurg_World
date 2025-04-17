@@ -13,6 +13,7 @@ public class GameStart {
 
     public GameStart(int hiveCount, int hiveEnergy, boolean zombiesActive) {
         Hives.getInstance().clearHives();
+        Hives.getInstance().setHiveCount(hiveCount);
 
         var worldWidth = WorldFrame.getInstance().getWorldPanel().getWorldWidth();
         var worldHeight = WorldFrame.getInstance().getWorldPanel().getWorldHeight();
@@ -61,7 +62,9 @@ public class GameStart {
         }
 
         if (zombiesActive) {
-            Hive zombieHive = new Hive(new Location(0, 0), new Color(64, 64, 64, 128),
+//            Hive zombieHive = new Hive(new Location(0, 0), new Color(64, 64, 64, 128),
+//                    "Zombie Hive", true);
+            Hive zombieHive = new Hive(new Location(0, 0), new Color(0, 0, 0, 255),
                     "Zombie Hive", true);
             Hives.getInstance().addHive(zombieHive);
         }

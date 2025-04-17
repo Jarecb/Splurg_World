@@ -16,7 +16,13 @@ public class Combat {
         var baResult = damageB - damageA;
         var abResult = damageA - damageB;
         splurgA.reduceHealth(baResult);
+        if (abResult > 0 && splurgA instanceof Zombie && !(splurgB instanceof Zombie)) {
+            splurgB.setInfectedByZombie(true);
+        }
         splurgB.reduceHealth(abResult);
+        if (baResult > 0 && splurgB instanceof Zombie && !(splurgA instanceof Zombie)) {
+            splurgA.setInfectedByZombie(true);
+        }
         GameLoop.getInstance().incrementCombatsPerTurn();
     }
 
