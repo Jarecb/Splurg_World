@@ -58,7 +58,6 @@ public class Hives {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         Stroke originalStroke = g2.getStroke();
-        Stroke thickStroke = new BasicStroke(2);
         Font originalFont = g2.getFont();
         Font energyFont = new Font("Arial", Font.BOLD, 12);
         g2.setFont(energyFont);
@@ -72,24 +71,20 @@ public class Hives {
                     int drawX = x - (HIVE_SIZE / 2);
                     int drawY = y - (HIVE_SIZE / 2);
 
-                    // Fill circle if hive alive
-                    if (hive.getColor() != null) {
-                        Color color = hive.getColor();
-                        g2.setColor(color);
-                        g2.fillOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
+                    var hiveImage = hive.getIcon();
+
+                    if (hiveImage != null) {
+                        Composite originalComposite = g2.getComposite();
+                        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                        g2.drawImage(hiveImage, drawX, drawY, HIVE_SIZE, HIVE_SIZE, null);
+                        g2.setComposite(originalComposite);
                     }
 
-                    // Draw border
-                    g2.setColor(new Color(0, 0, 0, 128));
-                    g2.setStroke(thickStroke);
-                    g2.drawOval(drawX, drawY, HIVE_SIZE, HIVE_SIZE);
-
-                    // Draw energy text (centered)
+                    // Draw energy text
                     String energyText = String.valueOf(hive.getEnergyReserve());
                     FontMetrics fm = g2.getFontMetrics();
                     int textWidth = fm.stringWidth(energyText);
                     int textHeight = fm.getAscent();
-
                     int textX = x - textWidth / 2;
                     int textY = y + textHeight / 2 - 2;
 
