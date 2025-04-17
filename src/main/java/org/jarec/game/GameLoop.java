@@ -210,10 +210,12 @@ public class GameLoop {
         sb.append("\nAve. Strength: ").append(splurgs.getAverageSplurgStrength());
         sb.append("\nAve. Toughness: ").append(splurgs.getAverageSplurgToughness());
 
-        sb.append("\n\nCurrent Zombies: ");
-        sb.append("\nZombies Spawned: ");
-        sb.append("\nZombies Killed: ");
-        sb.append("\nMax Zombies: ");
+        if (zombiesActive) {
+            sb.append("\n\nCurrent Zombies: ");
+            sb.append("\nZombies Spawned: ");
+            sb.append("\nZombies Killed: ");
+            sb.append("\nMax Zombies: ");
+        }
 
         return sb.toString();
     }
@@ -244,5 +246,4 @@ public class GameLoop {
 
         return stats.toString();
     }
-
 }
