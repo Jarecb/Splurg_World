@@ -12,6 +12,7 @@ public abstract class Life {
     private int energy = 0;
     private Location location;
     private Heading heading = Heading.getRandomHeading();
+    private boolean zombie = false;
 
     public void setAge(int age) {
         this.age = age;
@@ -53,36 +54,51 @@ public abstract class Life {
     }
 
     public void recoverHealth(int recovery) {
-        setHealth(health + recovery);
+        if (!zombie) {
+            setHealth(health + recovery);
+        }
     }
 
     public boolean reduceHealth(int reduction) {
+        if (zombie && reduction < 0) {
+            return true;
+        }
         setHealth(health - reduction);
         return health > 0;
     }
 
     public void heal() {
-        if (health < maxHealth) {
-            health += takeEnergy(1);
+        if (!zombie) {
+            if (health < maxHealth) {
+                health += takeEnergy(1);
+            }
         }
     }
 
     public void increaseEnergy(int bonus) {
-        energy += bonus;
+        if (!zombie) {
+            energy += bonus;
+        }
     }
 
     public int takeEnergy(int drain) {
-        if (drain <= energy) {
-            energy -= drain;
+        if (!zombie) {
+            if (drain <= energy) {
+                energy -= drain;
+                return drain;
+            }
+            drain = energy;
+            energy = 0;
             return drain;
         }
-        drain = energy;
-        energy = 0;
-        return drain;
+        return 0;
     }
 
     public int getEnergy() {
-        return energy;
+        if (!zombie) {
+            return energy;
+        }
+        return 0;
     }
 
     public void setLocation(Location location) {
@@ -102,5 +118,9 @@ public abstract class Life {
 
     public void setHeading(Heading heading) {
         this.heading = heading;
+    }
+
+    public void setZombie(boolean isZombie) {
+        zombie = isZombie;
     }
 }

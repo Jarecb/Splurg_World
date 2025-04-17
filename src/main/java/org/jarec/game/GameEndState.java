@@ -6,7 +6,7 @@ public enum GameEndState {
     RED("Red_Wins.png"),
     YELLOW("Yellow_Wins.png"),
     ZOMBIE("Nobody_Wins.png"),
-    BOOM("Population_Boom.png");
+    STALEMATE("Truce.png");
 
     private final String fileName;
 

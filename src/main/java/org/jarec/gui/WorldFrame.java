@@ -28,6 +28,7 @@ public class WorldFrame extends JFrame {
 
     private static int hiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
     private static int hiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
+    private static int maxPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
     private static boolean zombiesActive = Boolean.parseBoolean(PropertyHandler.get("game.default.zombie", "false"));
     private String currentStatusMessage = "";
     private int messageTurnSet = -1;
@@ -75,7 +76,6 @@ public class WorldFrame extends JFrame {
         setVisible(true);
 
         if (startup) {
-            // Add this to your constructor after setVisible(true)
             addComponentListener(new ComponentAdapter() {
                 @Override
                 public void componentResized(ComponentEvent e) {
@@ -139,7 +139,7 @@ public class WorldFrame extends JFrame {
             wrapper.add(splashImage);
 
             // Remove any existing center component first
-            Component center = ((BorderLayout)getContentPane().getLayout()).getLayoutComponent(BorderLayout.CENTER);
+            Component center = ((BorderLayout) getContentPane().getLayout()).getLayoutComponent(BorderLayout.CENTER);
             if (center != null) {
                 remove(center);
             }
@@ -295,7 +295,7 @@ public class WorldFrame extends JFrame {
 
     private GameEndState determineEndState(Hive winningHive) {
         if (winningHive == null) {
-            return GameEndState.BOOM;
+            return GameEndState.STALEMATE;
         }
 
         return switch (winningHive.getName().toLowerCase()) {
@@ -312,9 +312,11 @@ public class WorldFrame extends JFrame {
 
         ButtonGroup hiveGroup = new ButtonGroup();
         ButtonGroup energyGroup = new ButtonGroup();
+        ButtonGroup populationGroup = new ButtonGroup();
 
         var defaultHiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
         var defaultHiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
+        var defaultPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
 
         JRadioButtonMenuItem twoHivesItem = new JRadioButtonMenuItem("2 Hives", defaultHiveCount == 2);
         twoHivesItem.addActionListener(e -> {
@@ -367,6 +369,44 @@ public class WorldFrame extends JFrame {
         energyGroup.add(threeHundredEnergyItem);
         energyGroup.add(fourHundredEnergyItem);
 
+        // Max population setup radio buttons
+        var lowPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.low", "500"));
+        JRadioButtonMenuItem lowPopulationItem = new JRadioButtonMenuItem("Max Population Low", defaultPopulation == lowPopulation);
+        lowPopulationItem.addActionListener(e -> {
+            if (lowPopulationItem.isSelected()) {
+                setMaxPopulation(lowPopulation);
+            }
+        });
+
+        var mediumPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
+        JRadioButtonMenuItem mediumPopulationItem = new JRadioButtonMenuItem("Max Population Medium", defaultPopulation == mediumPopulation);
+        mediumPopulationItem.addActionListener(e -> {
+            if (mediumPopulationItem.isSelected()) {
+                setMaxPopulation(mediumPopulation);
+            }
+        });
+
+        var highPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.high", "1000"));
+        JRadioButtonMenuItem highPopulationItem = new JRadioButtonMenuItem("Max Population High", defaultPopulation == highPopulation);
+        highPopulationItem.addActionListener(e -> {
+            if (highPopulationItem.isSelected()) {
+                setMaxPopulation(highPopulation);
+            }
+        });
+
+        var extremePopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.extreme", "1500"));
+        JRadioButtonMenuItem extremePopulationItem = new JRadioButtonMenuItem("Max Population Extreme", defaultPopulation == extremePopulation);
+        lowPopulationItem.addActionListener(e -> {
+            if (extremePopulationItem.isSelected()) {
+                setMaxPopulation(extremePopulation);
+            }
+        });
+
+        populationGroup.add(lowPopulationItem);
+        populationGroup.add(mediumPopulationItem);
+        populationGroup.add(highPopulationItem);
+        populationGroup.add(extremePopulationItem);
+
         JCheckBoxMenuItem zombiesToggle = new JCheckBoxMenuItem("Zombies", zombiesActive);
         zombiesToggle.addActionListener(e -> {
             zombiesActive = zombiesToggle.isSelected();
@@ -380,6 +420,11 @@ public class WorldFrame extends JFrame {
         settingsMenu.add(threeHundredEnergyItem);
         settingsMenu.add(fourHundredEnergyItem);
         settingsMenu.addSeparator();
+        settingsMenu.add(lowPopulationItem);
+        settingsMenu.add(mediumPopulationItem);
+        settingsMenu.add(highPopulationItem);
+        settingsMenu.add(extremePopulationItem);
+        settingsMenu.addSeparator();
         settingsMenu.add(zombiesToggle);
 
         return settingsMenu;
@@ -387,6 +432,14 @@ public class WorldFrame extends JFrame {
 
     private static void setHiveEnergy(int energy) {
         hiveEnergy = energy;
+    }
+
+    private static void setMaxPopulation(int population) {
+        maxPopulation = population;
+    }
+
+    public static int getMaxPopulation() {
+        return maxPopulation;
     }
 
     private static void setHiveCount(int hives) {
@@ -397,7 +450,7 @@ public class WorldFrame extends JFrame {
         JTextArea helpText = new JTextArea();
         helpText.setText("""
                 How to run Splurg World.
-                
+                                
                 Use the Game menu to Start, Pause, or Stop the game.
                 You can also use the following keys:
                 Space Bar: Pause/Unpause
@@ -406,7 +459,7 @@ public class WorldFrame extends JFrame {
                 Esc: Ends the current game
                 When paused you can mouse click on the world to see the
                 details of the Splurgs in that area
-                
+                                
                 You can use the Settings Menu to choose how many Hives
                 to start the game with and their starting Energy.
                 """);
@@ -420,17 +473,17 @@ public class WorldFrame extends JFrame {
         var version = PropertyHandler.get("version", "0.0");
         JTextArea aboutText = new JTextArea();
         aboutText.setText(String.format("""
-            Splurg World
-            Version %s
-            Developed by %s
-            
-            Welcome to Splurg World, a place populated by the Splurgs.
-            Splurgs are Amoeba that just like to float about, raid each
-            others Hives and fight. Fighting and raiding gives them
-            energy that they can take back to their Hives to make more
-            Splurgs. Splurgs can also sometimes spawn new Splurgs when
-            they meet.
-            """, version, author));
+                Splurg World
+                Version %s
+                Developed by %s
+                            
+                Welcome to Splurg World, a place populated by the Splurgs.
+                Splurgs are Amoeba that just like to float about, raid each
+                others Hives and fight. Fighting and raiding gives them
+                energy that they can take back to their Hives to make more
+                Splurgs. Splurgs can also sometimes spawn new Splurgs when
+                they meet.
+                """, version, author));
         aboutText.setEditable(false);
         aboutText.setCaretPosition(0);
         JOptionPane.showMessageDialog(this, new JScrollPane(aboutText), "About", JOptionPane.INFORMATION_MESSAGE);

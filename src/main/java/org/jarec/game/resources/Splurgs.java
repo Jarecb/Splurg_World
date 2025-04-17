@@ -4,10 +4,13 @@ import org.jarec.data.Hive;
 import org.jarec.data.Location;
 import org.jarec.data.creature.Life;
 import org.jarec.data.creature.Splurg;
+import org.jarec.game.GameEndState;
+import org.jarec.gui.WinnerPanel;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.*;
@@ -41,6 +44,10 @@ public class Splurgs {
                 spawns++;
             }
         }
+    }
+
+    public int getTotalSplurgs(){
+        return getCounts().values().stream().mapToInt(Math::toIntExact).sum();
     }
 
     public int getDeaths() {
@@ -338,6 +345,10 @@ public class Splurgs {
             return liveHives.get(0);
         }
 
-        return null; // No winner yet or tie
+        if (getTotalSplurgs() > WorldFrame.getInstance().getMaxPopulation())
+        {
+            SwingUtilities.invokeLater(() -> WinnerPanel.createAndShowWinnerPanel(GameEndState.STALEMATE));
+        }
+        return null; // No winner yet
     }
 }
