@@ -325,6 +325,13 @@ public class WorldFrame extends JFrame {
             }
         });
 
+        JRadioButtonMenuItem threeHivesItem = new JRadioButtonMenuItem("3 Hives", defaultHiveCount == 3);
+        threeHivesItem.addActionListener(e -> {
+            if (threeHivesItem.isSelected()) {
+                setHiveCount(3);
+            }
+        });
+
         JRadioButtonMenuItem fourHivesItem = new JRadioButtonMenuItem("4 Hives", defaultHiveCount == 4);
         fourHivesItem.addActionListener(e -> {
             if (fourHivesItem.isSelected()) {
@@ -333,6 +340,7 @@ public class WorldFrame extends JFrame {
         });
 
         hiveGroup.add(twoHivesItem);
+        hiveGroup.add(threeHivesItem);
         hiveGroup.add(fourHivesItem);
 
         // Energy setup radio buttons
@@ -413,6 +421,7 @@ public class WorldFrame extends JFrame {
         });
 
         settingsMenu.add(twoHivesItem);
+        settingsMenu.add(threeHivesItem);
         settingsMenu.add(fourHivesItem);
         settingsMenu.addSeparator();
         settingsMenu.add(oneHundredEnergyItem);

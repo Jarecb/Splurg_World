@@ -3,12 +3,14 @@ package org.jarec.game;
 import org.jarec.data.Hive;
 import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
+import org.jarec.gui.WinnerPanel;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -106,7 +108,9 @@ public class GameLoop {
                 worldPanel.publish();
 
                 WorldFrame.updateStats(getStats());
-                if(Splurgs.getInstance().getLiveHiveCount() <= 1) { // TODO add zombie check here so it doesn't end on 1 if there are zombies? Maybe
+
+                // Endgame check
+                if(Splurgs.getInstance().getLiveHiveCount() <= 1 || Splurgs.getInstance().getTotalSplurgs() > WorldFrame.getInstance().getMaxPopulation()) { // TODO add zombie check here so it doesn't end on 1 if there are zombies? Maybe
                     WorldFrame.getInstance().displayEndGamePanel(Splurgs.getInstance().getWinningHive());
                 }
 
