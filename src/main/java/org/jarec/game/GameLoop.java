@@ -33,6 +33,7 @@ public class GameLoop {
     private int combatsPerTurn = 0;
     private int maxCombatsPerTurn = 0;
     private int maxSplurgs = 0;
+    private int maxZombies = 0;
 
     private GameLoop() {}
 
@@ -50,6 +51,7 @@ public class GameLoop {
         spawnPhase = true;
         maxSplurgs = 0;
         maxCombatsPerTurn = 0;
+        maxZombies = 0;
         loopSleepTime.set(Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000")));
 
         Thread loopThread = new Thread(() -> {
@@ -211,10 +213,16 @@ public class GameLoop {
         sb.append("\nAve. Toughness: ").append(splurgs.getAverageSplurgToughness());
 
         if (zombiesActive) {
-            sb.append("\n\nCurrent Zombies: ");
-            sb.append("\nZombies Spawned: ");
-            sb.append("\nZombies Killed: ");
-            sb.append("\nMax Zombies: ");
+            var zSpawns = splurgs.getZombieSpawns();
+            var zDeaths = splurgs.getZombieDeaths();
+            var zCurrent = zSpawns - zDeaths;
+            if (zCurrent > maxZombies) {
+                maxZombies++;
+            }
+            sb.append("\n\nCurrent Zombies: ").append(zCurrent);
+            sb.append("\nZombies Spawned: ").append(zSpawns);
+            sb.append("\nZombies Killed: ").append(zDeaths);
+            sb.append("\nMax Zombies: ").append(maxZombies);
         }
 
         return sb.toString();
