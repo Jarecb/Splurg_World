@@ -33,9 +33,12 @@ public class Hives {
 
     public List<Hive> getHives() {
         synchronized (hiveList) {
-            return new ArrayList<>(hiveList);
+            return hiveList.stream()
+                    .filter(hive -> !hive.isZombie()) // Filter out zombie hives
+                    .toList();
         }
     }
+
 
     public void clearHives() {
         synchronized (hiveList) {

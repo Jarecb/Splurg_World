@@ -4,6 +4,7 @@ import org.jarec.data.Hive;
 import org.jarec.data.Location;
 import org.jarec.data.creature.Life;
 import org.jarec.data.creature.Splurg;
+import org.jarec.data.creature.Zombie;
 import org.jarec.game.GameEndState;
 import org.jarec.gui.WinnerPanel;
 import org.jarec.gui.WorldFrame;
@@ -46,7 +47,7 @@ public class Splurgs {
         }
     }
 
-    public int getTotalSplurgs(){
+    public int getTotalSplurgs() {
         return getCounts().values().stream().mapToInt(Math::toIntExact).sum();
     }
 
@@ -214,6 +215,7 @@ public class Splurgs {
     public Map<Hive, Integer> getCounts() {
         synchronized (splurgList) {
             return splurgList.stream()
+                    .filter(splurg -> !(splurg instanceof Zombie)) // Filter out Zombies
                     .collect(Collectors.groupingBy(
                             Splurg::getHomeHive,
                             Collectors.collectingAndThen(
@@ -257,7 +259,10 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getSize().getValue()).sum();
+            double totalSize = splurgList.stream()
+                    .filter(splurg -> !(splurg instanceof Zombie))
+                    .mapToInt(splurg -> splurg.getSize().getValue())
+                    .sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -269,7 +274,10 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getSpeed().getValue()).sum();
+            double totalSize = splurgList.stream()
+                    .filter(splurg -> !(splurg instanceof Zombie))
+                    .mapToInt(splurg -> splurg.getSpeed().getValue())
+                    .sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -281,7 +289,10 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getToughness().getValue()).sum();
+            double totalSize = splurgList.stream()
+                    .filter(splurg -> !(splurg instanceof Zombie))
+                    .mapToInt(splurg -> splurg.getToughness().getValue())
+                    .sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -293,7 +304,10 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getStrength().getValue()).sum();
+            double totalSize = splurgList.stream()
+                    .filter(splurg -> !(splurg instanceof Zombie))
+                    .mapToInt(splurg -> splurg.getStrength().getValue())
+                    .sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -305,7 +319,10 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getAggression().getValue()).sum();
+            double totalSize = splurgList.stream()
+                    .filter(splurg -> !(splurg instanceof Zombie))
+                    .mapToInt(splurg -> splurg.getAggression().getValue())
+                    .sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -317,7 +334,10 @@ public class Splurgs {
                 return 0;
             }
 
-            double totalSize = splurgList.stream().mapToInt(splurg -> splurg.getForaging().getValue()).sum();
+            double totalSize = splurgList.stream()
+                    .filter(splurg -> !(splurg instanceof Zombie))
+                    .mapToInt(splurg -> splurg.getForaging().getValue())
+                    .sum();
 
             return (int) (totalSize / splurgList.size());
         }
@@ -345,8 +365,7 @@ public class Splurgs {
             return liveHives.get(0);
         }
 
-        if (getTotalSplurgs() > WorldFrame.getInstance().getMaxPopulation())
-        {
+        if (getTotalSplurgs() > WorldFrame.getInstance().getMaxPopulation()) {
             SwingUtilities.invokeLater(() -> WinnerPanel.createAndShowWinnerPanel(GameEndState.STALEMATE));
         }
         return null; // No winner yet
