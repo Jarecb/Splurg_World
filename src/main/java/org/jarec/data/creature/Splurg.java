@@ -28,7 +28,7 @@ public class Splurg extends Life {
     private Size size;
     private Speed speed;
     private Hive homeHive;
-    private final String name = RandomNameGenerator.generateName();
+    String name = RandomNameGenerator.generateName();
     private int breedingDelay = 0;
 
     Splurg (){}

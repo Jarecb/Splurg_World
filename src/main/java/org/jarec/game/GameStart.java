@@ -39,7 +39,7 @@ public class GameStart {
         }
 
         if (zombiesActive) {
-            Hive zombieHive = new Hive(new Location(0, 0), new Color(0, 0, 0, 255),
+            Hive zombieHive = new Hive(new Location(0, 0), new Color(64, 64, 64, 128),
                     "Zombie Hive", true);
             Hives.getInstance().addHive(zombieHive);
         }

@@ -231,7 +231,7 @@ public class GameLoop {
             stats.append(hive.getName()).append(": ").append(count).append(" Splurgs");
         });
 
-        int totalSplurgs = counts.values().stream().mapToInt(Math::toIntExact).sum();
+        int totalSplurgs = Splurgs.getInstance().getTotalSplurgs();
         if (totalSplurgs > maxSplurgs){
             maxSplurgs = totalSplurgs;
         }
