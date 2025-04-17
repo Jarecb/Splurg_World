@@ -2,22 +2,55 @@ package org.jarec.data;
 
 import org.jarec.data.creature.Splurg;
 import org.jarec.util.PropertyHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 public class Hive {
+    private static final Logger log = LoggerFactory.getLogger(Hive.class);
+
     private final Location location;
     private Color color;
     private final String name;
     private int energyReserve = 0;
     private int spawnCountdown = 0;
     private boolean zombieHive = false;
+    private BufferedImage hiveIcon = null;
 
     public Hive(Location location, Color color, String name, boolean zombie) {
         this.location = location;
         this.color = color;
         this.name = name;
         zombieHive = zombie;
+        loadIcon();
+    }
+
+    private void loadIcon() {
+        var imageName = "";
+        if (name.toUpperCase().contains("RED")) {
+            imageName = "/Red Hive.png";
+        } else if (name.toUpperCase().contains("GREEN")) {
+            imageName = "/Green Hive.png";
+        } else if (name.toUpperCase().contains("YELLOW")) {
+            imageName = "/Yellow Hive.png";
+        } else if (name.toUpperCase().contains("BLUE")) {
+            imageName = "/Blue Hive.png";
+        } else {
+            return;
+        }
+        try {
+            hiveIcon = ImageIO.read(getClass().getResource(imageName));
+        } catch (IOException | IllegalArgumentException e) {
+            log.error("Could not load hive image: " + e.getMessage());
+        }
+    }
+
+    public BufferedImage getIcon() {
+        return hiveIcon;
     }
 
     public void setColor(Color color) {
