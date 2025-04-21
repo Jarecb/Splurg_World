@@ -10,19 +10,31 @@ public class Combat {
 
     // Method for attacking and determining the result of a combat round between two Splurgs
     public static void attack(Splurg splurgA, Splurg splurgB) {
-        var damageA = wound(splurgA, splurgB);
-        var damageB = wound(splurgB, splurgA);
-        // Positive results are damage done, negative are health gain
-        var baResult = damageB - damageA;
-        var abResult = damageA - damageB;
-        splurgA.reduceHealth(baResult);
-        if (abResult > 0 && splurgA instanceof Zombie && !(splurgB instanceof Zombie)) {
-            splurgB.setInfectedByZombie(true);
+        var aWoundsB = wound(splurgA, splurgB);
+        var bWoundsA = wound(splurgB, splurgA);
+        var aIsAZombie = splurgA instanceof Zombie;
+        var bIsAZombie = splurgB instanceof Zombie;
+
+        if (aWoundsB > 0) {
+            splurgB.takeWound(aWoundsB);
+            if(aIsAZombie) {
+                splurgB.setInfectedByZombie(true);
+            }
+            if (!aIsAZombie && !bIsAZombie){
+                splurgA.gainHealth(aWoundsB);
+            }
         }
-        splurgB.reduceHealth(abResult);
-        if (baResult > 0 && splurgB instanceof Zombie && !(splurgA instanceof Zombie)) {
-            splurgA.setInfectedByZombie(true);
+
+        if (bWoundsA > 0) {
+            splurgA.takeWound(bWoundsA);
+            if(bIsAZombie){
+                splurgA.setInfectedByZombie(true);
+            }
+            if (!aIsAZombie && !bIsAZombie){
+                splurgB.gainHealth(bWoundsA);
+            }
         }
+
         GameLoop.getInstance().incrementCombatsPerTurn();
     }
 

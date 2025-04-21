@@ -53,10 +53,14 @@ public abstract class Life {
         return health;
     }
 
-    public void recoverHealth(int recovery) {
+    public void gainHealth(int recovery) {
         if (!zombie) {
             setHealth(health + recovery);
         }
+    }
+
+    public void takeWound(int wound) {
+        health -= wound;
     }
 
     public boolean reduceHealth(int reduction) {
