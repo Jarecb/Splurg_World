@@ -24,7 +24,7 @@ public class Zombie extends Splurg {
         aggression.setValue(Integer.parseInt(PropertyHandler.get("zombie.default.aggression", "10")));
 
         int str = sourceJson.getInt("Str");
-        strength.setValue(str);
+        strength.setValue(str + Integer.parseInt(PropertyHandler.get("zombie.default.strength.bonus", "1")));
         int tgh = sourceJson.getInt("Tgh");
         toughness.setValue(tgh);
         setMaxHealth(Integer.parseInt(PropertyHandler.get("zombie.default.health", "20")));

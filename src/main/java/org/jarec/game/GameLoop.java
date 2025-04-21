@@ -223,6 +223,7 @@ public class GameLoop {
             sb.append("\nZombies Spawned: ").append(zSpawns);
             sb.append("\nZombies Killed: ").append(zDeaths);
             sb.append("\nMax Zombies: ").append(maxZombies);
+            sb.append("\nInfected: ").append(Splurgs.getInstance().getTotalInfectedSplurgs());
         }
 
         return sb.toString();

@@ -56,6 +56,13 @@ public class Splurgs {
         return getCounts().values().stream().mapToInt(Math::toIntExact).sum();
     }
 
+    public int getTotalInfectedSplurgs() {
+        return (int) splurgList.stream()
+                .filter(splurg -> !(splurg instanceof Zombie))
+                .filter(Splurg::isInfected)
+                .count();
+    }
+
     public int getDeaths() {
         return deaths;
     }
@@ -233,7 +240,7 @@ public class Splurgs {
     public Map<Hive, Integer> getCounts() {
         synchronized (splurgList) {
             return splurgList.stream()
-                    .filter(splurg -> !(splurg instanceof Zombie)) // Filter out Zombies
+                    .filter(splurg -> !(splurg instanceof Zombie))
                     .collect(Collectors.groupingBy(
                             Splurg::getHomeHive,
                             Collectors.collectingAndThen(
