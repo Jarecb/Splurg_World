@@ -13,7 +13,6 @@ public class GameStart {
 
     public GameStart(int hiveCount, int hiveEnergy, boolean zombiesActive) {
         Hives.getInstance().clearHives();
-        Hives.getInstance().setHiveCount(hiveCount);
 
         var worldWidth = WorldFrame.getInstance().getWorldPanel().getWorldWidth();
         var worldHeight = WorldFrame.getInstance().getWorldPanel().getWorldHeight();
