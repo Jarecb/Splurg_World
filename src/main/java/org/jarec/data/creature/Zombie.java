@@ -41,6 +41,7 @@ public class Zombie extends Splurg {
         setHeading(null);
 
         Splurgs.getInstance().addSplurg(this);
+        Splurgs.getInstance().zombieSpawned();
 
         var statusMessage = "A Zombie Splurg was created on turn " + GameLoop.getInstance().getTurn();
         WorldFrame.getInstance().updateStatus(statusMessage);

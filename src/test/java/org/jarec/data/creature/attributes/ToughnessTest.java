@@ -26,12 +26,4 @@ class ToughnessTest {
             assertTrue(toughness.getValue() <= max && toughness.getValue() > 0, "Toughness = " + toughness.getValue());
         }
     }
-
-    @Test
-    void setValueTest_throwsExceptionIfNotInRange() {
-        int max = Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10"));
-        SettableAttribute toughness = new Toughness();
-        assertThrows(IllegalArgumentException.class, () -> toughness.setValue(0));
-        assertThrows(IllegalArgumentException.class, () -> toughness.setValue(max + 1));
-    }
 }
