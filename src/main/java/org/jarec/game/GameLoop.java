@@ -3,14 +3,12 @@ package org.jarec.game;
 import org.jarec.data.Hive;
 import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
-import org.jarec.gui.WinnerPanel;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -168,7 +166,7 @@ public class GameLoop {
         Splurgs splurgs = Splurgs.getInstance();
 
         List<Hive> hives = Hives.getInstance().getHives();
-        Map<Hive, Integer> energy = splurgs.getTotalEnergyPerHive();
+        Map<Hive, Integer> energy = splurgs.getTotalSplurgEnergyPerHive();
         int totalEnergy = 0;
 
         for (Hive hive : hives){
@@ -215,7 +213,7 @@ public class GameLoop {
         if (zombiesActive) {
             var zSpawns = splurgs.getZombieSpawns();
             var zDeaths = splurgs.getZombieDeaths();
-            var zCurrent = zSpawns - zDeaths;
+            var zCurrent = splurgs.getZombieCount();
             if (zCurrent > maxZombies) {
                 maxZombies++;
             }
@@ -234,7 +232,7 @@ public class GameLoop {
     }
 
     private String getSplurgs() {
-        Map<Hive, Integer> counts = Splurgs.getInstance().getCounts();
+        Map<Hive, Integer> counts = Splurgs.getInstance().getSplurgsPerHive();
         StringBuilder stats = new StringBuilder();
         List<Hive> hives = Hives.getInstance().getHives();
 

@@ -36,8 +36,8 @@ class CombatTest {
         // Act
         Combat.attack(attacker, defender);
 
-        verify(attacker).reduceHealth(-9);  // Attacker should gain 9 health (0 - 9)
-        verify(defender).reduceHealth(9);   // Defender should lose 9 health (9 - 0)
+        verify(attacker).gainHealth(9);
+        verify(defender).takeWound(9);
     }
 
 
@@ -68,7 +68,7 @@ class CombatTest {
         attack(attacker, defender);
 
         // Assert
-        verify(attacker).reduceHealth(9);
-        verify(defender).reduceHealth(-9);
+        verify(attacker).takeWound(9);
+        verify(defender).gainHealth(9);
     }
 }
