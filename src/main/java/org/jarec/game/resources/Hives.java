@@ -34,6 +34,7 @@ public class Hives {
     public void addHive(Hive hive) {
         if (hive != null) {
             hiveList.add(hive);
+            activeHiveCount++;
         }
         if (hive.isZombie()){
             zombieHive = hive;
@@ -52,6 +53,8 @@ public class Hives {
     public void clearHives() {
         synchronized (hiveList) {
             hiveList.clear();
+            zombieHive = null;
+            activeHiveCount = 0;
         }
     }
 
@@ -109,10 +112,6 @@ public class Hives {
         g2.setFont(originalFont);
         g2.setStroke(originalStroke);
         g2.dispose();
-    }
-
-    public void setHiveCount(int hiveCount) {
-        this.activeHiveCount = hiveCount;
     }
 
     public int getHiveCount() {
