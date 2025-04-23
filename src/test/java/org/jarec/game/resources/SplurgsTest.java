@@ -95,7 +95,7 @@ class SplurgsTest {
         hives.addHive(zombieHive);
         Splurg splurg1 = new Splurg(hive);
         new Splurg(hive);
-        Zombie zombie = new Zombie(new Splurg(hive)); // Zombies spawning is duplicating
+        Zombie zombie = new Zombie(splurg1);
         assertEquals(3, Splurgs.getInstance().getSpawns());
     }
 
