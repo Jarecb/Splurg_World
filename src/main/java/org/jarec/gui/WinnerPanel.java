@@ -72,7 +72,6 @@ public class WinnerPanel {
     }
 
     private static BufferedImage loadImageFromResources(String path) throws IOException {
-        // Debugging output
         log.debug("Attempting to load: {}", path);
         URL resourceUrl = WinnerPanel.class.getClassLoader().getResource(path);
         log.debug("Resource URL: {}", resourceUrl);

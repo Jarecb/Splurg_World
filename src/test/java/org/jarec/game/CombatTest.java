@@ -16,22 +16,21 @@ class CombatTest {
         Splurg attacker = mock(Splurg.class);
         Splurg defender = mock(Splurg.class);
 
-        // Mocking the Attribute class for Strength and Toughness
         Strength attackerStrength = mock(Strength.class);
         when(attacker.getStrength()).thenReturn(attackerStrength);
-        when(attackerStrength.getValue()).thenReturn(10); // Attacker strength is 10
+        when(attackerStrength.getValue()).thenReturn(10);
 
         Toughness attackerToughness = mock(Toughness.class);
         when(attacker.getToughness()).thenReturn(attackerToughness);
-        when(attackerToughness.getValue()).thenReturn(10); // Attacker toughness is 10
+        when(attackerToughness.getValue()).thenReturn(10);
 
         Strength defenderStrength = mock(Strength.class);
         when(defender.getStrength()).thenReturn(defenderStrength);
-        when(defenderStrength.getValue()).thenReturn(10); // Defender strength is 10
+        when(defenderStrength.getValue()).thenReturn(10);
 
         Toughness defenderToughness = mock(Toughness.class);
         when(defender.getToughness()).thenReturn(defenderToughness);
-        when(defenderToughness.getValue()).thenReturn(1); // Defender toughness is 1
+        when(defenderToughness.getValue()).thenReturn(1);
 
         // Act
         Combat.attack(attacker, defender);
@@ -47,22 +46,21 @@ class CombatTest {
         Splurg attacker = mock(Splurg.class);
         Splurg defender = mock(Splurg.class);
 
-        // Mocking the Attribute class for Strength and Toughness
         Strength attackerStrength = mock(Strength.class);
         when(attacker.getStrength()).thenReturn(attackerStrength);
-        when(attackerStrength.getValue()).thenReturn(10); // Attacker strength is 10
+        when(attackerStrength.getValue()).thenReturn(10);
 
         Toughness attackerToughness = mock(Toughness.class);
         when(attacker.getToughness()).thenReturn(attackerToughness);
-        when(attackerToughness.getValue()).thenReturn(1); // Attacker toughness is 1
+        when(attackerToughness.getValue()).thenReturn(1);
 
         Strength defenderStrength = mock(Strength.class);
         when(defender.getStrength()).thenReturn(defenderStrength);
-        when(defenderStrength.getValue()).thenReturn(10); // Defender strength is 10
+        when(defenderStrength.getValue()).thenReturn(10);
 
         Toughness defenderToughness = mock(Toughness.class);
         when(defender.getToughness()).thenReturn(defenderToughness);
-        when(defenderToughness.getValue()).thenReturn(10); // Defender toughness is 10
+        when(defenderToughness.getValue()).thenReturn(10);
 
         // Act
         attack(attacker, defender);

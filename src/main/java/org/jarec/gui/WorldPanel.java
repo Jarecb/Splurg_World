@@ -17,8 +17,8 @@ import java.util.List;
  * Coordinate 0:0 is top left corner
  */
 public class WorldPanel extends JPanel {
-    private transient BufferedImage displayBuffer;     // What gets painted to screen
-    private transient BufferedImage backgroundBuffer;  // External classes can draw here
+    private transient BufferedImage displayBuffer;     // Screen buffer
+    private transient BufferedImage backgroundBuffer;  // Swap buffer
 
     private final ArrayList<Drawable> drawables = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class WorldPanel extends JPanel {
                         JPopupMenu popup = new JPopupMenu();
 
                         for (Splurg splurg : localSplurgs) {
-                            JMenuItem item = new JMenuItem(splurg.toString()); // Customize toString() for nicer info
+                            JMenuItem item = new JMenuItem(splurg.toString());
                             popup.add(item);
                         }
 
@@ -64,7 +64,6 @@ public class WorldPanel extends JPanel {
         displayBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         backgroundBuffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        // Optional: clear buffers
         clearBuffer(displayBuffer);
         clearBuffer(backgroundBuffer);
     }
@@ -76,9 +75,6 @@ public class WorldPanel extends JPanel {
         g2.dispose();
     }
 
-    /**
-     * Returns a Graphics2D object that external code can use to draw to the background.
-     */
     public Graphics2D getBackgroundGraphics() {
         if (backgroundBuffer == null) {
             backgroundBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -92,23 +88,19 @@ public class WorldPanel extends JPanel {
     public void publish() {
         if (displayBuffer == null || backgroundBuffer == null) return;
 
-        // ✅ Clear the display buffer
         Graphics2D displayG = displayBuffer.createGraphics();
         displayG.setComposite(AlphaComposite.Clear);
         displayG.fillRect(0, 0, displayBuffer.getWidth(), displayBuffer.getHeight());
         displayG.setComposite(AlphaComposite.SrcOver);
 
-        // ✅ Then draw the background onto it
         displayG.drawImage(backgroundBuffer, 0, 0, null);
 
-        // ✅ Optionally draw dynamic overlays
         for (Drawable d : drawables) {
             d.draw(displayG);
         }
 
         displayG.dispose();
 
-        // ✅ Now clear the backgroundBuffer so it's clean for the next frame
         Graphics2D bgG = backgroundBuffer.createGraphics();
         bgG.setComposite(AlphaComposite.Clear);
         bgG.fillRect(0, 0, backgroundBuffer.getWidth(), backgroundBuffer.getHeight());
@@ -117,17 +109,13 @@ public class WorldPanel extends JPanel {
         repaint();
     }
 
-
-    /**
-     * Clears the background buffer (call before drawing new stuff).
-     */
     public void clearBackground() {
         clearBuffer(backgroundBuffer);
     }
 
     public void addDrawable(Drawable d) {
         drawables.add(d);
-        publish(); // Re-render with new drawable
+        publish();
     }
 
     public int getWorldWidth() {
@@ -137,5 +125,4 @@ public class WorldPanel extends JPanel {
     public int getWorldHeight() {
         return getHeight();
     }
-
 }
