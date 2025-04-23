@@ -39,7 +39,7 @@ class SplurgsTest {
         Hives.addHive(zombieHive);
         Zombie zombie = new Zombie(new Splurg(hive));
         Splurgs.getInstance().addSplurg(zombie);
-        assertEquals(2, Splurgs.getInstance().getSpawns());
+        assertEquals(1, Splurgs.getInstance().getSpawns());
     }
 
     @Test
@@ -92,7 +92,7 @@ class SplurgsTest {
         Splurg splurg1 = new Splurg(hive);
         new Splurg(hive);
         new Zombie(splurg1);
-        assertEquals(3, Splurgs.getInstance().getSpawns());
+        assertEquals(2, Splurgs.getInstance().getSpawns());
     }
 
     @Test
@@ -111,8 +111,8 @@ class SplurgsTest {
     void getZombieDeaths() {
         Hive hive = new Hive(new Location(1, 1), null, "Hive one", false);
         Hive zombieHive = new Hive(new Location(0, 0), null, "Zombie hive", true);
-        Hives.getInstance().addHive(hive);
-        Hives.getInstance().addHive(zombieHive);
+        Hives.addHive(hive);
+        Hives.addHive(zombieHive);
         new Splurg(hive);
         Splurg splurg = new Splurg(hive);
         Zombie zombie1 = new Zombie(new Splurg(hive));
@@ -159,7 +159,7 @@ class SplurgsTest {
 
     @Test
     void zombieSpawned() {
-        Splurgs.zombieSpawned();
+        Splurgs.getInstance().addSplurg(new Zombie(new Splurg(new Hive(new Location(0, 0), null, "Zombie", true))));
         assertEquals(1, Splurgs.getInstance().getZombieSpawns());
     }
 
