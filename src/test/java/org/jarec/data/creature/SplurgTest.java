@@ -34,10 +34,9 @@ class SplurgTest {
         assertEquals(0, splurg.getHealth());
         splurg.setHealth(21);
         assertEquals(20, splurg.getHealth());
-        splurg.reduceHealth(10);
-        // TODO Fix this test
-//        splurg.recoverHealth(11);
-//        assertEquals(20, splurg.getHealth());
+        splurg.takeWound(10);
+        splurg.gainHealth(11);
+        assertEquals(20, splurg.getHealth());
     }
 
     @Test
