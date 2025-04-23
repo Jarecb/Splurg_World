@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class Zombie extends Splurg {
     private boolean active = false;
@@ -103,5 +104,19 @@ public class Zombie extends Splurg {
     @Override
     public void depositEnergy() {
         // Zombies don't collect energy
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Zombie other)) return false;
+        return Objects.equals(name, other.name)
+                && Objects.equals(this.getLocation(), other.getLocation())
+                && Objects.equals(getHomeHive(), other.getHomeHive());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, this.getLocation(), getHomeHive());
     }
 }

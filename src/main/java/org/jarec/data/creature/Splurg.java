@@ -376,8 +376,7 @@ public class Splurg extends Life {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Splurg)) return false;
-        Splurg other = (Splurg) obj;
+        if (!(obj instanceof Splurg other)) return false;
         return Objects.equals(name, other.name)
                 && Objects.equals(this.getLocation(), other.getLocation())
                 && Objects.equals(homeHive, other.homeHive);
@@ -387,5 +386,4 @@ public class Splurg extends Life {
     public int hashCode() {
         return Objects.hash(name, this.getLocation(), homeHive);
     }
-
 }

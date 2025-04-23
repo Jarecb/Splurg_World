@@ -157,8 +157,6 @@ public class GameLoop {
     }
 
     private String getStats(){
-        // TODO Adjust stats for zombies
-
         StringBuilder sb = new StringBuilder("\n");
 
         sb.append("Turn: ").append(turn).append("\n\n");
