@@ -110,7 +110,7 @@ public class GameLoop {
                 WorldFrame.updateStats(getStats());
 
                 // Endgame check
-                if(Splurgs.getLiveHiveCount() <= 1 || Splurgs.getTotalSplurgs() > WorldFrame.getMaxPopulation()) { // TODO add zombie check here so it doesn't end on 1 if there are zombies? Maybe
+                if(Splurgs.getLiveHiveCount() <= 1 || Splurgs.getTotalSplurgs() > WorldFrame.getMaxPopulation()) {
                     WorldFrame.getInstance().displayEndGamePanel(Splurgs.getInstance().getWinningHive());
                 }
 
@@ -221,7 +221,7 @@ public class GameLoop {
             sb.append("\nZombies Spawned: ").append(zSpawns);
             sb.append("\nZombies Killed: ").append(zDeaths);
             sb.append("\nMax Zombies: ").append(maxZombies);
-            sb.append("\nInfected: ").append(Splurgs.getInstance().getTotalInfectedSplurgs());
+            sb.append("\nInfected: ").append(Splurgs.getTotalInfectedSplurgs());
         }
 
         return sb.toString();
