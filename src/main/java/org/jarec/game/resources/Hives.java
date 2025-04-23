@@ -14,7 +14,6 @@ public class Hives {
     private static final Hives INSTANCE = new Hives();
     private static Hive zombieHive;
 
-    // Thread-safe list to handle concurrent access if needed
     private static final List<Hive> hiveList = Collections.synchronizedList(new ArrayList<>());
 
     private static final int HIVE_SIZE = Integer.parseInt(PropertyHandler.get("hive.default.size", "20"));
@@ -45,7 +44,7 @@ public class Hives {
     public List<Hive> getHives() {
         synchronized (hiveList) {
             return hiveList.stream()
-                    .filter(hive -> !hive.isZombie()) // Filter out zombie hives
+                    .filter(hive -> !hive.isZombie())
                     .toList();
         }
     }

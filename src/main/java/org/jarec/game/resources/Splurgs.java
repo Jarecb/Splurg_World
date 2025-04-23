@@ -285,9 +285,6 @@ public class Splurgs {
             int x = splurg.getLocation().getX();
             int y = splurg.getLocation().getY();
             Color color = splurg.getHomeHive().getColor();
-            if (splurg instanceof Zombie) {
-                color = Color.BLACK;
-            }
 
             g2.setColor(color);
             g2.fillOval(x - (size / 2), y - (size / 2), size, size);

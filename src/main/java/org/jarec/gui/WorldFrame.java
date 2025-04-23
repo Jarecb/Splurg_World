@@ -42,8 +42,6 @@ public class WorldFrame extends JFrame {
     private static final int MESSAGE_DURATION_TURNS = 50;
     private boolean startup = true;
 
-
-    // Private constructor ensures no auto-start
     private WorldFrame() {
         setTitle("Splurg World");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
