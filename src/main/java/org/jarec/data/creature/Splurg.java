@@ -19,6 +19,7 @@ import org.json.JSONObject;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class Splurg extends Life {
     Aggression aggression = new Aggression();
@@ -358,19 +359,33 @@ public class Splurg extends Life {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("{");
-        sb.append("\"Name\":\"").append(name).append("\",");
-        sb.append("\"Hive\":\"").append(homeHive != null ? homeHive.getName() : "null").append("\",");
-        sb.append("\"Agg\":").append(aggression.getValue()).append(",");
-        sb.append("\"For\":").append(foraging.getValue()).append(",");
-        sb.append("\"Str\":").append(strength.getValue()).append(",");
-        sb.append("\"Tgh\":").append(toughness.getValue()).append(",");
-        sb.append("\"Siz\":").append(size != null ? size.getValue() : 0).append(",");
-        sb.append("\"Spd\":").append(speed != null ? speed.getValue() : 0).append(",");
-        sb.append("\"Hth\":").append(getHealth()).append(",");
-        sb.append("\"Eng\":").append(getEnergy()).append(",");
-        sb.append("\"Location\":").append(getLocation() != null ? getLocation().toString() : "null");
-        sb.append("}");
-        return sb.toString();
+        return "{" + "\"Name\":\"" + name + "\"," +
+                "\"Hive\":\"" + (homeHive != null ? homeHive.getName() : "null") + "\"," +
+                "\"Agg\":" + aggression.getValue() + "," +
+                "\"For\":" + foraging.getValue() + "," +
+                "\"Str\":" + strength.getValue() + "," +
+                "\"Tgh\":" + toughness.getValue() + "," +
+                "\"Siz\":" + (size != null ? size.getValue() : 0) + "," +
+                "\"Spd\":" + (speed != null ? speed.getValue() : 0) + "," +
+                "\"Hth\":" + getHealth() + "," +
+                "\"Eng\":" + getEnergy() + "," +
+                "\"Location\":" + (getLocation() != null ? getLocation().toString() : "null") +
+                "}";
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof Splurg)) return false;
+        Splurg other = (Splurg) obj;
+        return Objects.equals(name, other.name)
+                && Objects.equals(this.getLocation(), other.getLocation())
+                && Objects.equals(homeHive, other.homeHive);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, this.getLocation(), homeHive);
+    }
+
 }

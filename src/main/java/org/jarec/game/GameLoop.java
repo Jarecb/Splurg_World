@@ -211,9 +211,9 @@ public class GameLoop {
         sb.append("\nAve. Toughness: ").append(splurgs.getAverageSplurgToughness());
 
         if (zombiesActive) {
+            var zCurrent = splurgs.getZombieCount();
             var zSpawns = splurgs.getZombieSpawns();
             var zDeaths = splurgs.getZombieDeaths();
-            var zCurrent = splurgs.getZombieCount();
             if (zCurrent > maxZombies) {
                 maxZombies++;
             }

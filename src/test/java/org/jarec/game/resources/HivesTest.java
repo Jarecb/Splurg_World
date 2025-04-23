@@ -24,7 +24,7 @@ class HivesTest {
     @Test
     void getZombieHiveWhenOneExists() {
         Hive zombieHive = new Hive(new Location(0, 0), null, "zombie", true);
-        Hives.getInstance().addHive(zombieHive);
+        Hives.addHive(zombieHive);
         assertInstanceOf(Hive.class, Hives.getZombieHive());
         assertEquals(zombieHive, Hives.getZombieHive());
     }
@@ -37,7 +37,7 @@ class HivesTest {
     @Test
     void addHive() {
         Hive hive = new Hive(new Location(0, 0), null, "Hive", false);
-        Hives.getInstance().addHive(hive);
+        Hives.addHive(hive);
         List<Hive> hiveList = Hives.getInstance().getHives();
         assertEquals(1, hiveList.size());
         assertTrue(hiveList.contains(hive));
@@ -47,7 +47,7 @@ class HivesTest {
     @Test
     void addZombieHive() {
         Hive zombieHive = new Hive(new Location(0, 0), null, "Hive", true);
-        Hives.getInstance().addHive(zombieHive);
+        Hives.addHive(zombieHive);
         assertEquals(zombieHive, Hives.getZombieHive());
     }
 
@@ -57,8 +57,8 @@ class HivesTest {
         assertTrue(result.isEmpty());
         Hive hiveOne = new Hive(new Location(0,0), null, "Hive one", false);
         Hive hiveTwo = new Hive(new Location(0,0), null, "Hive two", false);
-        Hives.getInstance().addHive(hiveOne);
-        Hives.getInstance().addHive(hiveTwo);
+        Hives.addHive(hiveOne);
+        Hives.addHive(hiveTwo);
         result = Hives.getInstance().getHives();
         assertEquals(2, result.size());
         assertTrue(result.contains(hiveOne));
@@ -70,9 +70,9 @@ class HivesTest {
         Hive hiveOne = new Hive(new Location(0, 0), null, "Hive", false);
         Hive hiveTwo = new Hive(new Location(0, 0), null, "Hive", false);
         Hive hiveThree = new Hive(new Location(0, 0), null, "Hive", false);
-        Hives.getInstance().addHive(hiveOne);
-        Hives.getInstance().addHive(hiveTwo);
-        Hives.getInstance().addHive(hiveThree);
+        Hives.addHive(hiveOne);
+        Hives.addHive(hiveTwo);
+        Hives.addHive(hiveThree);
         assertEquals(3, Hives.getInstance().getHiveCount());
     }
 }
