@@ -41,7 +41,7 @@ public class Zombie extends Splurg {
         setHeading(null);
 
         Splurgs.getInstance().addSplurg(this);
-        Splurgs.getInstance().zombieSpawned();
+        Splurgs.zombieSpawned();
 
         var statusMessage = "A Zombie Splurg was created on turn " + GameLoop.getInstance().getTurn();
         WorldFrame.getInstance().updateStatus(statusMessage);
@@ -103,5 +103,6 @@ public class Zombie extends Splurg {
 
     @Override
     public void depositEnergy() {
+        // Zombies don't collect energy
     }
 }

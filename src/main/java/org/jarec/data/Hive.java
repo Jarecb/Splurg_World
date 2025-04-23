@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 public class Hive {
     private static final Logger log = LoggerFactory.getLogger(Hive.class);
@@ -43,9 +44,9 @@ public class Hive {
             return;
         }
         try {
-            hiveIcon = ImageIO.read(getClass().getResource(imageName));
+            hiveIcon = ImageIO.read(Objects.requireNonNull(getClass().getResource(imageName)));
         } catch (IOException | IllegalArgumentException e) {
-            log.error("Could not load hive image: " + e.getMessage());
+            log.error("Could not load hive image: {}", e.getMessage());
         }
     }
 

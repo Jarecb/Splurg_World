@@ -51,21 +51,19 @@ public class GameStart {
                 "Green Hive", false);
         hiveFour.addEnergy(hiveEnergy);
 
-        Hives.getInstance().addHive(hiveOne);
-        Hives.getInstance().addHive(hiveTwo);
+        Hives.addHive(hiveOne);
+        Hives.addHive(hiveTwo);
         if (hiveCount >= 3) {
-            Hives.getInstance().addHive(hiveThree);
+            Hives.addHive(hiveThree);
         }
         if (hiveCount == 4) {
-            Hives.getInstance().addHive(hiveFour);
+            Hives.addHive(hiveFour);
         }
 
         if (zombiesActive) {
-//            Hive zombieHive = new Hive(new Location(0, 0), new Color(64, 64, 64, 128),
-//                    "Zombie Hive", true);
-            Hive zombieHive = new Hive(new Location(0, 0), new Color(0, 0, 0, 255),
+            Hive zombieHive = new Hive(new Location(0, 0), new Color(0, 0, 0, 175),
                     "Zombie Hive", true);
-            Hives.getInstance().addHive(zombieHive);
+            Hives.addHive(zombieHive);
         }
 
         Splurgs.getInstance().clearSplurgs();

@@ -95,7 +95,7 @@ class SplurgsTest {
         hives.addHive(zombieHive);
         Splurg splurg1 = new Splurg(hive);
         new Splurg(hive);
-        Zombie zombie = new Zombie(splurg1);
+        new Zombie(splurg1);
         assertEquals(3, Splurgs.getInstance().getSpawns());
     }
 
@@ -106,9 +106,9 @@ class SplurgsTest {
         Hives hives = Hives.getInstance();
         hives.addHive(hive);
         hives.addHive(zombieHive);
-        Splurg splurg1 = new Splurg(hive);
         new Splurg(hive);
-        Zombie zombie = new Zombie(new Splurg(hive));
+        new Splurg(hive);
+        new Zombie(new Splurg(hive));
         assertEquals(1, Splurgs.getInstance().getZombieSpawns());
     }
 
@@ -164,7 +164,7 @@ class SplurgsTest {
 
     @Test
     void zombieSpawned() {
-        Splurgs.getInstance().zombieSpawned();
+        Splurgs.zombieSpawned();
         assertEquals(1, Splurgs.getInstance().getZombieSpawns());
     }
 
@@ -244,12 +244,12 @@ class SplurgsTest {
         hives.addHive(hive1);
         hives.addHive(hive2);
         hives.addHive(zombieHive);
-        Splurg splurg1 = new Splurg(hive1);
+        new Splurg(hive1);
         assertEquals(1, Splurgs.getInstance().getLiveHiveCount());
 
         Splurg splurg2 = new Splurg(hive2);
         splurg2.reduceHealth(50);
-        Zombie zombie = new Zombie(splurg2);
+        new Zombie(splurg2);
         Splurgs.getInstance().removeDeadSplurgs();
         assertEquals(2, Splurgs.getInstance().getLiveHiveCount());
     }
@@ -263,7 +263,7 @@ class SplurgsTest {
         hives.addHive(hive1);
         hives.addHive(hive2);
         hives.addHive(zombieHive);
-        Splurg splurg1 = new Splurg(hive1);
+        new Splurg(hive1);
         assertEquals(hive1, Splurgs.getInstance().getWinningHive());
     }
 
@@ -278,7 +278,7 @@ class SplurgsTest {
         hives.addHive(zombieHive);
         Splurg splurg = new Splurg(hive2);
         splurg.reduceHealth(50);
-        Zombie zombie = new Zombie(splurg);
+        new Zombie(splurg);
         Splurgs.getInstance().removeDeadSplurgs();
         assertEquals(zombieHive, Splurgs.getInstance().getWinningHive());
     }

@@ -15,7 +15,7 @@ public class Hives {
     private static Hive zombieHive;
 
     // Thread-safe list to handle concurrent access if needed
-    private final List<Hive> hiveList = Collections.synchronizedList(new ArrayList<>());
+    private static final List<Hive> hiveList = Collections.synchronizedList(new ArrayList<>());
 
     private static final int HIVE_SIZE = Integer.parseInt(PropertyHandler.get("hive.default.size", "20"));
     private static int activeHiveCount;
@@ -31,13 +31,14 @@ public class Hives {
         return zombieHive;
     }
 
-    public void addHive(Hive hive) {
+    public static void addHive(Hive hive) {
         if (hive != null) {
+            if (hive.isZombie()){
+                zombieHive = hive;
+                return;
+            }
             hiveList.add(hive);
             activeHiveCount++;
-        }
-        if (hive.isZombie()){
-            zombieHive = hive;
         }
     }
 
@@ -115,6 +116,6 @@ public class Hives {
     }
 
     public int getHiveCount() {
-        return this.activeHiveCount;
+        return activeHiveCount;
     }
 }

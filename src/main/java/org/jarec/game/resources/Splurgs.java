@@ -28,7 +28,7 @@ public class Splurgs {
     private static int zombieSpawns = 0;
     private static final int ZOMBIE_SPAWN_CHANCE = Integer.parseInt(PropertyHandler.get("zombie.default.change", "1000")) * Hives.getInstance().getHiveCount();
 
-    private final List<Splurg> splurgList = new ArrayList<>();
+    private static final List<Splurg> splurgList = new ArrayList<>();
 
     private Splurgs() {
     }
@@ -44,20 +44,18 @@ public class Splurgs {
     }
 
     public void addSplurg(Splurg splurg) {
-        if (splurg != null) {
-            if (!splurgList.contains(splurg)) {
-                synchronized (splurgList) {
-                    splurgList.add(splurg);
-                    spawns++;
-                }
+        if (splurg != null && !splurgList.contains(splurg)) {
+            synchronized (splurgList) {
+                splurgList.add(splurg);
+                spawns++;
             }
         }
     }
 
-    public int getTotalSplurgs() {
+    public static int getTotalSplurgs() {
         return getSplurgsPerHive().entrySet().stream()
                 .filter(entry -> !entry.getKey().isZombie())
-                .mapToInt(entry -> entry.getValue())
+                .mapToInt(Map.Entry::getValue)
                 .sum();
     }
 
@@ -124,7 +122,7 @@ public class Splurgs {
         }
     }
 
-    public void zombieSpawned() {
+    public static void zombieSpawned() {
         zombieSpawns++;
     }
 
@@ -134,32 +132,32 @@ public class Splurgs {
 
         synchronized (splurgList) {
             for (Splurg splurg : new ArrayList<>(splurgList)) {
-                if (splurg.getHealth() <= 0) {
-                    deadSplurgs.add(splurg);
-                    if (splurg instanceof Zombie) {
-                        zombieDeaths++;
-                    }
+                if (splurg.getHealth() > 0) continue;
 
-                    var statusMessage = splurg.getName() + " of " + splurg.getHomeHive().getName() + " has died";
-                    WorldFrame.getInstance().updateStatus(statusMessage);
-                    if (!(splurg instanceof Zombie)) {
-                        deaths++;
-                    }
+                deadSplurgs.add(splurg);
+                boolean isZombie = splurg instanceof Zombie;
 
-                    if (GameLoop.getInstance().areZombiesActive()) {
-                        if (RandomInt.getRandomInt(ZOMBIE_SPAWN_CHANCE) % ZOMBIE_SPAWN_CHANCE == 0 || splurg.isInfected()) {
-                            var zombie = new Zombie(splurg);
-                            newZombies.add(zombie);
-                        }
-                    }
+                if (isZombie) {
+                    zombieDeaths++;
+                } else {
+                    deaths++;
+                }
+
+                WorldFrame.getInstance().updateStatus(
+                        splurg.getName() + " of " + splurg.getHomeHive().getName() + " has died"
+                );
+
+                if (GameLoop.getInstance().areZombiesActive() &&
+                        (!isZombie && (RandomInt.getRandomInt(ZOMBIE_SPAWN_CHANCE) % ZOMBIE_SPAWN_CHANCE == 0 || splurg.isInfected()))) {
+                    newZombies.add(new Zombie(splurg));
                 }
             }
 
             splurgList.removeAll(deadSplurgs);
-
             splurgList.addAll(newZombies);
         }
     }
+
 
     public List<Splurg> getSplurgsInVicinity(Location targetPoint) {
         var searchRadius = Integer.parseInt(PropertyHandler.get("gui.mouse.click.detection.range", "20"));
@@ -251,7 +249,7 @@ public class Splurgs {
         return new Location((a.getX() + b.getX()) / 2, (a.getY() + b.getY()) / 2);
     }
 
-    public Map<Hive, Integer> getSplurgsPerHive() {
+    public static Map<Hive, Integer> getSplurgsPerHive() {
         synchronized (splurgList) {
             return splurgList.stream()
                     .collect(Collectors.groupingBy(
@@ -384,7 +382,7 @@ public class Splurgs {
         }
     }
 
-    public int getLiveHiveCount() {
+    public static int getLiveHiveCount() {
         synchronized (splurgList) {
             return (int) splurgList.stream()
                     .collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()))
@@ -415,7 +413,7 @@ public class Splurgs {
     public int getZombieCount() {
         synchronized (splurgList) {
             return (int) splurgList.stream()
-                    .filter(splurg -> splurg instanceof Zombie)
+                    .filter(Zombie.class::isInstance)
                     .count();
         }
     }

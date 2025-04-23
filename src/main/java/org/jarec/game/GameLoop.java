@@ -110,7 +110,7 @@ public class GameLoop {
                 WorldFrame.updateStats(getStats());
 
                 // Endgame check
-                if(Splurgs.getInstance().getLiveHiveCount() <= 1 || Splurgs.getInstance().getTotalSplurgs() > WorldFrame.getInstance().getMaxPopulation()) { // TODO add zombie check here so it doesn't end on 1 if there are zombies? Maybe
+                if(Splurgs.getLiveHiveCount() <= 1 || Splurgs.getTotalSplurgs() > WorldFrame.getMaxPopulation()) { // TODO add zombie check here so it doesn't end on 1 if there are zombies? Maybe
                     WorldFrame.getInstance().displayEndGamePanel(Splurgs.getInstance().getWinningHive());
                 }
 
@@ -232,7 +232,7 @@ public class GameLoop {
     }
 
     private String getSplurgs() {
-        Map<Hive, Integer> counts = Splurgs.getInstance().getSplurgsPerHive();
+        Map<Hive, Integer> counts = Splurgs.getSplurgsPerHive();
         StringBuilder stats = new StringBuilder();
         List<Hive> hives = Hives.getInstance().getHives();
 
@@ -244,7 +244,7 @@ public class GameLoop {
             stats.append(hive.getName()).append(": ").append(count).append(" Splurgs");
         });
 
-        int totalSplurgs = Splurgs.getInstance().getTotalSplurgs();
+        int totalSplurgs = Splurgs.getTotalSplurgs();
         if (totalSplurgs > maxSplurgs){
             maxSplurgs = totalSplurgs;
         }

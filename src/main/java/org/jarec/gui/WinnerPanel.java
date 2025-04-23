@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+
 public class WinnerPanel {
     private static final Logger log = LoggerFactory.getLogger(WinnerPanel.class);
 
@@ -23,14 +25,14 @@ public class WinnerPanel {
         try {
             BufferedImage image = loadImageFromResources(gameEndStata.getfileName());
 
-            if (image.getWidth() != 512 || image.getHeight() != 512) {
+            if (image != null && (image.getWidth() != 512 || image.getHeight() != 512)) {
                 log.error("Image must be 512x512 pixels");
             }
 
             JPanel panel = getWinnerPanel(image);
 
             JDialog dialog = new JDialog(WorldFrame.getInstance(), "Image Viewer", true);
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             dialog.setUndecorated(true);
             dialog.getContentPane().add(panel);
             dialog.pack();
