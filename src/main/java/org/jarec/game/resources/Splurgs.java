@@ -59,7 +59,7 @@ public class Splurgs {
                 .sum();
     }
 
-    public int getTotalInfectedSplurgs() {
+    public static int getTotalInfectedSplurgs() {
         return (int) splurgList.stream()
                 .filter(splurg -> !(splurg instanceof Zombie))
                 .filter(Splurg::isInfected)

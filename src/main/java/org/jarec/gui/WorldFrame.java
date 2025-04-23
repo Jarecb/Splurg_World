@@ -18,6 +18,7 @@ import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 
 import static javax.swing.SwingConstants.CENTER;
+import static org.jarec.game.GameEndCheck.determineEndState;
 
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
@@ -297,20 +298,6 @@ public class WorldFrame extends JFrame {
         GameEndState endState = determineEndState(winningHive);
         SwingUtilities.invokeLater(() -> WinnerPanel.createAndShowWinnerPanel(endState));
         updateMenuItemsState();
-    }
-
-    private GameEndState determineEndState(Hive winningHive) {
-        if (winningHive == null) {
-            return GameEndState.STALEMATE;
-        }
-
-        return switch (winningHive.getName().toLowerCase()) {
-            case String s when s.contains("red") -> GameEndState.RED;
-            case String s when s.contains("blue") -> GameEndState.BLUE;
-            case String s when s.contains("yellow") -> GameEndState.YELLOW;
-            case String s when s.contains("green") -> GameEndState.GREEN;
-            default -> GameEndState.ZOMBIE;
-        };
     }
 
     private static JMenu getSettingsMenu() {
