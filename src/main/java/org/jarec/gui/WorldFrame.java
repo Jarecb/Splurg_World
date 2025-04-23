@@ -14,6 +14,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.net.URL;
+import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
+
+import static javax.swing.SwingConstants.CENTER;
 
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
@@ -22,7 +26,9 @@ public class WorldFrame extends JFrame {
     private WorldPanel world;
     private static JTextArea statsPanel;
     private JLabel statusBar;
-    private JMenuItem startItem, pauseItem, stopItem;
+    private JMenuItem startItem;
+    private JMenuItem pauseItem;
+    private JMenuItem stopItem;
     private JLabel splashImage;
     private JPanel wrapper;
 
@@ -39,7 +45,7 @@ public class WorldFrame extends JFrame {
     // Private constructor ensures no auto-start
     private WorldFrame() {
         setTitle("Splurg World");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(
                 Integer.parseInt(PropertyHandler.get("gui.frame.width", "800")),
                 Integer.parseInt(PropertyHandler.get("gui.frame.height", "600"))
@@ -128,8 +134,8 @@ public class WorldFrame extends JFrame {
             splashImage.setIcon(scaledIcon);
 
             // Center the label
-            splashImage.setHorizontalAlignment(JLabel.CENTER);
-            splashImage.setVerticalAlignment(JLabel.CENTER);
+            splashImage.setHorizontalAlignment(CENTER);
+            splashImage.setVerticalAlignment(CENTER);
 
             // Make sure the label doesn't stretch the image
             splashImage.setPreferredSize(new Dimension(scaledWidth, scaledHeight));
@@ -314,130 +320,72 @@ public class WorldFrame extends JFrame {
         ButtonGroup energyGroup = new ButtonGroup();
         ButtonGroup populationGroup = new ButtonGroup();
 
-        var defaultHiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
-        var defaultHiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
-        var defaultPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
+        int defaultHiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
+        int defaultHiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
+        int defaultPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
 
-        JRadioButtonMenuItem twoHivesItem = new JRadioButtonMenuItem("2 Hives", defaultHiveCount == 2);
-        twoHivesItem.addActionListener(e -> {
-            if (twoHivesItem.isSelected()) {
-                setHiveCount(2);
-            }
-        });
+        addRadioItems(settingsMenu, hiveGroup,
+                new int[]{2, 3, 4},
+                defaultHiveCount,
+                count -> count + " Hives",
+                WorldFrame::setHiveCount
+        );
 
-        JRadioButtonMenuItem threeHivesItem = new JRadioButtonMenuItem("3 Hives", defaultHiveCount == 3);
-        threeHivesItem.addActionListener(e -> {
-            if (threeHivesItem.isSelected()) {
-                setHiveCount(3);
-            }
-        });
+        settingsMenu.addSeparator();
 
-        JRadioButtonMenuItem fourHivesItem = new JRadioButtonMenuItem("4 Hives", defaultHiveCount == 4);
-        fourHivesItem.addActionListener(e -> {
-            if (fourHivesItem.isSelected()) {
-                setHiveCount(4);
-            }
-        });
+        addRadioItems(settingsMenu, energyGroup,
+                new int[]{100, 200, 300, 400},
+                defaultHiveEnergy,
+                energy -> energy + " Energy",
+                WorldFrame::setHiveEnergy
+        );
 
-        hiveGroup.add(twoHivesItem);
-        hiveGroup.add(threeHivesItem);
-        hiveGroup.add(fourHivesItem);
+        settingsMenu.addSeparator();
 
-        // Energy setup radio buttons
-        JRadioButtonMenuItem oneHundredEnergyItem = new JRadioButtonMenuItem("100 Energy", defaultHiveEnergy == 100);
-        oneHundredEnergyItem.addActionListener(e -> {
-            if (oneHundredEnergyItem.isSelected()) {
-                setHiveEnergy(100);
-            }
-        });
+        int[] populationLevels = {
+                Integer.parseInt(PropertyHandler.get("game.max.concurrent.low", "500")),
+                defaultPopulation,
+                Integer.parseInt(PropertyHandler.get("game.max.concurrent.high", "1000")),
+                Integer.parseInt(PropertyHandler.get("game.max.concurrent.extreme", "1500"))
+        };
+        String[] populationLabels = {
+                "Max Population Low", "Max Population Medium", "Max Population High", "Max Population Extreme"
+        };
 
-        JRadioButtonMenuItem twoHundredEnergyItem = new JRadioButtonMenuItem("200 Energy", defaultHiveEnergy == 200);
-        twoHundredEnergyItem.addActionListener(e -> {
-            if (twoHundredEnergyItem.isSelected()) {
-                setHiveEnergy(200);
-            }
-        });
+        for (int i = 0; i < populationLevels.length; i++) {
+            int level = populationLevels[i];
+            boolean isSelected = level == defaultPopulation;
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(populationLabels[i], isSelected);
+            item.addActionListener(e -> {
+                if (item.isSelected()) setMaxPopulation(level);
+            });
+            populationGroup.add(item);
+            settingsMenu.add(item);
+        }
 
-        JRadioButtonMenuItem threeHundredEnergyItem = new JRadioButtonMenuItem("300 Energy", defaultHiveEnergy == 300);
-        threeHundredEnergyItem.addActionListener(e -> {
-            if (threeHundredEnergyItem.isSelected()) {
-                setHiveEnergy(300);
-            }
-        });
-
-        JRadioButtonMenuItem fourHundredEnergyItem = new JRadioButtonMenuItem("400 Energy", defaultHiveEnergy == 400);
-        fourHundredEnergyItem.addActionListener(e -> {
-            if (fourHundredEnergyItem.isSelected()) {
-                setHiveEnergy(400);
-            }
-        });
-
-        energyGroup.add(oneHundredEnergyItem);
-        energyGroup.add(twoHundredEnergyItem);
-        energyGroup.add(threeHundredEnergyItem);
-        energyGroup.add(fourHundredEnergyItem);
-
-        // Max population setup radio buttons
-        var lowPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.low", "500"));
-        JRadioButtonMenuItem lowPopulationItem = new JRadioButtonMenuItem("Max Population Low", defaultPopulation == lowPopulation);
-        lowPopulationItem.addActionListener(e -> {
-            if (lowPopulationItem.isSelected()) {
-                setMaxPopulation(lowPopulation);
-            }
-        });
-
-        var mediumPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
-        JRadioButtonMenuItem mediumPopulationItem = new JRadioButtonMenuItem("Max Population Medium", defaultPopulation == mediumPopulation);
-        mediumPopulationItem.addActionListener(e -> {
-            if (mediumPopulationItem.isSelected()) {
-                setMaxPopulation(mediumPopulation);
-            }
-        });
-
-        var highPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.high", "1000"));
-        JRadioButtonMenuItem highPopulationItem = new JRadioButtonMenuItem("Max Population High", defaultPopulation == highPopulation);
-        highPopulationItem.addActionListener(e -> {
-            if (highPopulationItem.isSelected()) {
-                setMaxPopulation(highPopulation);
-            }
-        });
-
-        var extremePopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.extreme", "1500"));
-        JRadioButtonMenuItem extremePopulationItem = new JRadioButtonMenuItem("Max Population Extreme", defaultPopulation == extremePopulation);
-        lowPopulationItem.addActionListener(e -> {
-            if (extremePopulationItem.isSelected()) {
-                setMaxPopulation(extremePopulation);
-            }
-        });
-
-        populationGroup.add(lowPopulationItem);
-        populationGroup.add(mediumPopulationItem);
-        populationGroup.add(highPopulationItem);
-        populationGroup.add(extremePopulationItem);
+        settingsMenu.addSeparator();
 
         JCheckBoxMenuItem zombiesToggle = new JCheckBoxMenuItem("Zombies", zombiesActive);
-        zombiesToggle.addActionListener(e -> {
-            zombiesActive = zombiesToggle.isSelected();
-        });
-
-        settingsMenu.add(twoHivesItem);
-        settingsMenu.add(threeHivesItem);
-        settingsMenu.add(fourHivesItem);
-        settingsMenu.addSeparator();
-        settingsMenu.add(oneHundredEnergyItem);
-        settingsMenu.add(twoHundredEnergyItem);
-        settingsMenu.add(threeHundredEnergyItem);
-        settingsMenu.add(fourHundredEnergyItem);
-        settingsMenu.addSeparator();
-        settingsMenu.add(lowPopulationItem);
-        settingsMenu.add(mediumPopulationItem);
-        settingsMenu.add(highPopulationItem);
-        settingsMenu.add(extremePopulationItem);
-        settingsMenu.addSeparator();
+        zombiesToggle.addActionListener(e -> zombiesActive = zombiesToggle.isSelected());
         settingsMenu.add(zombiesToggle);
 
         return settingsMenu;
     }
+
+
+    private static void addRadioItems(JMenu menu, ButtonGroup group, int[] values, int defaultValue,
+                                      IntFunction<String> labelFunc, IntConsumer actionFunc) {
+        for (int val : values) {
+            boolean selected = val == defaultValue;
+            JRadioButtonMenuItem item = new JRadioButtonMenuItem(labelFunc.apply(val), selected);
+            item.addActionListener(e -> {
+                if (item.isSelected()) actionFunc.accept(val);
+            });
+            group.add(item);
+            menu.add(item);
+        }
+    }
+
 
     private static void setHiveEnergy(int energy) {
         hiveEnergy = energy;

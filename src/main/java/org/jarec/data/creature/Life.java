@@ -72,10 +72,8 @@ public abstract class Life {
     }
 
     public void heal() {
-        if (!zombie) {
-            if (health < maxHealth) {
-                health += takeEnergy(1);
-            }
+        if (!zombie && health < maxHealth) {
+            health += takeEnergy(1);
         }
     }
 
