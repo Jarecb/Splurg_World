@@ -33,7 +33,7 @@ public class Hives {
 
     public static void addHive(Hive hive) {
         if (hive != null) {
-            if (hive.isZombie()){
+            if (hive.isZombie()) {
                 zombieHive = hive;
                 return;
             }
@@ -78,6 +78,8 @@ public class Hives {
         Font energyFont = new Font("Arial", Font.BOLD, 12);
         g2.setFont(energyFont);
 
+        var splurgsPerHive = Splurgs.getSplurgsPerHive();
+
         synchronized (hiveList) {
             for (Hive hive : hiveList) {
                 if (!hive.isZombie()) {
@@ -89,23 +91,35 @@ public class Hives {
 
                     var hiveImage = hive.getIcon();
 
+                    var splurgsInHive = splurgsPerHive.get(hive);
+
                     if (hiveImage != null) {
+                        float alpha = 0.5f;
+                        if (!splurgsPerHive.containsKey(hive) || splurgsInHive <= 0) {
+                            alpha = 0.1f;
+                        }
                         Composite originalComposite = g2.getComposite();
-                        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+                        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
                         g2.drawImage(hiveImage, drawX, drawY, HIVE_SIZE, HIVE_SIZE, null);
                         g2.setComposite(originalComposite);
                     }
 
                     // Draw energy text
-                    String energyText = String.valueOf(hive.getEnergyReserve());
-                    FontMetrics fm = g2.getFontMetrics();
-                    int textWidth = fm.stringWidth(energyText);
-                    int textHeight = fm.getAscent();
-                    int textX = x - textWidth / 2;
-                    int textY = y + textHeight / 2 - 2;
+                    var hiveEnergy = hive.getEnergyReserve();
+                    if (hiveEnergy > 0) {
+                        float alpha = 1f;
+                        if (!splurgsPerHive.containsKey(hive) || splurgsInHive <= 0) {
+                            alpha = 0.5f;
+                        }
+                        FontMetrics fm = g2.getFontMetrics();
+                        int textWidth = fm.stringWidth(String.valueOf(hiveEnergy));
+                        int textHeight = fm.getAscent();
+                        int textX = x - textWidth / 2;
+                        int textY = y + textHeight / 2 - 2;
 
-                    g2.setColor(Color.BLACK);
-                    g2.drawString(energyText, textX, textY);
+                        g2.setColor(new Color(0, 0, 0, alpha));
+                        g2.drawString(String.valueOf(hiveEnergy), textX, textY);
+                    }
                 }
             }
         }
