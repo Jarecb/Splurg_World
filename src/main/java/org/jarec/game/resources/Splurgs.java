@@ -131,7 +131,7 @@ public class Splurgs {
     }
 
     public void removeDeadSplurgs() {
-        logDuplicates(splurgList);
+        logDuplicates();
 
         List<Splurg> deadSplurgs = new ArrayList<>();
 
@@ -149,7 +149,8 @@ public class Splurgs {
         }
     }
 
-    private void logDuplicates(List<Splurg> splurgList) {
+     // Useful for debugging
+    private void logDuplicates() {
         var duplicates = getDuplicates(splurgList);
         if (!duplicates.isEmpty()) {
             log.error("Duplicate Splurgs found {}", duplicates);

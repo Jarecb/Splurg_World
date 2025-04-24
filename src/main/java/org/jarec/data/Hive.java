@@ -54,10 +54,6 @@ public class Hive {
         return hiveIcon;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
     public void spawn() {
         if (!zombieHive) {
             var spawnEnergy = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));

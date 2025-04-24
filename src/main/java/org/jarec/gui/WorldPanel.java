@@ -109,15 +109,6 @@ public class WorldPanel extends JPanel {
         repaint();
     }
 
-    public void clearBackground() {
-        clearBuffer(backgroundBuffer);
-    }
-
-    public void addDrawable(Drawable d) {
-        drawables.add(d);
-        publish();
-    }
-
     public int getWorldWidth() {
         return getWidth();
     }
