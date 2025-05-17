@@ -119,10 +119,10 @@ public class Splurgs {
         }
     }
 
-    private static <T> Set<T> getDuplicates(List<T> list) {
+    private static <T> Set<T> getDuplicates() {
         Set<T> seen = new HashSet<>();
         Set<T> duplicates = new HashSet<>();
-        for (T item : list) {
+        for (T item : (List<T>) Splurgs.splurgList) {
             if (!seen.add(item)) {
                 duplicates.add(item);
             }
@@ -151,7 +151,7 @@ public class Splurgs {
 
      // Useful for debugging
     private void logDuplicates() {
-        var duplicates = getDuplicates(splurgList);
+        var duplicates = getDuplicates();
         if (!duplicates.isEmpty()) {
             log.error("Duplicate Splurgs found {}", duplicates);
         }
@@ -376,6 +376,32 @@ public class Splurgs {
         return (int) (totalSize / splurgList.size());
     }
 
+    public int getAverageSplurgCharisma() {
+        if (splurgList.isEmpty()) {
+            return 0;
+        }
+
+        double totalSize = splurgList.stream()
+                .filter(splurg -> !(splurg instanceof Zombie))
+                .mapToInt(splurg -> splurg.getCharisma().getValue())
+                .sum();
+
+        return (int) (totalSize / splurgList.size());
+    }
+
+    public int getAverageSplurgLoner() {
+        if (splurgList.isEmpty()) {
+            return 0;
+        }
+
+        double totalSize = splurgList.stream()
+                .filter(splurg -> !(splurg instanceof Zombie))
+                .mapToInt(splurg -> splurg.getLoner().getValue())
+                .sum();
+
+        return (int) (totalSize / splurgList.size());
+    }
+
     public static int getLiveHiveCount() {
         return (int) splurgList.stream()
                 .collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.counting()))
@@ -406,5 +432,9 @@ public class Splurgs {
         return (int) splurgList.stream()
                 .filter(Zombie.class::isInstance)
                 .count();
+    }
+
+    public void updateCharisma() {
+        splurgList.forEach(Splurg::calculateCharisma);
     }
 }

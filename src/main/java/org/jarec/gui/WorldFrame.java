@@ -244,7 +244,7 @@ public class WorldFrame extends JFrame {
             add(world, BorderLayout.CENTER);
             revalidate();
             repaint();
-            new GameStart(hiveCount, hiveEnergy, zombiesActive);
+            new GameStart(hiveCount, hiveEnergy, zombiesActive, herdingActive);
             remove(wrapper);
             updateStatus("Game started");
             updateMenuItemsState();

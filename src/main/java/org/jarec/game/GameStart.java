@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class GameStart {
 
-    public GameStart(int hiveCount, int hiveEnergy, boolean zombiesActive) {
+    public GameStart(int hiveCount, int hiveEnergy, boolean zombiesActive, boolean herdingActive) {
         Hives.getInstance().clearHives();
 
         var worldWidth = WorldFrame.getInstance().getWorldPanel().getWorldWidth();
@@ -68,6 +68,6 @@ public class GameStart {
 
         Splurgs.getInstance().clearSplurgs();
 
-        GameLoop.getInstance().start(zombiesActive);
+        GameLoop.getInstance().start(zombiesActive, herdingActive);
     }
 }

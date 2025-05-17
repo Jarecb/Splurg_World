@@ -238,11 +238,39 @@ public class Splurg extends Life {
             return true;
         }
 
+        // Follow a charismatic Splurg
+        if (GameLoop.getInstance().isHerdingActive()) {
+            List<Splurg> allSplurgs2 = Splurgs.getInstance().getSplurgs();
+            synchronized (allSplurgs2) {
+                Splurg leader = findLeader(currentLocation, allSplurgs2, foragingThreshold);
+                if (leader != null) {
+                    handleFollowMyLeader(leader);
+                    return true;
+                }
+            }
+        }
+
         if (getHeading() == null) {
             setHeading(Heading.getRandomHeading());
         }
 
         return false;
+    }
+
+    private Splurg findLeader(Location currentLocation, List<Splurg> allSplurgs, double foragingThreshold) {
+        return allSplurgs.stream()
+                .filter(candidate -> candidate != this)
+                .filter(candidate -> candidate.getHomeHive().equals(homeHive))
+                .filter(candidate -> isWithinThreshold(currentLocation, candidate.getLocation(), foragingThreshold))
+                .filter(candidate -> (candidate.charisma.getValue() - this.charisma.getValue()) > this.loner.getValue())
+                .max(Comparator.comparingInt(candidate -> candidate.charisma.getValue()))
+                .orElse(null);
+    }
+
+    private void handleFollowMyLeader(Splurg leaderSplurg) {
+        Heading newHeading = HeadingUtils.getHeadingTo(getLocation(), leaderSplurg.getLocation());
+        setHeading(newHeading);
+        setHeading(getHeading().getRandomTurn());
     }
 
     private void returnHome() {

@@ -24,6 +24,7 @@ public class GameLoop {
     private volatile boolean started = false;
     private final AtomicInteger loopSleepTime = new AtomicInteger(0);
     private boolean zombiesActive;
+    private boolean herdingActive;
 
     private boolean spawnPhase = true;
     private int energyPeak = 0;
@@ -39,9 +40,10 @@ public class GameLoop {
         return INSTANCE;
     }
 
-    public void start(boolean zombiesActive) {
+    public void start(boolean zombiesActive, boolean herdingActive) {
         if (started) return;
         this.zombiesActive = zombiesActive;
+        this.herdingActive = herdingActive;
         running = new AtomicBoolean(true);
         started = true;
         turn = 0;
@@ -95,6 +97,7 @@ public class GameLoop {
                 Splurgs.getInstance().reorder();
 
                 Splurgs.getInstance().drawSplurges();
+                Splurgs.getInstance().updateCharisma();
                 Splurgs.getInstance().moveSplurgs();
                 Splurgs.getInstance().removeDeadSplurgs();
                 Splurgs.getInstance().healSplurgs();
@@ -207,6 +210,8 @@ public class GameLoop {
         sb.append("\nAve. Speed: ").append(splurgs.getAverageSplurgSpeed());
         sb.append("\nAve. Strength: ").append(splurgs.getAverageSplurgStrength());
         sb.append("\nAve. Toughness: ").append(splurgs.getAverageSplurgToughness());
+        sb.append("\nAve. Charisma: ").append(splurgs.getAverageSplurgCharisma());
+        sb.append("\nAve. Loner: ").append(splurgs.getAverageSplurgLoner());
 
         if (zombiesActive) {
             var zCurrent = splurgs.getZombieCount();
@@ -229,13 +234,15 @@ public class GameLoop {
         return zombiesActive;
     }
 
+    public boolean isHerdingActive() { return herdingActive; }
+
     private String getSplurgs() {
         Map<Hive, Integer> counts = Splurgs.getSplurgsPerHive();
         StringBuilder stats = new StringBuilder();
         List<Hive> hives = Hives.getInstance().getHives();
 
         hives.forEach(hive -> {
-            if (stats.length() > 0) {
+            if (!stats.isEmpty()) {
                 stats.append("\n");
             }
             int count = counts.getOrDefault(hive, 0);
