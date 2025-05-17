@@ -37,6 +37,7 @@ public class WorldFrame extends JFrame {
     private static int hiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
     private static int maxPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
     private static boolean zombiesActive = Boolean.parseBoolean(PropertyHandler.get("game.default.zombie", "false"));
+    private static boolean herdingActive = Boolean.parseBoolean(PropertyHandler.get("game.default.herding", "false"));
     private String currentStatusMessage = "";
     private int messageTurnSet = -1;
     private static final int MESSAGE_DURATION_TURNS = 50;
@@ -347,6 +348,12 @@ public class WorldFrame extends JFrame {
             populationGroup.add(item);
             settingsMenu.add(item);
         }
+
+        settingsMenu.addSeparator();
+
+        JCheckBoxMenuItem herdingToggle = new JCheckBoxMenuItem("Herding", herdingActive);
+        herdingToggle.addActionListener(e -> herdingActive = herdingToggle.isSelected());
+        settingsMenu.add(herdingToggle);
 
         settingsMenu.addSeparator();
 
