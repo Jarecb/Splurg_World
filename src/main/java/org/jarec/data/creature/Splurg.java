@@ -28,6 +28,8 @@ public class Splurg extends Life {
     Toughness toughness = new Toughness();
     Size size;
     Speed speed;
+    Charisma charisma;
+    Loner loner = new Loner();
     private Hive homeHive;
     String name = RandomNameGenerator.generateName();
     private int breedingDelay = 0;
@@ -60,6 +62,9 @@ public class Splurg extends Life {
         if (parent1Json.getInt("Tgh") == parent2Json.getInt("Tgh")) {
             toughness.setValue(parent1Json.getInt("Tgh"));
         }
+        if (parent1Json.getInt("Lnr") == parent2Json.getInt("Lnr")) {
+            toughness.setValue(parent1Json.getInt("Lnr"));
+        }
 
         JSONObject location1 = parent1Json.getJSONObject("Location");
         JSONObject location2 = parent2Json.getJSONObject("Location");
@@ -79,6 +84,8 @@ public class Splurg extends Life {
     private void commonSetup(Hive hive) {
         size = new Size(toughness, strength);
         speed = new Speed(size);
+        charisma = new Charisma();
+        calculateCharisma();
 
         setAgeAtBirth();
         setMaxHealth();
@@ -104,6 +111,10 @@ public class Splurg extends Life {
     private void setMaxHealth() {
         setMaxHealth(Integer.parseInt((PropertyHandler.get("splurg.default.base.health", "10")))
                 + toughness.getValue());
+    }
+
+    public void calculateCharisma() {
+        charisma.setValue(size, getEnergy());
     }
 
     void setHomeHive(Hive hive) {
@@ -142,7 +153,6 @@ public class Splurg extends Life {
         if (RandomInt.getRandomInt(randomness) % randomness == 0) {
             setHeading(getHeading().getRandomTurn());
         }
-
     }
 
     private void degradation() {
@@ -318,6 +328,14 @@ public class Splurg extends Life {
         return foraging;
     }
 
+    public Charisma getCharisma() {
+        return charisma;
+    }
+
+    public Loner getLoner() {
+        return loner;
+    }
+
     @VisibleForTesting
     void setForaging(int value) {
         foraging.setValue(value);
@@ -367,6 +385,8 @@ public class Splurg extends Life {
                 "\"Tgh\":" + toughness.getValue() + "," +
                 "\"Siz\":" + (size != null ? size.getValue() : 0) + "," +
                 "\"Spd\":" + (speed != null ? speed.getValue() : 0) + "," +
+                "\"Cha\":" + charisma.getValue() + "," +
+                "\"Lnr\":" + loner.getValue() + "," +
                 "\"Hth\":" + getHealth() + "," +
                 "\"Eng\":" + getEnergy() + "," +
                 "\"Location\":" + (getLocation() != null ? getLocation().toString() : "null") +
