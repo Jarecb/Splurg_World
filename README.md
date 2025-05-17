@@ -9,6 +9,25 @@ Splurgs love to fight, eat each other and steal energy from each others Hives, e
 
 # Stats
 A number of statistics are shown in the right hand side panel.
+## Aggression
+This is a random value between 1-10 and defines the range at which a Splurg will detect an enemy Splurg and move to attack it.
+## Foraging
+This is a random value between 1-10 and defines the range at which a Splurg will detect an enemy Hive and move to raid it.
+## Size
+This is a derived attribute equal to (Toughness + Strength) / 2.
+## Speed
+This is a derived attribute based on the inverse of the Splurgs size.
+## Strength
+This is a random value between 1-10 and defines the amount of damage a Splurg does in combat.
+## Toughness
+This is a random value between 1-10 and defines the amount of damage a Splurg can resist in combat.
+## Charisma
+This is a derived attribute based on a Splurgs Size and the current amount of Energy they have.
+## Loner
+This is a random value between 1-10 and defines the change of a Splurg following another Splurg with a higher Charisma value.
+## Energy
+Energy isn't an Attribute but is collected by injuring another Splurg in combat or raiding enemy Hives. Energy can be used to 
+heal an injured Splurg of prevent degradation or death.
 
 # Keyboard Controls
 * ESC - Stops the Game
@@ -22,6 +41,10 @@ A number of statistics are shown in the right hand side panel.
 Creating new Splurgs is called spawning and can happen in 2 ways.
 ## Hives
 Hives will spawn random Splurgs providing they have enough energy (hive.default.spawn.energy).
+
+## Herding
+Splurgs with low Loner attributes will tend to follow Splurgs with a higher Charisma value.
+
 ## Splurg Breeding
 When 2 Splurgs meet, providing they have enough energy they will spawn a new Splurg.
 This Splurg is mostly random, however if the two parent Splurgs share a common attribute value then the
@@ -62,6 +85,7 @@ Various parameters can be set for the simulation. These are in the splurg.proper
 * splurg.default.breeding.delay = Delay in turns before a Splurg can breed
 * splurg.default.stuck.break = Change of a Splurg moving while in combat, prevents stuck combats
 * splurg.degradation = Change of a Splurg suffering from an attribute degradation
+* splurg.charisma.energy.divisor = The amount of Energy required to generate one point of Charisma
 ## GUI Properties
 * gui.frame.width = Default window width
 * gui.frame.height = Default window height
@@ -82,6 +106,7 @@ Various parameters can be set for the simulation. These are in the splurg.proper
 * game.max.concurrent.high = Maximum number of concurrent Splurgs before game ends
 * game.max.concurrent.extreme = Maximum number of concurrent Splurgs before game ends
 * game.default.zombie = true/false, controls the creation of Zombie Splurgs
+* game.default.herding = true/false, controls if Splurgs herd
 ## Zombie Properties
 * zombie.default.activation.delay = Delay before Zombified Splurg rises
 * zombie.default.aggression = Default Zombie Aggression
