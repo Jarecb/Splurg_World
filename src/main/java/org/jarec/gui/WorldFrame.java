@@ -25,7 +25,6 @@ public class WorldFrame extends JFrame {
 
     private static final WorldFrame INSTANCE = new WorldFrame();
     private WorldPanel world;
-    private static JTextArea statsPanel;
     private JLabel statusBar;
     private JMenuItem startItem;
     private JMenuItem pauseItem;
@@ -55,7 +54,7 @@ public class WorldFrame extends JFrame {
         // Center the frame on the screen
         setLocationRelativeTo(null);
 
-        statsPanel = new JTextArea();
+        JTextArea statsPanel = new JTextArea();
         statsPanel.append("Splurg World Stats");
         statsPanel.setEditable(false);
         statsPanel.setFocusable(false);

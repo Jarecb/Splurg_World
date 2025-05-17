@@ -12,7 +12,7 @@ public class Charisma implements Attribute {
     }
 
     public void setValue(Size size, int energy) {
-        charismaValue = (int) ((size.getValue() / 2) + (energy / Integer.parseInt(PropertyHandler.get("splurg.charisma.energy.divisor", "20"))));
+        charismaValue = (size.getValue() / 2) + (energy / Integer.parseInt(PropertyHandler.get("splurg.charisma.energy.divisor", "20")));
         if (charismaValue > 10) {
             charismaValue = 10;
         }
