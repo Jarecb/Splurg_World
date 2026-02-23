@@ -1,131 +1,217 @@
 # Splurg World
-Splurg world is a simple life simulator where the Splurgs try to live and evolve. \
 
-![Splurg World](screen.png)
+<!-- Improved README: badges, TOC, compact properties, preserved gameplay content -->
 
-## What is a Splurg
-A Splurg is an asexual Amoeba. \
-Splurgs love to fight, eat each other and steal energy from each others Hives, especially the Aggressive ones.
+[![Java](https://img.shields.io/badge/Java-21-blue?style=flat-square&logo=java)](https://openjdk.org/)
+[![Build with Maven](https://img.shields.io/badge/build-maven-brightgreen?style=flat-square&logo=apache-maven)](https://maven.apache.org/)
 
-# Stats
-A number of statistics are shown in the right hand side panel.
-## Aggression
-This is a random value between 1-10 and defines the range at which a Splurg will detect an enemy Splurg and move to attack it.
-## Foraging
-This is a random value between 1-10 and defines the range at which a Splurg will detect an enemy Hive and move to raid it.
-## Size
-This is a derived attribute equal to (Toughness + Strength) / 2.
-## Speed
-This is a derived attribute based on the inverse of the Splurgs size.
-## Strength
-This is a random value between 1-10 and defines the amount of damage a Splurg does in combat.
-## Toughness
-This is a random value between 1-10 and defines the amount of damage a Splurg can resist in combat.
-## Charisma
-This is a derived attribute based on a Splurgs Size and the current amount of Energy they have.
-## Loner
-This is a random value between 1-10 and defines the change of a Splurg following another Splurg with a higher Charisma value.
-## Energy
-Energy isn't an Attribute but is collected by injuring another Splurg in combat or raiding enemy Hives. Energy can be used to 
-heal an injured Splurg of prevent degradation or death.
+A simple desktop life simulator where little creatures called "Splurgs" live, fight, raid hives and evolve over time.
 
-# Keyboard Controls
-* ESC - Stops the Game
-* Space - Pauses and resumes the game
-* Left Arrow - Slows down the game
-* Right Arrow - Speeds up the game
-* Up Arrow - Resets game to its default speed
-* Mouse click - While the game is Paused will give you stats on all the Splurgs in the area
+<p align="center">
+  <img src="screen.png" alt="Splurg World screenshot" style="max-width:100%;height:auto;" />
+</p>
 
-# Spawning
-Creating new Splurgs is called spawning and can happen in 2 ways.
-## Hives
-Hives will spawn random Splurgs providing they have enough energy (hive.default.spawn.energy).
+---
 
-## Herding
-Splurgs with low Loner attributes will tend to follow Splurgs with a higher Charisma value.
+## Table of contents
+- [Overview](#overview)
+- [Tech Stack](#tech-stack)
+- [Quick start](#quick-start)
+  - [Prerequisites](#prerequisites)
+  - [Build](#build)
+  - [Run](#run)
+  - [Tests](#tests)
+- [Configuration & resources](#configuration--resources)
+- [Gameplay](#gameplay)
+  - [What is a Splurg](#what-is-a-splurg)
+  - [Stats & attributes](#stats--attributes)
+  - [Spawning & breeding](#spawning--breeding)
+  - [Zombies & degradation](#zombies--degradation)
+  - [Controls](#controls)
+- [Artifacts & logs](#artifacts--logs)
+- [Troubleshooting](#troubleshooting)
+- [Development notes](#development-notes)
+- [License & next steps](#license--next-steps)
 
-## Splurg Breeding
-When 2 Splurgs meet, providing they have enough energy they will spawn a new Splurg.
-This Splurg is mostly random, however if the two parent Splurgs share a common attribute value then the
-new spawn will inherit that attribute value.
+---
 
-# Splurg Degradation
-Over time Splurgs will tire and there is a random chance of their Strength or Toughness going down. \
-This is controlled by the 'splurg.degradation' property, setting this to 0 turns this effect off.
+## Overview
+`Splurg World` is a Java 21 desktop simulation/game that models populations of small creatures (Splurgs) and their interactions (combat, raiding, spawning, infection/zombies, and aging). The simulation is configurable via `src/main/resources/splurg.properties`.
 
-# Life expectancy
-Splurgs have a maximum life span (splurg.default.spawn.age) after which there is a chance of them losing Health until 
-they die unless they consume Energy to keep themselves alive.
+Key facts:
+- Main class: `org.jarec.Main`
+- Module: `Splurg.World` (see `src/main/java/module-info.java`)
+- Author: **Jarec** (from `splurg.properties`)
+- Version: **01.10** (from `splurg.properties`)
 
-# Settings
-A number of game settings, such as number or Hives and starting energy can be set via the Settings menu.
+---
 
-# Zombies
-Zombie Splurgs are an option that can be enabled via the Settings menu. \
-Zombies do not heal, collect or steal energy. They only move to attack nearby Splurgs. \
-Whenever a Splurg dies there is a chance that the Splurg will become a Zombie. \
-Any time a Splurg is injured by a Zombie the Splurg becomes Infected. Infected Splurgs will automatically
-become Zombies when they die.
+## Tech Stack
+A concise summary of the technologies and library versions used in this project (extracted from `pom.xml` and `module-info.java`):
 
-# Properties
-Various parameters can be set for the simulation. These are in the splurg.properties file in the resources folder.
-## Splurg Properties
-* splurg.default.max.attribute = Maximum attribute value
-* splurg.default.max.toughness = Maximum Toughness attribute value
-* splurg.default.spawn.age = Maximum Splurg age (Not  currently used)
-* splurg.default.death.chance = Chance of death once Maximum age is reached
-* splurg.default.base.health = Maximum Splurg health value
-* splurg.default.size.multiplier = Multiplier to Size attribute for display value
-* splurg.default.pathing.randomness = Chance of a Splurg changing direction of movement
-* splurg.default.aggression.multiplier = Multiplier for Aggression attribute, controls distance at which a Splurg will move to attack an enemy Splurg
-* splurg.default.foraging.multiplier = Multiplier for Foraging attribute, controls distance at which a Splurg will move feed on an enemy Splurg Hive
-* splurg.default.feeding.volume = Controls how much energy a Splurg will drain from an enemy Hive per turn
-* splurg.default.energy.capacity = Maximum amount of Energy a Splurg can store before returning excess to Hive
-* splurg.default.breeding.delay = Delay in turns before a Splurg can breed
-* splurg.default.stuck.break = Change of a Splurg moving while in combat, prevents stuck combats
-* splurg.degradation = Change of a Splurg suffering from an attribute degradation
-* splurg.charisma.energy.divisor = The amount of Energy required to generate one point of Charisma
-## GUI Properties
-* gui.frame.width = Default window width
-* gui.frame.height = Default window height
-* gui.mouse.click.detection.range = Area of Splurgs detected when the mouse is clicked on the view
-* gui.hive.default.number = Default number of Hives, 2, 3 or 4
-## World Timing Loop Properties
-* world.game.loop.sleeptime = Delay between each turn, effects simulation visual speed
-* world.game.loop.pausedelaytime = Delay in refresh loop when game is paused
-## Hive Properties
-* hive.default.position.inset = Position of Hives from frame edges
-* hive.default.setup.energy = Default starting energy in Hives at game start
-* hive.default.spawn.rate = Turns between Hive spawnings
-* hive.default.spawn.energy = Energy cost to spawn a Splurg
-* hive.default.size = Visual size of Hives
-## Game Properties
-* game.max.concurrent.low = Maximum number of concurrent Splurgs before game ends
-* game.max.concurrent.medium = Maximum number of concurrent Splurgs before game ends
-* game.max.concurrent.high = Maximum number of concurrent Splurgs before game ends
-* game.max.concurrent.extreme = Maximum number of concurrent Splurgs before game ends
-* game.default.zombie = true/false, controls the creation of Zombie Splurgs
-* game.default.herding = true/false, controls if Splurgs herd
-## Zombie Properties
-* zombie.default.activation.delay = Delay before Zombified Splurg rises
-* zombie.default.aggression = Default Zombie Aggression
-* zombie.default.change = Change of a dead Splurg becoming a Zombie, multiplied by number of Hives
-* zombie.default.health = Default Zombie Health
-* zombie.default.speed.multiplier = Zombie Speed multiplier
-* zombie.default.strength.bonus = Bonus to Zombie Strength Attribute
-## Game End Properties
-* winning.image.red = Image displayed if Red is the last remaining Hive
-* winning.image.blue = Image displayed if Blue is the last remaining Hive
-* winning.image.green = Image displayed if Green is the last remaining Hive
-* winning.image.yellow = Image displayed if Yellow is the last remaining Hive
-* winning.image.nobody = Image displayed if only Zombies are left
-* winning.image.truce = Image displayed if the maximum number of concurrent Splurgs is reached
+- Java: JDK 21 (project compiler source/target set to 21)
+- Build tool: Maven (pom.xml)
+  - Plugins: `maven-jar-plugin` 3.3.0, `maven-shade-plugin` 3.5.0
+- Libraries:
+  - `org.slf4j:slf4j-api` — 2.0.12
+  - `ch.qos.logback:logback-classic` — 1.4.11
+  - `com.google.guava:guava` — 31.1-jre
+  - `org.json:json` — 20231013
+- Testing:
+  - `org.junit.jupiter:junit-jupiter` — 5.10.0 (test scope)
+  - `org.mockito:mockito-core` — 5.10.0 (test scope)
+- Module system: `module Splurg.World` (requires `com.google.common`, `java.datatransfer`, `java.desktop`, `org.slf4j`, `org.json`)
+- Packaging: executable jar (manifest mainClass `org.jarec.Main`; Shade plugin configured)
 
-# Building Splurg World
-Building Splurg World for deployment creates an executable jar file
-> mvn clean package
+Notes: run `mvn dependency:tree` to inspect full transitive dependencies.
 
-# Technology Requirements
-* Java 21
-* Maven
+---
+
+## Quick start
+
+### Prerequisites
+- Java 21 (JDK)
+- Maven 3.x
+
+Verify Java is the expected major version:
+
+```bash
+java -version
+mvn -v
+```
+
+### Build
+
+From the repository root:
+
+```bash
+mvn clean package
+```
+
+Produce a faster local build (skip tests):
+
+```bash
+mvn -DskipTests package
+```
+
+The build produces jars in `target/` (pom is configured with a Shade transformer and `org.jarec.Main` as the entry point).
+
+### Run
+
+After packaging:
+
+```bash
+java -jar target/Splurg_World-1.0.jar
+```
+
+Notes:
+- Running creates a `logs` directory for runtime logs.
+- If you run from an IDE, ensure the module path and resources are available.
+
+### Tests
+
+Run unit tests:
+
+```bash
+mvn test
+```
+
+Reports: `target/surefire-reports/`.
+
+---
+
+## Configuration & resources
+
+The primary configuration file is `src/main/resources/splurg.properties`. It contains game tuning values (attributes, hive settings, zombie options and image names).
+
+<details>
+<summary>Click to view properties (collapsed for readability)</summary>
+
+Key properties include (see the file for exact values):
+
+- `author`, `version`
+- `splurg.default.*` (attributes, breeding, energy, degradation)
+- `hive.default.*` (setup energy, spawn rate, spawn energy, size, position)
+- `game.*` (max concurrent thresholds, default toggles for zombies/herding)
+- `zombie.default.*` (activation delay, aggression, health, speed multiplier)
+- `winning.image.*` (images shown at game end)
+
+All images and resources under `src/main/resources/` are copied to `target/classes/` during build. Notable images referenced: `Red_Wins.png`, `Blue_Wins.png`, `Green_Wins.png`, `Yellow_Wins.png`, `Nobody_Wins.png`, `Truce.png`, `splash_image.png`, `icon.png`.
+
+</details>
+
+---
+
+## Gameplay
+
+### What is a Splurg
+A Splurg is an asexual amoeba-like creature that fights, feeds and reproduces. They raid hives for energy, fight other Splurgs, and can become infected/zombies.
+
+### Stats & attributes
+A number of statistics are shown in the right-hand side panel. Many are randomized at spawn and some are derived from others.
+
+- Aggression: a random value (1–10). Determines detection range to attack other Splurgs.
+- Foraging: a random value (1–10). Determines detection range to raid Hives.
+- Strength: random (1–10). Damage dealt in combat.
+- Toughness: random (1–10). Damage resisted in combat.
+- Size: derived as (Toughness + Strength) / 2.
+- Speed: derived from Size (larger size → slower speed).
+- Charisma: derived from Size and stored Energy.
+- Loner: random (1–10). Determines tendency to follow others with higher Charisma.
+- Energy: not an attribute but collected by injuring Splurgs or raiding Hives; used to heal or breed.
+
+### Spawning & breeding
+- Hives spawn Splurgs when they have enough energy (`hive.default.spawn.energy`).
+- Herding: Splurgs with low `Loner` follow others with higher `Charisma`.
+- Breeding: when two Splurgs meet and have enough energy, they can spawn a new Splurg. Offspring inherit attributes (fully random unless parents share an attribute value).
+
+### Splurg degradation & life expectancy
+- Splurgs can degrade (lose Strength or Toughness) over time. Controlled by `splurg.degradation` (set to 0 to disable).
+- Splurgs have a maximum lifespan (`splurg.default.spawn.age`). After this age there's an increased chance of death unless they consume Energy.
+
+### Zombies
+- Can be enabled/disabled via settings (`game.default.zombie`).
+- Zombies do not collect or spend energy: they only attack.
+- Dead Splurgs may become Zombies depending on `zombie.default.change` and hive counts.
+- Splurgs injured by Zombies become Infected and will become Zombies when they die.
+
+### Controls
+- ESC — Stop the game
+- Space — Pause / resume
+- Left arrow — Slow down simulation
+- Right arrow — Speed up simulation
+- Up arrow — Reset to default speed
+- Mouse click (while paused) — Show stats for Splurgs in the clicked area
+
+---
+
+## Artifacts & logs
+- Packaged jar: `target/Splurg_World-1.0.jar` (and possibly a shaded jar)
+- Compiled classes & resources: `target/classes/`
+- Test reports: `target/surefire-reports/`
+- Runtime logs: `logs/splurg.log` (created by the app at startup)
+
+---
+
+## Troubleshooting
+- Module/run errors: make sure you're running with Java 21 (the project is compiled for Java 21).
+- Missing resources: verify `target/classes/` contains resource files after building.
+- Dependency issues: run `mvn dependency:tree` to inspect.
+
+---
+
+## Development notes
+- The `Main` class prints author & version (from `splurg.properties`) and initializes the GUI (`WorldFrame.getInstance()`).
+- Module requires: `com.google.common`, `java.desktop`, `org.slf4j`, `org.json` (see `module-info.java`).
+
+---
+
+## License & next steps
+No `LICENSE` file was found. Consider adding one (MIT or Apache-2.0 are common).
+
+Suggestions to improve the repo:
+- Add `mvnw` (Maven wrapper) so contributors can build without installing Maven.
+- Add a GitHub Actions workflow to run `mvn -DskipTests package` and `mvn test` on push/PR.
+- Add a short `CONTRIBUTING.md` and a `LICENSE` file.
+
+---
