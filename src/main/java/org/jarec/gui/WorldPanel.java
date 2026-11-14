@@ -12,12 +12,10 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-/**
- * Coordinate 0:0 is top left corner
- */
+/** Displays the world using Swing component coordinates, with the origin at the top left. */
 public class WorldPanel extends JPanel {
-    private transient BufferedImage displayBuffer;     // Screen buffer
-    private transient BufferedImage backgroundBuffer;  // Swap buffer
+    private transient BufferedImage displayBuffer;
+    private transient BufferedImage backgroundBuffer;
 
     public WorldPanel() {
         setBackground(UiTheme.BACKGROUND);
@@ -124,9 +122,7 @@ public class WorldPanel extends JPanel {
         return backgroundBuffer.createGraphics();
     }
 
-    /**
-     * Pushes background buffer to display buffer and repaints.
-     */
+    /** Copies the rendered background to the display buffer, clears the drawing buffer, and repaints. */
     public synchronized void publish() {
         if (displayBuffer == null || backgroundBuffer == null) return;
 

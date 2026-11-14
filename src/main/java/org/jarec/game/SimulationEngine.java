@@ -10,6 +10,12 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Advances one simulation tick and collects metrics and a render-ready snapshot.
+ *
+ * <p>The engine operates on the shared {@link Splurgs} and {@link Hives} managers; creating
+ * another engine does not create an independent world.</p>
+ */
 public class SimulationEngine {
     private static final Logger log = LoggerFactory.getLogger(SimulationEngine.class);
     private long lastSlowWarningTurn = -1;
@@ -20,6 +26,14 @@ public class SimulationEngine {
         populationLimitReported = false;
     }
 
+    /**
+     * Advances the shared world by one tick.
+     *
+     * @param turn current one-based simulation turn
+     * @param combatsThisTurn combat count accumulated before this tick's update
+     * @param populationLimit configured maximum used to report the population guardrail
+     * @return metrics and a render-ready snapshot of the updated world
+     */
     public SimulationFrame step(int turn, int combatsThisTurn, int populationLimit) {
         SimulationState.setTurn(turn);
         long startedAt = System.nanoTime();

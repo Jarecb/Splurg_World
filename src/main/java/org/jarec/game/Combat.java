@@ -8,7 +8,7 @@ public class Combat {
     private Combat() {
     }
 
-    // Method for attacking and determining the result of a combat round between two Splurgs
+    /** Resolves both attacks for one combat round, applying wounds, infection, and healing. */
     public static void attack(Splurg splurgA, Splurg splurgB) {
         var aWoundsB = wound(splurgA, splurgB);
         var bWoundsA = wound(splurgB, splurgA);

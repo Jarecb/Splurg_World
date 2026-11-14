@@ -113,10 +113,10 @@ public class Splurgs {
         }
     }
 
-    private static <T> Set<T> getDuplicates() {
-        Set<T> seen = new HashSet<>();
-        Set<T> duplicates = new HashSet<>();
-        for (T item : (List<T>) Splurgs.splurgList) {
+    private static Set<Splurg> getDuplicates() {
+        Set<Splurg> seen = new HashSet<>();
+        Set<Splurg> duplicates = new HashSet<>();
+        for (Splurg item : splurgList) {
             if (!seen.add(item)) {
                 duplicates.add(item);
             }
@@ -143,7 +143,6 @@ public class Splurgs {
         }
     }
 
-     // Useful for debugging
     private void logDuplicates() {
         var duplicates = getDuplicates();
         if (!duplicates.isEmpty()) {
@@ -341,7 +340,7 @@ public class Splurgs {
             return liveHives.getFirst();
         }
 
-        return null; // No winner yet
+        return null; // No sole living colony; the game may still be ongoing or end in a stalemate.
     }
 
     public int getZombieCount() {
