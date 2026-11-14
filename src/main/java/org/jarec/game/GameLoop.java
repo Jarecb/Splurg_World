@@ -13,8 +13,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.LockSupport;
 
 public class GameLoop {
     private static final Logger log = LoggerFactory.getLogger(GameLoop.class);
@@ -22,20 +26,20 @@ public class GameLoop {
     private static final GameLoop INSTANCE = new GameLoop();
     private final SimulationEngine simulationEngine = new SimulationEngine();
     private final WorldRenderer worldRenderer = new WorldRenderer();
+    private final Object worldLock = new Object();
 
-    private volatile int turn = 0;
+    private final AtomicInteger turn = new AtomicInteger(0);
     private final AtomicBoolean running = new AtomicBoolean(false);
     private volatile boolean started = false;
-    private volatile long generation = 0;
-    private volatile Thread loopThread;
+    private final AtomicLong generation = new AtomicLong(0);
+    private final AtomicReference<Thread> loopThread = new AtomicReference<>();
     private final AtomicInteger loopSleepTime = new AtomicInteger(0);
     private boolean zombiesActive;
-    private boolean herdingActive;
 
     private boolean spawnPhase = true;
     private int energyPeak = 0;
 
-    private int combatsPerTurn = 0;
+    private final AtomicInteger combatsPerTurn = new AtomicInteger(0);
     private int maxCombatsPerTurn = 0;
     private int maxSplurgs = 0;
     private int maxZombies = 0;
@@ -49,46 +53,45 @@ public class GameLoop {
     public synchronized void start(boolean zombiesActive, boolean herdingActive) {
         if (started) return;
         this.zombiesActive = zombiesActive;
-        this.herdingActive = herdingActive;
         SimulationState.configure(zombiesActive, herdingActive);
-        long runGeneration = ++generation;
+        long runGeneration = generation.incrementAndGet();
         running.set(true);
         started = true;
-        turn = 0;
-        SimulationState.setTurn(turn);
+        turn.set(0);
+        SimulationState.setTurn(turn.get());
         energyPeak = 0;
         spawnPhase = true;
         maxSplurgs = 0;
         maxCombatsPerTurn = 0;
         maxZombies = 0;
+        combatsPerTurn.set(0);
         simulationEngine.resetGuardrails();
         loopSleepTime.set(PropertyHandler.getInt("world.game.loop.sleeptime", 1000));
 
-        loopThread = new Thread(() -> {
+        Thread thread = new Thread(() -> {
             try {
                 run(runGeneration);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                if (runGeneration == generation) {
+                if (runGeneration == generation.get()) {
                     log.error("Game loop interrupted unexpectedly", e);
                 }
             } catch (RuntimeException e) {
                 log.error("Game loop stopped after an unexpected error", e);
             } finally {
-                synchronized (GameLoop.this) {
-                    if (runGeneration == generation) {
+                synchronized (this) {
+                    if (runGeneration == generation.get()) {
                         started = false;
                         running.set(false);
                     }
-                    if (loopThread == Thread.currentThread()) {
-                        loopThread = null;
-                    }
+                    loopThread.compareAndSet(Thread.currentThread(), null);
                 }
             }
         }, "splurg-world-game-loop");
 
-        loopThread.setDaemon(true);
-        loopThread.start();
+        thread.setDaemon(true);
+        loopThread.set(thread);
+        thread.start();
     }
 
     public synchronized void pause() {
@@ -106,8 +109,8 @@ public class GameLoop {
     public synchronized void stop() {
         started = false;
         running.set(false);
-        generation++;
-        Thread thread = loopThread;
+        generation.incrementAndGet();
+        Thread thread = loopThread.get();
         if (thread != null) {
             thread.interrupt();
         }
@@ -119,40 +122,90 @@ public class GameLoop {
 
         log.info("Game starting");
 
-        while (started && runGeneration == generation) {
+        while (started && runGeneration == generation.get()) {
             if (running.get()) {
-                turn++;
-                SimulationState.setTurn(turn);
-                combatsPerTurn = 0;
+                int currentTurn = turn.incrementAndGet();
+                SimulationState.setTurn(currentTurn);
+                combatsPerTurn.set(0);
                 WorldFrame.getInstance().refreshStatus();
 
                 WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
-                WorldBounds.set(worldPanel.getWorldWidth(), worldPanel.getWorldHeight());
-                SimulationFrame frame = simulationEngine.step(
-                        turn, combatsPerTurn, WorldFrame.getMaxPopulation());
+                SimulationFrame frame;
+                synchronized (worldLock) {
+                    resizeWorldLocked(worldPanel.getWorldWidth(), worldPanel.getWorldHeight());
+                    frame = simulationEngine.step(currentTurn, combatsPerTurn.get(), WorldFrame.getMaxPopulation());
+                    worldRenderer.render(worldPanel, frame.snapshot());
+                }
                 SimulationMetrics metrics = frame.metrics();
-                worldRenderer.render(worldPanel, frame.snapshot());
                 WorldFrame.updateStats(getStats(metrics));
 
                 if (metrics.liveHiveCount() <= 1 || metrics.populationLimitReached()) {
                     WorldFrame.getInstance().displayEndGamePanel(Splurgs.getInstance().getWinningHive());
                 }
 
-                Thread.sleep(loopSleepTime.get());
+                delay(loopSleepTime.get());
             } else {
-                Thread.sleep(loopPauseTime);
+                delay(loopPauseTime);
             }
         }
 
         log.info("Game loop has stopped.");
     }
 
+    private void delay(long millis) throws InterruptedException {
+        long remainingNanos = TimeUnit.MILLISECONDS.toNanos(millis);
+        if (remainingNanos <= 0) return;
+
+        long deadline = System.nanoTime() + remainingNanos;
+        while (remainingNanos > 0) {
+            LockSupport.parkNanos(remainingNanos);
+            if (Thread.interrupted()) throw new InterruptedException();
+            remainingNanos = deadline - System.nanoTime();
+        }
+    }
+
     public void incrementCombatsPerTurn(){
-        combatsPerTurn++;
+        combatsPerTurn.incrementAndGet();
     }
 
     public int getTurn() {
-        return turn;
+        return turn.get();
+    }
+
+    public void resizeWorld(int width, int height) {
+        if (width < 1 || height < 1) return;
+        synchronized (worldLock) {
+            resizeWorldLocked(width, height);
+        }
+    }
+
+    public void resizeWorld(WorldPanel worldPanel) {
+        int width = worldPanel.getWorldWidth();
+        int height = worldPanel.getWorldHeight();
+        if (width < 1 || height < 1) return;
+        synchronized (worldLock) {
+            resizeWorldLocked(width, height);
+            worldRenderer.render(worldPanel, simulationEngine.createSnapshot());
+        }
+    }
+
+    private void resizeWorldLocked(int width, int height) {
+        if (width < 1 || height < 1) return;
+
+        int oldWidth = WorldBounds.getWidth();
+        int oldHeight = WorldBounds.getHeight();
+        if (oldWidth == width && oldHeight == height) return;
+
+        Hives hives = Hives.getInstance();
+        hives.getHives().forEach(hive ->
+                hive.getLocation().rescale(oldWidth, oldHeight, width, height));
+        Hive zombieHive = Hives.getZombieHive();
+        if (zombieHive != null) {
+            zombieHive.getLocation().rescale(oldWidth, oldHeight, width, height);
+        }
+        Splurgs.getInstance().getSplurgs().forEach(splurg ->
+                splurg.getLocation().rescale(oldWidth, oldHeight, width, height));
+        WorldBounds.set(width, height);
     }
 
     public boolean isStarted() {
@@ -183,7 +236,7 @@ public class GameLoop {
     private String getStats(SimulationMetrics metrics){
         StringBuilder sb = new StringBuilder("\n");
 
-        sb.append("Turn: ").append(turn).append("\n\n");
+        sb.append("Turn: ").append(turn.get()).append("\n\n");
 
         Splurgs splurgs = Splurgs.getInstance();
 
@@ -214,10 +267,11 @@ public class GameLoop {
         sb.append("Total Energy: ").append(totalEnergy).append(" Energy\n");
         sb.append("Peak Energy: ").append(energyPeak).append(" Energy\n\n");
 
-        if (combatsPerTurn > maxCombatsPerTurn){
-            maxCombatsPerTurn = combatsPerTurn;
+        int currentCombats = combatsPerTurn.get();
+        if (currentCombats > maxCombatsPerTurn){
+            maxCombatsPerTurn = currentCombats;
         }
-        sb.append("Combats per Turn: ").append(combatsPerTurn).append("\n");
+        sb.append("Combats per Turn: ").append(currentCombats).append("\n");
         sb.append("Max Combats per Turn: ").append(maxCombatsPerTurn).append("\n");
 
         sb.append("\n");
@@ -251,12 +305,6 @@ public class GameLoop {
 
         return sb.toString();
     }
-
-    public boolean areZombiesActive(){
-        return zombiesActive;
-    }
-
-    public boolean isHerdingActive() { return herdingActive; }
 
     private String getSplurgs() {
         Map<Hive, Integer> counts = Splurgs.getSplurgsPerHive();

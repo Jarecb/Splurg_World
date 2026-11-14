@@ -84,7 +84,7 @@ public class SimulationEngine {
                 .sum();
     }
 
-    private WorldSnapshot createSnapshot() {
+    WorldSnapshot createSnapshot() {
         Map<Hive, Integer> population = Splurgs.getSplurgsPerHive();
         List<WorldSnapshot.HiveView> hives = Hives.getInstance().getHives().stream()
                 .map(hive -> new WorldSnapshot.HiveView(
