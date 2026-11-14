@@ -45,7 +45,6 @@ public class WorldFrame extends JFrame {
     private String currentStatusMessage = "";
     private int messageTurnSet = -1;
     private static final int MESSAGE_DURATION_TURNS = 50;
-    private boolean startup = true;
     private final AtomicBoolean endGameShown = new AtomicBoolean();
     private static final LatestEdtUpdate<String> statsUpdate =
             new LatestEdtUpdate<>(value -> statsPanel.setText("Splurg World Stats\n" + value));
@@ -101,19 +100,16 @@ public class WorldFrame extends JFrame {
 
         setVisible(true);
 
-        if (startup) {
-            addComponentListener(new ComponentAdapter() {
-                @Override
-                public void componentResized(ComponentEvent e) {
-                    // Only redraw if we're showing the splash screen
-                    if (splashImage != null && splashImage.getParent() != null && world == null) {
-                        displaySplashImage();
-                    }
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                // Only redraw if we're showing the splash screen
+                if (splashImage != null && splashImage.getParent() != null && world == null) {
+                    displaySplashImage();
                 }
-            });
-            displaySplashImage();
-            startup = false;
-        }
+            }
+        });
+        displaySplashImage();
         log.info("World Frame created");
         statusBar.setText("Welcome to Splurg World");
     }
@@ -458,7 +454,6 @@ public class WorldFrame extends JFrame {
             return;
         }
 
-        boolean isRunning = GameLoop.getInstance().isRunning();
         boolean isStarted = GameLoop.getInstance().isStarted();
 
         startItem.setEnabled(!isStarted);

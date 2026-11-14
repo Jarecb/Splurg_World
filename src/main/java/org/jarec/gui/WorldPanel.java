@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,8 +18,6 @@ import java.util.List;
 public class WorldPanel extends JPanel {
     private transient BufferedImage displayBuffer;     // Screen buffer
     private transient BufferedImage backgroundBuffer;  // Swap buffer
-
-    private final ArrayList<Drawable> drawables = new ArrayList<>();
 
     public WorldPanel() {
         setBackground(UiTheme.BACKGROUND);
@@ -139,10 +136,6 @@ public class WorldPanel extends JPanel {
         displayG.setComposite(AlphaComposite.SrcOver);
 
         displayG.drawImage(backgroundBuffer, 0, 0, null);
-
-        for (Drawable d : drawables) {
-            d.draw(displayG);
-        }
 
         displayG.dispose();
 
