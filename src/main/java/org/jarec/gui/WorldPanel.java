@@ -23,7 +23,8 @@ public class WorldPanel extends JPanel {
     private final ArrayList<Drawable> drawables = new ArrayList<>();
 
     public WorldPanel() {
-        setBackground(Color.WHITE);
+        setBackground(UiTheme.BACKGROUND);
+        setOpaque(true);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -33,18 +34,62 @@ public class WorldPanel extends JPanel {
                     List<Splurg> localSplurgs = Splurgs.getInstance().getSplurgsInVicinity(clickLocation);
 
                     if (!localSplurgs.isEmpty()) {
-                        JPopupMenu popup = new JPopupMenu();
-
-                        for (Splurg splurg : localSplurgs) {
-                            JMenuItem item = new JMenuItem(splurg.toString());
-                            popup.add(item);
-                        }
-
-                        popup.show(WorldPanel.this, e.getX(), e.getY());
+                        showSplurgPopup(e, localSplurgs);
                     }
                 }
             }
         });
+    }
+
+    private void showSplurgPopup(MouseEvent event, List<Splurg> splurgs) {
+        JPopupMenu popup = new JPopupMenu();
+        popup.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UiTheme.BORDER),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)));
+        JMenuItem heading = new JMenuItem("Nearby Splurgs  ·  " + splurgs.size());
+        heading.setEnabled(false);
+        heading.setFont(heading.getFont().deriveFont(Font.BOLD));
+        popup.add(heading);
+        popup.addSeparator();
+        for (Splurg splurg : splurgs) {
+            popup.add(createSplurgMenuItem(splurg));
+        }
+        popup.show(this, event.getX(), event.getY());
+    }
+
+    private JMenuItem createSplurgMenuItem(Splurg splurg) {
+        JMenuItem item = new JMenuItem(splurg.getName() + "  ·  " + splurg.getHomeHive().getName()
+                + "  ·  Health " + splurg.getHealth());
+        item.setToolTipText("View this Splurg's attributes and current state");
+        item.addActionListener(event -> showSplurgDetails(splurg));
+        return item;
+    }
+
+    private void showSplurgDetails(Splurg splurg) {
+        String details = """
+                Colony: %s
+                Health: %d
+                Energy: %d
+
+                Aggression: %d
+                Foraging: %d
+                Strength: %d
+                Toughness: %d
+                Size: %d
+                Speed: %d
+                Charisma: %d
+                Loner: %d
+
+                Position: %d, %d
+                """.formatted(
+                splurg.getHomeHive().getName(), splurg.getHealth(), splurg.getEnergy(),
+                splurg.getAggression().getValue(), splurg.getForaging().getValue(),
+                splurg.getStrength().getValue(), splurg.getToughness().getValue(),
+                splurg.getSize().getValue(), splurg.getSpeed().getValue(),
+                splurg.getCharisma().getValue(), splurg.getLoner().getValue(),
+                splurg.getLocation().getX(), splurg.getLocation().getY());
+        UiTheme.showInfoDialog(SwingUtilities.getWindowAncestor(this), splurg.getName(),
+                "Splurg status and traits", details);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.jarec;
 
 import org.jarec.gui.WorldFrame;
+import org.jarec.gui.UiTheme;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ public class Main {
             log.info("Creating Splurg World");
             SwingUtilities.invokeLater(() -> {
                 try {
+                    UiTheme.install();
                     WorldFrame.getInstance();
                 } catch (Exception e) {
                     log.error("Failed to initialize the Splurg World window", e);

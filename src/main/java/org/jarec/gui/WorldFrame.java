@@ -24,6 +24,8 @@ import static org.jarec.game.GameEndCheck.determineEndState;
 
 public class WorldFrame extends JFrame {
     private static final Logger log = LoggerFactory.getLogger(WorldFrame.class);
+    private static final String TURN_PREFIX = "Turn: ";
+    private static final String STATUS_SEPARATOR = "      ";
 
     private static final WorldFrame INSTANCE = new WorldFrame();
     private WorldPanel world;
@@ -47,9 +49,9 @@ public class WorldFrame extends JFrame {
     private final AtomicBoolean endGameShown = new AtomicBoolean();
     private static final LatestEdtUpdate<String> statsUpdate =
             new LatestEdtUpdate<>(value -> statsPanel.setText("Splurg World Stats\n" + value));
-    private final LatestEdtUpdate<StatusUpdate> statusUpdate =
+    private final transient LatestEdtUpdate<StatusUpdate> statusUpdate =
             new LatestEdtUpdate<>(this::applyStatusUpdate);
-    private final LatestEdtUpdate<Integer> statusRefresh =
+    private final transient LatestEdtUpdate<Integer> statusRefresh =
             new LatestEdtUpdate<>(this::applyStatusRefresh);
 
     private record StatusUpdate(int turn, String message) {}
@@ -63,20 +65,26 @@ public class WorldFrame extends JFrame {
         );
         setLayout(new BorderLayout());
         GameEvents.setStatusListener(this::updateStatus);
+        getContentPane().setBackground(UiTheme.BACKGROUND);
 
         // Center the frame on the screen
         setLocationRelativeTo(null);
 
         statsPanel = new JTextArea();
-        statsPanel.append("Splurg World Stats");
+        statsPanel.setText("Splurg World Stats");
         statsPanel.setEditable(false);
         statsPanel.setFocusable(false);
-        statsPanel.setPreferredSize(new Dimension(200, getHeight()));
-        statsPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLoweredBevelBorder(),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
-        add(statsPanel, BorderLayout.EAST);
+        statsPanel.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        statsPanel.setForeground(UiTheme.INK);
+        statsPanel.setBackground(UiTheme.SURFACE);
+        statsPanel.setBorder(BorderFactory.createEmptyBorder(14, 14, 14, 14));
+        JScrollPane statsScroll = new JScrollPane(statsPanel);
+        statsScroll.setPreferredSize(new Dimension(245, getHeight()));
+        statsScroll.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 1, 0, 0, UiTheme.BORDER),
+                BorderFactory.createEmptyBorder(0, 1, 0, 0)));
+        statsScroll.getViewport().setBackground(UiTheme.SURFACE);
+        add(statsScroll, BorderLayout.EAST);
 
         setupKeyBindings();
         setupMenuBar();
@@ -236,10 +244,12 @@ public class WorldFrame extends JFrame {
 
     private void setupMenuBar() {
         JMenuBar menuBar = new JMenuBar();
+        menuBar.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, UiTheme.BORDER));
 
         // File menu
         JMenu fileMenu = new JMenu("File");
         JMenuItem exitItem = new JMenuItem("Exit");
+        exitItem.setAccelerator(KeyStroke.getKeyStroke("alt F4"));
         exitItem.addActionListener(e -> {
             log.info("Exiting application...");
             System.exit(0);
@@ -270,6 +280,7 @@ public class WorldFrame extends JFrame {
         });
 
         stopItem = new JMenuItem("Stop");
+        stopItem.setAccelerator(KeyStroke.getKeyStroke("ESCAPE"));
         stopItem.addActionListener(e -> {
             updateStatus("Game stopped");
             updateMenuItemsState();
@@ -411,46 +422,34 @@ public class WorldFrame extends JFrame {
     }
 
     private void openHelpWindow() {
-        JTextArea helpText = new JTextArea();
-        helpText.setText("""
-                How to run Splurg World.
-                                
-                Use the Game menu to Start, Pause, or Stop the game.
-                You can also use the following keys:
-                Space Bar: Pause/Unpause
-                Left and Right Arrow: Slow down and speed up the game
-                Up Arrow: Returns the game to its default speed
-                Esc: Ends the current game
-                When paused you can mouse click on the world to see the
-                details of the Splurgs in that area
-                                
-                You can use the Settings Menu to choose how many Hives
-                to start the game with and their starting Energy.
+        UiTheme.showInfoDialog(this, "How to play", "Set up a world, then see which colony survives", """
+                START A WORLD
+                Choose the number of hives, their starting energy, and a population limit in Settings. You can also enable herding or zombies. Select Start from the Game menu when you are ready.
+
+                WHAT TO WATCH
+                Splurgs wander, raid rival hives for energy, and fight rival creatures. Energy helps them recover and reproduce. Their traits shape how they forage, fight, and follow leaders. A colony wins when it is the last one with living Splurgs.
+
+                CONTROLS
+                Space                  Pause or resume
+                Esc                    End the game and show the result
+                Left / Right Arrow     Slow down / speed up
+                Up Arrow               Restore the default speed
+
+                INSPECT YOUR WORLD
+                Pause the simulation, then click near Splurgs to see who is there. Select a creature in the list to inspect its traits and status. Click the winner image or press Escape to close it.
                 """);
-        helpText.setEditable(false);
-        helpText.setCaretPosition(0);
-        JOptionPane.showMessageDialog(this, new JScrollPane(helpText), "Help", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void openAboutWindow() {
         var author = PropertyHandler.get("author", "Jarec");
         var version = PropertyHandler.get("version", "0.0");
-        JTextArea aboutText = new JTextArea();
-        aboutText.setText(String.format("""
-                Splurg World
-                Version %s
-                Developed by %s
-                            
-                Welcome to Splurg World, a place populated by the Splurgs.
-                Splurgs are Amoeba that just like to float about, raid each
-                others Hives and fight. Fighting and raiding gives them
-                energy that they can take back to their Hives to make more
-                Splurgs. Splurgs can also sometimes spawn new Splurgs when
-                they meet.
-                """, version, author));
-        aboutText.setEditable(false);
-        aboutText.setCaretPosition(0);
-        JOptionPane.showMessageDialog(this, new JScrollPane(aboutText), "About", JOptionPane.INFORMATION_MESSAGE);
+        UiTheme.showInfoDialog(this, "Splurg World", "Version " + version + "  ·  Created by " + author, """
+                A living world, one simulation tick at a time.
+
+                Splurgs are small, evolving creatures with distinct traits. They roam the world, search for food and energy, raid rival hives, and fight. When conditions are right, they reproduce and pass some shared traits to their offspring.
+
+                Each colony depends on its hive and the energy its creatures bring home. Age, injury, and changing fortunes can thin a population. Turn on herding to encourage social behavior, or introduce zombies to see how infection reshapes the contest.
+                """);
     }
 
     private void updateMenuItemsState() {
@@ -475,7 +474,12 @@ public class WorldFrame extends JFrame {
 
     private void setupStatusBar() {
         statusBar = new JLabel("");
-        statusBar.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        statusBar.setOpaque(true);
+        statusBar.setBackground(UiTheme.SURFACE);
+        statusBar.setForeground(UiTheme.MUTED);
+        statusBar.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(1, 0, 0, 0, UiTheme.BORDER),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
         add(statusBar, BorderLayout.SOUTH);
     }
 
@@ -487,7 +491,7 @@ public class WorldFrame extends JFrame {
     private void applyStatusUpdate(StatusUpdate update) {
         currentStatusMessage = update.message();
         messageTurnSet = update.turn();
-        statusBar.setText("Turn: " + update.turn() + "      " + update.message());
+        statusBar.setText(TURN_PREFIX + update.turn() + STATUS_SEPARATOR + update.message());
     }
 
     public void refreshStatus() {
@@ -496,10 +500,10 @@ public class WorldFrame extends JFrame {
 
     private void applyStatusRefresh(int currentTurn) {
         if (currentTurn - messageTurnSet < MESSAGE_DURATION_TURNS) {
-            statusBar.setText("Turn: " + currentTurn + "      " + currentStatusMessage);
+            statusBar.setText(TURN_PREFIX + currentTurn + STATUS_SEPARATOR + currentStatusMessage);
         } else {
             currentStatusMessage = "";
-            statusBar.setText("Turn: " + currentTurn + "      ");
+            statusBar.setText(TURN_PREFIX + currentTurn + STATUS_SEPARATOR);
         }
     }
 
