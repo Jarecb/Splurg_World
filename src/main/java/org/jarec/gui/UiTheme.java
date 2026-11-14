@@ -20,6 +20,7 @@ import java.awt.Window;
 
 public final class UiTheme {
     private static final String FONT_FAMILY = "SansSerif";
+    private static final int INFO_DIALOG_COLUMNS = 64;
 
     public static final Color BACKGROUND = new Color(244, 247, 251);
     public static final Color SURFACE = Color.WHITE;
@@ -105,8 +106,8 @@ public final class UiTheme {
         JTextArea message = new JTextArea(content);
         message.setEditable(false);
         message.setFocusable(false);
-        message.setColumns(64);
-        message.setRows(estimateRows(content, 64));
+        message.setColumns(INFO_DIALOG_COLUMNS);
+        message.setRows(estimateRows(content));
         styleTextArea(message);
         JScrollPane contentScroll = new JScrollPane(message);
         contentScroll.setBorder(BorderFactory.createLineBorder(BORDER));
@@ -134,10 +135,10 @@ public final class UiTheme {
         dialog.setVisible(true);
     }
 
-    private static int estimateRows(String content, int columns) {
+    private static int estimateRows(String content) {
         int rows = 0;
         for (String line : content.split("\\R", -1)) {
-            rows += Math.max(1, (int) Math.ceil(line.length() / (double) columns));
+            rows += Math.max(1, (int) Math.ceil(line.length() / (double) INFO_DIALOG_COLUMNS));
         }
         return Math.max(8, rows);
     }
