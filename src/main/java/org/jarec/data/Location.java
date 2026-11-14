@@ -13,22 +13,26 @@ public class Location {
         return x;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
     public int getY() {
         return y;
     }
 
-    public void setY(int y) {
-        this.y = y;
-    }
-
+    /**
+     * Moves one step using the configured world bounds, reflecting the heading at an edge.
+     *
+     * @return the resulting heading, which may change when an edge is reached
+     */
     public Heading updateLocation(Heading heading) {
         return updateLocation(heading, WorldBounds.getWidth(), WorldBounds.getHeight());
     }
 
+    /**
+     * Moves one step within the supplied dimensions, reflecting each heading component that
+     * would cross an edge. Coordinates are expected to start inside the world.
+     *
+     * @return the resulting heading, which may change when an edge is reached
+     * @throws IllegalArgumentException if either world dimension is not positive
+     */
     public Heading updateLocation(Heading heading, int worldWidth, int worldHeight) {
         if (worldWidth < 1 || worldHeight < 1) {
             throw new IllegalArgumentException("World dimensions must be positive");
@@ -49,7 +53,6 @@ public class Location {
         this.x += dx;
         this.y += dy;
 
-        // If direction changed, return new heading
         if (dx != heading.getDx() || dy != heading.getDy()) {
             return HeadingUtils.getHeadingFromVector(dx, dy);
         }

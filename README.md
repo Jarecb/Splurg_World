@@ -11,7 +11,7 @@ Splurg World is a Java desktop life simulation. Colored colonies of small creatu
 - Energy supports healing, returning energy to a home hive, and breeding. Two nearby Splurgs from the same colony can breed when both have enough energy and are ready.
 - Offspring receive randomized attributes, with matching parental values inherited. Strength and toughness contribute to size; size affects speed.
 - Splurgs age and may lose strength or toughness through degradation. Zombies are optional; infected Splurgs become zombies when they die, and other deaths may also produce zombies. Zombies attack but do not gather or use energy.
-- The game ends when one colony remains or the live population exceeds the selected limit. A winner banner identifies the surviving colony.
+- The game ends when at most one hive has living Splurgs or the live population exceeds the selected limit. Reaching the population limit can end a run before there is a sole surviving colony.
 
 The simulation is stochastic. Set a fixed random seed to make a run repeatable; the default selects a fresh seed and writes it to the log.
 
@@ -26,7 +26,7 @@ Use the **Game** menu to start, pause/resume, or stop a simulation. The **Settin
 | `Left Arrow` | Slow the simulation |
 | `Right Arrow` | Speed up the simulation |
 | `Up Arrow` | Reset to the configured default speed |
-| Mouse click while paused | Show details for nearby Splurgs; click the winner banner to dismiss it |
+| Mouse click while paused | List nearby Splurgs in the clicked area. Click a Splurg in the list to open its health, energy, traits, and position; click the winner banner to dismiss it. |
 
 ## Technology
 
@@ -58,7 +58,7 @@ Run just the tests with `mvn test`. Surefire test reports are written to `target
 
 - `org.jarec.Main` loads and validates configuration, initializes a random seed, and creates the Swing window.
 - `org.jarec.game.GameLoop` owns the background thread, pause/stop behavior, and tick timing.
-- `org.jarec.game.SimulationEngine` advances the simulation by one tick and produces metrics and an immutable `WorldSnapshot`.
+- `org.jarec.game.SimulationEngine` advances the simulation by one tick and produces metrics and a `WorldSnapshot` for rendering.
 - `org.jarec.gui.WorldRenderer` renders that snapshot separately from the simulation update. Swing UI changes are dispatched on the event-dispatch thread.
 - `org.jarec.game.resources.Splurgs` and `Hives` manage the current creature and hive collections. Creature behavior and attributes are implemented under `org.jarec.data`.
 - `org.jarec.util.GameConfig` provides typed property access and validates configuration at startup. `PropertyHandler` preserves the application's existing configuration access API.
@@ -77,4 +77,14 @@ Runtime settings and defaults are in `src/main/resources/splurg.properties`. Imp
 - `world.game.loop.*`: tick delays; `world.game.slow.tick.warning.ms`: slow-tick warning threshold.
 - `world.random.seed`: use `-1` for a new seed at startup or a non-negative integer for a repeatable run.
 
-Invalid numeric, boolean, or out-of-range settings cause configuration loading to fail with a descriptive error. Runtime logs are written to `logs/splurg.log`; the console displays errors.
+The bundled properties file is loaded from the application classpath. Known numeric and boolean settings are validated at startup, including cross-setting constraints such as ordered population limits; invalid values stop startup with a descriptive error. Missing properties use the defaults supplied by the code. Runtime logs are appended to `logs/splurg.log` at INFO level and above; the console displays ERROR level messages and above.
+
+## Development notes
+
+- Keep simulation updates in `SimulationEngine` and draw from `WorldSnapshot` through `WorldRenderer`; Swing component updates belong on the event-dispatch thread.
+- `SimulationEngine` currently reads and updates the singleton `Hives` and `Splurgs` managers. A separate engine instance does not create an isolated world.
+- Run `mvn clean package` before submitting changes. Add or update focused JUnit tests for behavior changes; test reports are available under `target/surefire-reports/`.
+
+### Inspecting Splurgs
+
+Pause the simulation and click the game panel near the Splurgs you want to inspect. A list of nearby Splurgs appears; select one to open its details, including colony, health, energy, attributes, and position.
