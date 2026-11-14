@@ -9,12 +9,27 @@ public class Location {
         this.y = y;
     }
 
-    public int getX() {
+    public synchronized int getX() {
         return x;
     }
 
-    public int getY() {
+    public synchronized int getY() {
         return y;
+    }
+
+    public synchronized void rescale(int oldWidth, int oldHeight, int newWidth, int newHeight) {
+        if (oldWidth < 1 || oldHeight < 1 || newWidth < 1 || newHeight < 1) {
+            throw new IllegalArgumentException("World dimensions must be positive");
+        }
+        x = rescaleCoordinate(x, oldWidth, newWidth);
+        y = rescaleCoordinate(y, oldHeight, newHeight);
+    }
+
+    private int rescaleCoordinate(int coordinate, int oldSize, int newSize) {
+        if (newSize == 1) return 0;
+        if (oldSize == 1) return (newSize - 1) / 2;
+        long scaled = Math.round((double) coordinate * (newSize - 1) / (oldSize - 1));
+        return (int) Math.clamp(scaled, 0L, newSize - 1L);
     }
 
     /**
@@ -23,7 +38,8 @@ public class Location {
      * @return the resulting heading, which may change when an edge is reached
      */
     public Heading updateLocation(Heading heading) {
-        return updateLocation(heading, WorldBounds.getWidth(), WorldBounds.getHeight());
+        WorldBounds.Size size = WorldBounds.getSize();
+        return updateLocation(heading, size.width(), size.height());
     }
 
     /**
@@ -33,7 +49,7 @@ public class Location {
      * @return the resulting heading, which may change when an edge is reached
      * @throws IllegalArgumentException if either world dimension is not positive
      */
-    public Heading updateLocation(Heading heading, int worldWidth, int worldHeight) {
+    public synchronized Heading updateLocation(Heading heading, int worldWidth, int worldHeight) {
         if (worldWidth < 1 || worldHeight < 1) {
             throw new IllegalArgumentException("World dimensions must be positive");
         }
@@ -61,7 +77,7 @@ public class Location {
     }
 
     @Override
-    public String toString() {
+    public synchronized String toString() {
         return String.format(
                 "{\"x\": %d, \"y\": %d}",
                 x,

@@ -1,8 +1,9 @@
 package org.jarec.data;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public final class WorldBounds {
-    private static volatile int width = 900;
-    private static volatile int height = 700;
+    private static final AtomicReference<Size> size = new AtomicReference<>(new Size(900, 700));
 
     private WorldBounds() {}
 
@@ -10,15 +11,20 @@ public final class WorldBounds {
         if (worldWidth < 1 || worldHeight < 1) {
             throw new IllegalArgumentException("World dimensions must be positive");
         }
-        width = worldWidth;
-        height = worldHeight;
+        size.set(new Size(worldWidth, worldHeight));
     }
 
     public static int getWidth() {
-        return width;
+        return size.get().width();
     }
 
     public static int getHeight() {
-        return height;
+        return size.get().height();
     }
+
+    public static Size getSize() {
+        return size.get();
+    }
+
+    public record Size(int width, int height) {}
 }

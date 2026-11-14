@@ -9,6 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -20,6 +22,13 @@ public class WorldPanel extends JPanel {
     public WorldPanel() {
         setBackground(UiTheme.BACKGROUND);
         setOpaque(true);
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent event) {
+                GameLoop.getInstance().resizeWorld(WorldPanel.this);
+            }
+        });
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -116,8 +125,9 @@ public class WorldPanel extends JPanel {
     }
 
     public synchronized Graphics2D getBackgroundGraphics() {
-        if (backgroundBuffer == null) {
-            backgroundBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        if (backgroundBuffer == null || backgroundBuffer.getWidth() != getWidth()
+                || backgroundBuffer.getHeight() != getHeight()) {
+            initBuffers();
         }
         return backgroundBuffer.createGraphics();
     }
