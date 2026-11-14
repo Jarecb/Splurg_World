@@ -4,7 +4,7 @@ import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 
 public class Aggression implements SettableAttribute {
-    private int aggressionValue = RandomInt.getRandomInt(Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")));
+    private int aggressionValue = RandomInt.getRandomInt(PropertyHandler.getInt("splurg.default.max.attribute", 10));
 
     @Override
     public String getName() {
@@ -18,7 +18,7 @@ public class Aggression implements SettableAttribute {
 
     @Override
     public void setValue(int aggression) {
-        if (aggression > Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10"))
+        if (aggression > PropertyHandler.getInt("splurg.default.max.attribute", 10)
             || aggression <= 0)
         {
             throw new IllegalArgumentException("Aggression outside of range: " + aggression);

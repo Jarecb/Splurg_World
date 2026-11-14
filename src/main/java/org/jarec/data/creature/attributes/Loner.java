@@ -4,7 +4,7 @@ import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 
 public class Loner implements SettableAttribute {
-    private int lonerValue = RandomInt.getRandomInt(Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")));
+    private int lonerValue = RandomInt.getRandomInt(PropertyHandler.getInt("splurg.default.max.attribute", 10));
 
     @Override
     public String getName() {
@@ -18,7 +18,7 @@ public class Loner implements SettableAttribute {
 
     @Override
     public void setValue(int loner) {
-        if (loner > Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10"))
+        if (loner > PropertyHandler.getInt("splurg.default.max.attribute", 10)
                 || loner <= 0) {
             throw new IllegalArgumentException("Loner outside of range: " + loner);
         }

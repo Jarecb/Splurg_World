@@ -61,11 +61,15 @@ class SplurgTest {
         parent1.setForaging(7);
         parent1.setStrength(3);
         parent1.setToughness(10);
+        parent1.loner.setValue(6);
+        parent1.increaseEnergy(20);
         Splurg parent2 = new Splurg(TEST_HIVE);
         parent2.setAggression(5);
         parent2.setForaging(7);
         parent2.setStrength(3);
         parent2.setToughness(10);
+        parent2.loner.setValue(6);
+        parent2.increaseEnergy(20);
 
         Splurg splurgSpawn = new Splurg(parent1, parent2);
 
@@ -73,5 +77,8 @@ class SplurgTest {
         assertEquals(7, splurgSpawn.getForaging().getValue(), "Foraging not cloned");
         assertEquals(3, splurgSpawn.getStrength().getValue(), "Strength not cloned");
         assertEquals(10, splurgSpawn.getToughness().getValue(), "Toughness not cloned");
+        assertEquals(6, splurgSpawn.getLoner().getValue(), "Loner not cloned");
+        assertEquals(10, parent1.getEnergy(), "First parent should pay the spawn cost once");
+        assertEquals(10, parent2.getEnergy(), "Second parent should pay the spawn cost once");
     }
 }

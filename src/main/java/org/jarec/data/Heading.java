@@ -1,6 +1,6 @@
 package org.jarec.data;
 
-import java.util.Random;
+import org.jarec.util.RandomInt;
 
 public enum Heading {
     NORTH(0, 1),
@@ -16,7 +16,6 @@ public enum Heading {
     private final int dy;
     private static final Heading[] VALUES = values();
     private static final int SIZE = VALUES.length;
-    private static final Random RANDOM = new Random();
 
     Heading(int dx, int dy) {
         this.dx = dx;
@@ -36,12 +35,11 @@ public enum Heading {
     }
 
     public static Heading getRandomHeading() {
-        return VALUES[RANDOM.nextInt(SIZE)];
+        return VALUES[RandomInt.getRandomInt(SIZE) - 1];
     }
 
     public Heading getRandomTurn() {
-        // Pick either -1 (counter-clockwise) or +1 (clockwise)
-        int direction = RANDOM.nextBoolean() ? 1 : -1;
+        int direction = RandomInt.getRandomBoolean() ? 1 : -1;
         int newIndex = (this.ordinal() + direction + SIZE) % SIZE;
         return VALUES[newIndex];
     }

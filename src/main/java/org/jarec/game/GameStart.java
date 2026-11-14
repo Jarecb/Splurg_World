@@ -2,6 +2,7 @@ package org.jarec.game;
 
 import org.jarec.data.Hive;
 import org.jarec.data.Location;
+import org.jarec.data.WorldBounds;
 import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
@@ -16,7 +17,8 @@ public class GameStart {
 
         var worldWidth = WorldFrame.getInstance().getWorldPanel().getWorldWidth();
         var worldHeight = WorldFrame.getInstance().getWorldPanel().getWorldHeight();
-        var hiveInset = Integer.parseInt(PropertyHandler.get("hive.default.position.inset", "150"));
+        WorldBounds.set(worldWidth, worldHeight);
+        var hiveInset = PropertyHandler.getInt("hive.default.position.inset", 150);
 
         var locationOne = new Location(0, 0);
         var locationTwo = new Location(0, 0);

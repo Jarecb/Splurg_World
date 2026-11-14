@@ -1,33 +1,29 @@
 package org.jarec.util;
 
-import java.io.*;
-import java.util.Properties;
-
 public class PropertyHandler {
-    private static final Properties properties = new Properties();
-    private static boolean isLoaded = false;
-
     private PropertyHandler() {}
 
     public static void load(String resourcePath) {
-        if (!isLoaded) {
-            try (InputStream input = PropertyHandler.class.getClassLoader().getResourceAsStream(resourcePath)) {
-                if (input == null) {
-                    throw new PropertyException("Property file not found: " + resourcePath);
-                }
-                properties.load(input);
-                isLoaded = true;
-            } catch (IOException e) {
-                throw new PropertyException("Failed to load properties from: " + resourcePath, e);
-            }
-        }
+        GameConfig.load(resourcePath);
     }
 
     public static String get(String key) {
-        return properties.getProperty(key);
+        return GameConfig.get(key, null);
     }
 
     public static String get(String key, String defaultValue) {
-        return properties.getProperty(key, defaultValue);
+        return GameConfig.get(key, defaultValue);
+    }
+
+    public static int getInt(String key, int defaultValue) {
+        return GameConfig.getInt(key, defaultValue);
+    }
+
+    public static long getLong(String key, long defaultValue) {
+        return GameConfig.getLong(key, defaultValue);
+    }
+
+    public static boolean getBoolean(String key, boolean defaultValue) {
+        return GameConfig.getBoolean(key, defaultValue);
     }
 }

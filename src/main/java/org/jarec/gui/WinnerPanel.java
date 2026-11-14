@@ -22,16 +22,23 @@ public class WinnerPanel {
     private WinnerPanel(){}
 
     public static void createAndShowWinnerPanel(GameEndState gameEndStata) {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(() -> createAndShowWinnerPanel(gameEndStata));
+            return;
+        }
         try {
             BufferedImage image = loadImageFromResources(gameEndStata.getfileName());
-
-            if (image != null && (image.getWidth() != 512 || image.getHeight() != 512)) {
+            if (image == null) {
+                log.error("Winner image could not be loaded: {}", gameEndStata.getfileName());
+                return;
+            }
+            if (image.getWidth() != 512 || image.getHeight() != 512) {
                 log.error("Image must be 512x512 pixels");
             }
 
             JPanel panel = getWinnerPanel(image);
 
-            JDialog dialog = new JDialog(WorldFrame.getInstance(), "Image Viewer", true);
+            JDialog dialog = new JDialog(WorldFrame.getInstance(), "Winner", false);
             dialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
             dialog.setUndecorated(true);
             dialog.getContentPane().add(panel);
@@ -40,11 +47,9 @@ public class WinnerPanel {
             dialog.setVisible(true);
 
         } catch (IOException e) {
-            log.error("Failed to load image: {}", e.getMessage());
+            log.error("Failed to load winner image: {}", gameEndStata.getfileName(), e);
         } catch (IllegalArgumentException e) {
-            log.error(e.getMessage());
-        } catch (NullPointerException e) {
-            log.error("Failed to load the required image");
+            log.error("Could not display winner image: {}", gameEndStata.getfileName(), e);
         }
     }
 

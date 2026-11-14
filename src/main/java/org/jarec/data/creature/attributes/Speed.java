@@ -4,11 +4,11 @@ import org.jarec.util.PropertyHandler;
 
 public class Speed implements Attribute {
     public Speed(Size size) {
-        speedValue = Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")) - size.getValue();
+        speedValue = PropertyHandler.getInt("splurg.default.max.attribute", 10) - size.getValue();
     }
 
     public Speed(Size size, int multiplier) {
-        speedValue = multiplier * Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")) - size.getValue();
+        speedValue = multiplier * PropertyHandler.getInt("splurg.default.max.attribute", 10) - size.getValue();
     }
 
     private final int speedValue;

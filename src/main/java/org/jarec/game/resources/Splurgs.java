@@ -5,21 +5,17 @@ import org.jarec.data.Location;
 import org.jarec.data.creature.Life;
 import org.jarec.data.creature.Splurg;
 import org.jarec.data.creature.Zombie;
-import org.jarec.game.GameEndState;
-import org.jarec.game.GameLoop;
-import org.jarec.gui.WinnerPanel;
-import org.jarec.gui.WorldFrame;
-import org.jarec.gui.WorldPanel;
+import org.jarec.game.SimulationState;
+import org.jarec.util.GameEvents;
 import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.ToIntFunction;
 import java.util.stream.Collectors;
 
 import static org.jarec.util.GameMath.calculateHypotenuse;
@@ -31,15 +27,13 @@ public class Splurgs {
     private int spawns = 0;
     private int zombieDeaths = 0;
     private int zombieSpawns = 0;
-    private static final int ZOMBIE_SPAWN_CHANCE = Integer.parseInt(PropertyHandler.get("zombie.default.change", "1000")) * Hives.getInstance().getHiveCount();
-
     private static final List<Splurg> splurgList = new CopyOnWriteArrayList<>();
 
     private Splurgs() {
     }
 
     public void reorder() {
-        Collections.shuffle(splurgList);
+        RandomInt.shuffle(splurgList);
     }
 
     private static final Splurgs INSTANCE = new Splurgs();
@@ -166,20 +160,28 @@ public class Splurgs {
         }
 
         String status = splurg.getName() + " of " + splurg.getHomeHive().getName() + " has died";
-        WorldFrame.getInstance().updateStatus(status);
+        GameEvents.publishStatus(status);
     }
 
     private boolean shouldBecomeZombie(Splurg splurg) {
         if (splurg instanceof Zombie) return false;
-        if (!GameLoop.getInstance().areZombiesActive()) return false;
+        if (!SimulationState.areZombiesActive()) return false;
 
-        return splurg.isInfected() ||
-                (RandomInt.getRandomInt(ZOMBIE_SPAWN_CHANCE) % ZOMBIE_SPAWN_CHANCE == 0);
+        if (splurg.isInfected()) {
+            return true;
+        }
+
+        int baseSpawnChance = PropertyHandler.getInt("zombie.default.change", 1000);
+        if (baseSpawnChance <= 0) {
+            return false;
+        }
+        int spawnChance = Math.max(1, baseSpawnChance * Math.max(1, Hives.getInstance().getHiveCount()));
+        return RandomInt.getRandomInt(spawnChance) % spawnChance == 0;
     }
 
 
     public List<Splurg> getSplurgsInVicinity(Location targetPoint) {
-        var searchRadius = Integer.parseInt(PropertyHandler.get("gui.mouse.click.detection.range", "20"));
+        var searchRadius = PropertyHandler.getInt("gui.mouse.click.detection.range", 20);
 
         Comparator<Splurg> orderingComparator = Comparator.comparing((Splurg s) -> s.getHomeHive().getName(), String.CASE_INSENSITIVE_ORDER).thenComparing(Comparator.comparingInt(Splurg::getHealth).reversed());
 
@@ -205,7 +207,7 @@ public class Splurgs {
     }
 
     private int getSpawnEnergyCost() {
-        return Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
+        return PropertyHandler.getInt("hive.default.spawn.energy", 10);
     }
 
     private List<Splurg[]> findBreedingPairs(List<Splurg> splurgs, int spawnEnergyCost) {
@@ -256,7 +258,7 @@ public class Splurgs {
                     child.getName(), p1.getName(), p2.getName(), p1.getHomeHive().getName()
             );
 
-            WorldFrame.getInstance().updateStatus(msg);
+            GameEvents.publishStatus(msg);
         }
     }
 
@@ -275,131 +277,48 @@ public class Splurgs {
                 ));
     }
 
-    public void drawSplurges() {
-        WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
-        Graphics2D g2 = worldPanel.getBackgroundGraphics();
-
-        int splurgSizeMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.size.multiplier", "2"));
-
-        for (Splurg splurg : splurgList) {
-            int size = splurg.getSize().getValue() * splurgSizeMultiplier;
-            int x = splurg.getLocation().getX();
-            int y = splurg.getLocation().getY();
-            Color color = splurg.getHomeHive().getColor();
-
-            g2.setColor(color);
-            g2.fillOval(x - (size / 2), y - (size / 2), size, size);
-        }
-
-        g2.dispose();
-    }
-
     public Map<Hive, Integer> getTotalSplurgEnergyPerHive() {
         return splurgList.stream().collect(Collectors.groupingBy(Splurg::getHomeHive, Collectors.summingInt(Life::getEnergy)));
     }
 
     public int getAverageSplurgSize() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
-
-        double totalSize = splurgList.stream()
-                .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getSize().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+        return averageSplurgAttribute(splurg -> splurg.getSize().getValue());
     }
 
     public int getAverageSplurgSpeed() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
-
-        double totalSize = splurgList.stream()
-                .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getSpeed().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+        return averageSplurgAttribute(splurg -> splurg.getSpeed().getValue());
     }
 
     public int getAverageSplurgToughness() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
-
-        double totalSize = splurgList.stream()
-                .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getToughness().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+        return averageSplurgAttribute(splurg -> splurg.getToughness().getValue());
     }
 
     public int getAverageSplurgStrength() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
-
-        double totalSize = splurgList.stream()
-                .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getStrength().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+        return averageSplurgAttribute(splurg -> splurg.getStrength().getValue());
     }
 
     public int getAverageSplurgAggression() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
-
-        double totalSize = splurgList.stream()
-                .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getAggression().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+        return averageSplurgAttribute(splurg -> splurg.getAggression().getValue());
     }
 
     public int getAverageSplurgForaging() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
-
-        double totalSize = splurgList.stream()
-                .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getForaging().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+        return averageSplurgAttribute(splurg -> splurg.getForaging().getValue());
     }
 
     public int getAverageSplurgCharisma() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
-
-        double totalSize = splurgList.stream()
-                .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getCharisma().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+        return averageSplurgAttribute(splurg -> splurg.getCharisma().getValue());
     }
 
     public int getAverageSplurgLoner() {
-        if (splurgList.isEmpty()) {
-            return 0;
-        }
+        return averageSplurgAttribute(splurg -> splurg.getLoner().getValue());
+    }
 
-        double totalSize = splurgList.stream()
+    private int averageSplurgAttribute(ToIntFunction<Splurg> attributeValue) {
+        return (int) splurgList.stream()
                 .filter(splurg -> !(splurg instanceof Zombie))
-                .mapToInt(splurg -> splurg.getLoner().getValue())
-                .sum();
-
-        return (int) (totalSize / splurgList.size());
+                .mapToInt(attributeValue)
+                .average()
+                .orElse(0);
     }
 
     public static int getLiveHiveCount() {
@@ -422,9 +341,6 @@ public class Splurgs {
             return liveHives.getFirst();
         }
 
-        if (getTotalSplurgs() > WorldFrame.getMaxPopulation()) {
-            SwingUtilities.invokeLater(() -> WinnerPanel.createAndShowWinnerPanel(GameEndState.STALEMATE));
-        }
         return null; // No winner yet
     }
 
