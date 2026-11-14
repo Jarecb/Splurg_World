@@ -2,6 +2,7 @@ package org.jarec.game;
 
 import org.jarec.data.Hive;
 import org.jarec.data.Location;
+import org.jarec.data.WorldBounds;
 import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
