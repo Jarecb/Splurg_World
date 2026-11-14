@@ -79,12 +79,6 @@ Runtime settings and defaults are in `src/main/resources/splurg.properties`. Imp
 
 The bundled properties file is loaded from the application classpath. Known numeric and boolean settings are validated at startup, including cross-setting constraints such as ordered population limits; invalid values stop startup with a descriptive error. Missing properties use the defaults supplied by the code. Runtime logs are appended to `logs/splurg.log` at INFO level and above; the console displays ERROR level messages and above.
 
-## Development notes
-
-- Keep simulation updates in `SimulationEngine` and draw from `WorldSnapshot` through `WorldRenderer`; Swing component updates belong on the event-dispatch thread.
-- `SimulationEngine` currently reads and updates the singleton `Hives` and `Splurgs` managers. A separate engine instance does not create an isolated world.
-- Run `mvn clean package` before submitting changes. Add or update focused JUnit tests for behavior changes; test reports are available under `target/surefire-reports/`.
-
 ### Inspecting Splurgs
 
 Pause the simulation and click the game panel near the Splurgs you want to inspect. A list of nearby Splurgs appears; select one to open its details, including colony, health, energy, attributes, and position.
