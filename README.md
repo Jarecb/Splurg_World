@@ -1,220 +1,80 @@
 # Splurg World
 
-<!-- Improved README: badges, TOC, compact properties, preserved gameplay content -->
+Splurg World is a Java desktop life simulation. Colored colonies of small creatures called Splurgs move around a shared world, gather energy, fight, reproduce, age, and compete to survive. Optional zombie and herding rules change how the population behaves. The simulation runs continuously and displays the evolving world and population statistics.
 
-[![Java](https://img.shields.io/badge/Java-21-blue?style=flat-square&logo=java)](https://openjdk.org/)
-[![Build with Maven](https://img.shields.io/badge/build-maven-brightgreen?style=flat-square&logo=apache-maven)](https://maven.apache.org/)
+![Splurg World screenshot](screen.png)
 
-A simple desktop life simulator where little creatures called "Splurgs" live, fight, raid hives and evolve over time.
+## What happens in the simulation
 
-<p align="center">
-  <img src="screen.png" alt="Splurg World screenshot" style="max-width:100%;height:auto;" />
-</p>
+- Each colony has a hive, an energy reserve, and its own color. Hives spend energy to spawn Splurgs.
+- Splurgs wander, look for rival hives to raid, and encounter rival Splurgs to fight. Foraging and aggression affect how far they detect targets.
+- Energy supports healing, returning energy to a home hive, and breeding. Two nearby Splurgs from the same colony can breed when both have enough energy and are ready.
+- Offspring receive randomized attributes, with matching parental values inherited. Strength and toughness contribute to size; size affects speed.
+- Splurgs age and may lose strength or toughness through degradation. Zombies are optional; infected Splurgs become zombies when they die, and other deaths may also produce zombies. Zombies attack but do not gather or use energy.
+- The game ends when one colony remains or the live population exceeds the selected limit. A winner banner identifies the surviving colony.
 
----
+The simulation is stochastic. Set a fixed random seed to make a run repeatable; the default selects a fresh seed and writes it to the log.
 
-## Table of contents
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Quick start](#quick-start)
-  - [Prerequisites](#prerequisites)
-  - [Build](#build)
-  - [Run](#run)
-  - [Tests](#tests)
-- [Configuration & resources](#configuration--resources)
-- [Gameplay](#gameplay)
-  - [What is a Splurg](#what-is-a-splurg)
-  - [Stats & attributes](#stats--attributes)
-  - [Spawning & breeding](#spawning--breeding)
-  - [Zombies & degradation](#zombies--degradation)
-  - [Controls](#controls)
-- [Artifacts & logs](#artifacts--logs)
-- [Troubleshooting](#troubleshooting)
-- [Development notes](#development-notes)
-- [License & next steps](#license--next-steps)
+## User controls
 
----
+Use the **Game** menu to start, pause/resume, or stop a simulation. The **Settings** menu selects 2–4 starting hives, starting hive energy, a population limit, and whether herding or zombies are enabled. Settings take effect when a new game starts.
 
-## Overview
-`Splurg World` is a Java 21 desktop simulation/game that models populations of small creatures (Splurgs) and their interactions (combat, raiding, spawning, infection/zombies, and aging). The simulation is configurable via `src/main/resources/splurg.properties`.
+| Input | Action |
+|---|---|
+| `Space` | Pause or resume |
+| `Esc` | Stop the simulation and show the end-game result |
+| `Left Arrow` | Slow the simulation |
+| `Right Arrow` | Speed up the simulation |
+| `Up Arrow` | Reset to the configured default speed |
+| Mouse click while paused | Show details for nearby Splurgs; click the winner banner to dismiss it |
 
-Key facts:
-- Main class: `org.jarec.Main`
-- Module: `Splurg.World` (see `src/main/java/module-info.java`)
-- Author: **Jarec** (from `splurg.properties`)
-- Version: **01.10** (from `splurg.properties`)
+## Technology
 
----
+- Java 21 (Maven compiler source and target)
+- Maven build and packaging
+- Swing/AWT desktop UI and rendering
+- SLF4J 2.0.12 with Logback 1.4.11
+- Guava 31.1-jre and JSON-java 20231013
+- JUnit Jupiter 5.10.0 and Mockito 5.10.0 for tests
+- Java Platform Module System; module name: `Splurg.World`
 
-## Tech Stack
-A concise summary of the technologies and library versions used in this project (extracted from `pom.xml` and `module-info.java`):
+## Build, test, and run
 
-- Java: JDK 21 (project compiler source/target set to 21)
-- Build tool: Maven (pom.xml)
-  - Plugins: `maven-jar-plugin` 3.3.0, `maven-shade-plugin` 3.5.0
-- Libraries:
-  - `org.slf4j:slf4j-api` — 2.0.12
-  - `ch.qos.logback:logback-classic` — 1.4.11
-  - `com.google.guava:guava` — 31.1-jre
-  - `org.json:json` — 20231013
-- Testing:
-  - `org.junit.jupiter:junit-jupiter` — 5.10.0 (test scope)
-  - `org.mockito:mockito-core` — 5.10.0 (test scope)
-- Module system: `module Splurg.World` (requires `com.google.common`, `java.datatransfer`, `java.desktop`, `org.slf4j`, `org.json`)
-- Packaging: executable jar (manifest mainClass `org.jarec.Main`; Shade plugin configured)
+Install a JDK 21 and Maven 3.x, then run these commands from the repository root:
 
-Notes: run `mvn dependency:tree` to inspect full transitive dependencies.
-
----
-
-## Quick start
-
-### Prerequisites
-- Java 21 (JDK)
-- Maven 3.x
-
-Verify Java is the expected major version:
-
-```bash
-java -version
-mvn -v
-```
-
-### Build
-
-From the repository root:
-
-```bash
+```shell
 mvn clean package
 ```
 
-Produce a faster local build (skip tests):
+The command compiles the application, runs the test suite, and packages the executable shaded JAR:
 
-```bash
-mvn -DskipTests package
-```
-
-The build produces jars in `target/` (pom is configured with a Shade transformer and `org.jarec.Main` as the entry point).
-
-### Run
-
-After packaging:
-
-```bash
+```shell
 java -jar target/Splurg_World-1.0.jar
 ```
 
-Notes:
-- Running creates a `logs` directory for runtime logs.
-- If you run from an IDE, ensure the module path and resources are available.
+Run just the tests with `mvn test`. Surefire test reports are written to `target/surefire-reports/`. For a quicker local package without running tests, use `mvn -DskipTests package`.
 
-### Tests
+## Implementation overview
 
-Run unit tests:
+- `org.jarec.Main` loads and validates configuration, initializes a random seed, and creates the Swing window.
+- `org.jarec.game.GameLoop` owns the background thread, pause/stop behavior, and tick timing.
+- `org.jarec.game.SimulationEngine` advances the simulation by one tick and produces metrics and an immutable `WorldSnapshot`.
+- `org.jarec.gui.WorldRenderer` renders that snapshot separately from the simulation update. Swing UI changes are dispatched on the event-dispatch thread.
+- `org.jarec.game.resources.Splurgs` and `Hives` manage the current creature and hive collections. Creature behavior and attributes are implemented under `org.jarec.data`.
+- `org.jarec.util.GameConfig` provides typed property access and validates configuration at startup. `PropertyHandler` preserves the application's existing configuration access API.
+- `src/test/java` contains unit tests for attributes, movement, combat, hives, game-end checks, deterministic scenarios, configuration validation, and UI update dispatch.
 
-```bash
-mvn test
-```
+The simulation currently uses shared singleton managers for its world state; the engine separates tick orchestration and rendering, but does not yet support multiple independent worlds in one process.
 
-Reports: `target/surefire-reports/`.
+## Configuration and logs
 
----
+Runtime settings and defaults are in `src/main/resources/splurg.properties`. Important groups include:
 
-## Configuration & resources
+- `splurg.default.*`: creature attributes, movement, lifespan, energy, breeding, and degradation.
+- `hive.default.*`: starting energy, spawn cost/rate, hive size, and positioning.
+- `game.*`: default gameplay toggles and available population limits.
+- `zombie.default.*`: zombie activation and combat behavior.
+- `world.game.loop.*`: tick delays; `world.game.slow.tick.warning.ms`: slow-tick warning threshold.
+- `world.random.seed`: use `-1` for a new seed at startup or a non-negative integer for a repeatable run.
 
-The primary configuration file is `src/main/resources/splurg.properties`. It contains game tuning values (attributes, hive settings, zombie options and image names).
-
-Numeric and boolean settings are parsed and validated when the configuration loads. Set `world.random.seed` to a non-negative integer to reproduce a run; `-1` chooses and logs a fresh seed at startup. `world.game.slow.tick.warning.ms` sets the tick-duration warning threshold.
-
-<details>
-<summary>Click to view properties (collapsed for readability)</summary>
-
-Key properties include (see the file for exact values):
-
-- `author`, `version`
-- `splurg.default.*` (attributes, breeding, energy, degradation)
-- `hive.default.*` (setup energy, spawn rate, spawn energy, size, position)
-- `game.*` (max concurrent thresholds, default toggles for zombies/herding)
-- `zombie.default.*` (activation delay, aggression, health, speed multiplier)
-- `winning.image.*` (images shown at game end)
-
-All images and resources under `src/main/resources/` are copied to `target/classes/` during build. Notable images referenced: `Red_Wins.png`, `Blue_Wins.png`, `Green_Wins.png`, `Yellow_Wins.png`, `Nobody_Wins.png`, `Truce.png`, `splash_image.png`, `icon.png`.
-
-</details>
-
----
-
-## Gameplay
-
-### What is a Splurg
-A Splurg is an asexual amoeba-like creature that fights, feeds and reproduces. They raid hives for energy, fight other Splurgs, and can become infected/zombies.
-
-### Stats & attributes
-A number of statistics are shown in the right-hand side panel. Many are randomized at spawn and some are derived from others.
-
-- Aggression: a random value (1–10). Determines detection range to attack other Splurgs.
-- Foraging: a random value (1–10). Determines detection range to raid Hives.
-- Strength: random (1–10). Damage dealt in combat.
-- Toughness: random (1–10). Damage resisted in combat.
-- Size: derived as (Toughness + Strength) / 2.
-- Speed: derived from Size (larger size → slower speed).
-- Charisma: derived from Size and stored Energy.
-- Loner: random (1–10). Determines tendency to follow others with higher Charisma.
-- Energy: not an attribute but collected by injuring Splurgs or raiding Hives; used to heal or breed.
-
-### Spawning & breeding
-- Hives spawn Splurgs when they have enough energy (`hive.default.spawn.energy`).
-- Herding: Splurgs with low `Loner` follow others with higher `Charisma`.
-- Breeding: when two Splurgs meet and have enough energy, they can spawn a new Splurg. Offspring inherit attributes (fully random unless parents share an attribute value).
-
-### Splurg degradation & life expectancy
-- Splurgs can degrade (lose Strength or Toughness) over time. Controlled by `splurg.degradation` (set to 0 to disable).
-- Splurgs have a maximum lifespan (`splurg.default.spawn.age`). After this age there's an increased chance of death unless they consume Energy.
-
-### Zombies
-- Can be enabled/disabled via settings (`game.default.zombie`).
-- Zombies do not collect or spend energy: they only attack.
-- Dead Splurgs may become Zombies depending on `zombie.default.change` and hive counts.
-- Splurgs injured by Zombies become Infected and will become Zombies when they die.
-
-### Controls
-- ESC — Stop the game
-- Space — Pause / resume
-- Left arrow — Slow down simulation
-- Right arrow — Speed up simulation
-- Up arrow — Reset to default speed
-- Mouse click (while paused) — Show stats for Splurgs in the clicked area
-
----
-
-## Artifacts & logs
-- Packaged jar: `target/Splurg_World-1.0.jar` (and possibly a shaded jar)
-- Compiled classes & resources: `target/classes/`
-- Test reports: `target/surefire-reports/`
-- Runtime logs: `logs/splurg.log` (created by the app at startup)
-
----
-
-## Troubleshooting
-- Module/run errors: make sure you're running with Java 21 (the project is compiled for Java 21).
-- Missing resources: verify `target/classes/` contains resource files after building.
-- Dependency issues: run `mvn dependency:tree` to inspect.
-
----
-
-## Development notes
-- The `Main` class prints author & version (from `splurg.properties`) and initializes the GUI (`WorldFrame.getInstance()`).
-- `SimulationEngine` advances one UI-independent simulation step and returns immutable population, energy, combat, and tick-duration metrics; Swing rendering is handled separately.
-- Module requires: `com.google.common`, `java.desktop`, `org.slf4j`, `org.json` (see `module-info.java`).
-
----
-
-## License & next steps
-No `LICENSE` file was found. Consider adding one (MIT or Apache-2.0 are common).
-
-Suggestions to improve the repo:
-- Add `mvnw` (Maven wrapper) so contributors can build without installing Maven.
-- Add a GitHub Actions workflow to run `mvn -DskipTests package` and `mvn test` on push/PR.
-- Add a short `CONTRIBUTING.md` and a `LICENSE` file.
-
----
+Invalid numeric, boolean, or out-of-range settings cause configuration loading to fail with a descriptive error. Runtime logs are written to `logs/splurg.log`; the console displays errors.
