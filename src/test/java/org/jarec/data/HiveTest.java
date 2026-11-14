@@ -1,5 +1,6 @@
 package org.jarec.data;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -22,5 +23,15 @@ class HiveTest {
         TEST_HIVE.setEnergyReserve(20);
         TEST_HIVE.addEnergy(5);
         assertEquals(25, TEST_HIVE.getEnergyReserve());
+    }
+
+    @Test
+    void toStringProducesValidJson() {
+        JSONObject hive = new JSONObject(TEST_HIVE.toString()).getJSONObject("Hive");
+
+        assertEquals("The Hive", hive.getString("name"));
+        assertEquals(10, hive.getJSONObject("location").getInt("x"));
+        assertEquals(20, hive.getJSONObject("location").getInt("y"));
+        assertFalse(hive.getBoolean("zombie"));
     }
 }

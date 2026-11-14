@@ -124,6 +124,8 @@ Reports: `target/surefire-reports/`.
 
 The primary configuration file is `src/main/resources/splurg.properties`. It contains game tuning values (attributes, hive settings, zombie options and image names).
 
+Numeric and boolean settings are parsed and validated when the configuration loads. Set `world.random.seed` to a non-negative integer to reproduce a run; `-1` chooses and logs a fresh seed at startup. `world.game.slow.tick.warning.ms` sets the tick-duration warning threshold.
+
 <details>
 <summary>Click to view properties (collapsed for readability)</summary>
 
@@ -202,6 +204,7 @@ A number of statistics are shown in the right-hand side panel. Many are randomiz
 
 ## Development notes
 - The `Main` class prints author & version (from `splurg.properties`) and initializes the GUI (`WorldFrame.getInstance()`).
+- `SimulationEngine` advances one UI-independent simulation step and returns immutable population, energy, combat, and tick-duration metrics; Swing rendering is handled separately.
 - Module requires: `com.google.common`, `java.desktop`, `org.slf4j`, `org.json` (see `module-info.java`).
 
 ---

@@ -25,7 +25,7 @@ public abstract class Life {
     public void age() {
         age--;
         if (age <= 0) {
-            var deathChance = Integer.parseInt(PropertyHandler.get("splurg.default.death.chance", "500"));
+            var deathChance = PropertyHandler.getInt("splurg.default.death.chance", 500);
             if (RandomInt.getRandomInt(deathChance) % deathChance == 0) {
                 if (getEnergy() > 0) {
                     takeEnergy(1);

@@ -4,8 +4,8 @@ import org.jarec.util.PropertyHandler;
 import org.jarec.util.RandomInt;
 
 public class Strength implements SettableAttribute {
-    private int strengthValue = RandomInt.getRandomInt(Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10")));
-    private static final int MAX_STRENGTH = Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10"));
+    private int strengthValue = RandomInt.getRandomInt(PropertyHandler.getInt("splurg.default.max.attribute", 10));
+    private static final int MAX_STRENGTH = PropertyHandler.getInt("splurg.default.max.attribute", 10);
 
     @Override
     public String getName() {
@@ -22,7 +22,8 @@ public class Strength implements SettableAttribute {
         if (strength > MAX_STRENGTH
                 || strength <= 0) {
             strengthValue = MAX_STRENGTH;
+        } else {
+            strengthValue = strength;
         }
-        strengthValue = strength;
     }
 }

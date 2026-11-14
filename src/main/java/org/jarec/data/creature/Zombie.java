@@ -3,13 +3,12 @@ package org.jarec.data.creature;
 import org.jarec.data.Location;
 import org.jarec.data.creature.attributes.Size;
 import org.jarec.data.creature.attributes.Speed;
-import org.jarec.game.GameLoop;
+import org.jarec.game.SimulationState;
 import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
-import org.jarec.gui.WorldFrame;
+import org.jarec.util.GameEvents;
 import org.jarec.util.GameMath;
 import org.jarec.util.PropertyHandler;
-import org.json.JSONObject;
 
 import java.util.Comparator;
 import java.util.List;
@@ -17,24 +16,22 @@ import java.util.Objects;
 
 public class Zombie extends Splurg {
     private boolean active = false;
-    private int activationDelay = Integer.parseInt(PropertyHandler.get("zombie.default.activation.delay", "20"));
+    private int activationDelay = PropertyHandler.getInt("zombie.default.activation.delay", 20);
 
     public Zombie(Splurg source) {
-        JSONObject sourceJson = new JSONObject(source.toString());
+        aggression.setValue(PropertyHandler.getInt("zombie.default.aggression", 10));
 
-        aggression.setValue(Integer.parseInt(PropertyHandler.get("zombie.default.aggression", "10")));
-
-        int str = sourceJson.getInt("Str");
-        strength.setValue(str + Integer.parseInt(PropertyHandler.get("zombie.default.strength.bonus", "1")));
-        int tgh = sourceJson.getInt("Tgh");
+        int str = source.getStrength().getValue();
+        strength.setValue(str + PropertyHandler.getInt("zombie.default.strength.bonus", 1));
+        int tgh = source.getToughness().getValue();
         toughness.setValue(tgh);
-        setMaxHealth(Integer.parseInt(PropertyHandler.get("zombie.default.health", "20")));
+        setMaxHealth(PropertyHandler.getInt("zombie.default.health", 20));
 
-        JSONObject sourceLocation = sourceJson.getJSONObject("Location");
-        setLocation(new Location(sourceLocation.getInt("x"), sourceLocation.getInt("y")));
+        Location sourceLocation = source.getLocation();
+        setLocation(new Location(sourceLocation.getX(), sourceLocation.getY()));
 
         size = new Size(toughness, strength);
-        speed = new Speed(size, Integer.parseInt(PropertyHandler.get("zombie.default.speed.multiplier", "2")));
+        speed = new Speed(size, PropertyHandler.getInt("zombie.default.speed.multiplier", 2));
         name = "Zombie " + source.getName();
 
         setHomeHive(Hives.getZombieHive());
@@ -43,8 +40,8 @@ public class Zombie extends Splurg {
 
         Splurgs.getInstance().addSplurg(this);
 
-        var statusMessage = "A Zombie Splurg was created on turn " + GameLoop.getInstance().getTurn();
-        WorldFrame.getInstance().updateStatus(statusMessage);
+        var statusMessage = "A Zombie Splurg was created on turn " + SimulationState.getTurn();
+        GameEvents.publishStatus(statusMessage);
     }
 
     @Override
@@ -69,7 +66,7 @@ public class Zombie extends Splurg {
     public boolean findTarget() {
         Location currentLocation = getLocation();
 
-        int aggressionMultiplier = Integer.parseInt(PropertyHandler.get("splurg.default.aggression.multiplier", "5"));
+        int aggressionMultiplier = PropertyHandler.getInt("splurg.default.aggression.multiplier", 5);
 
         double aggressionThreshold = getAggression().getValue() * (double) aggressionMultiplier;
 

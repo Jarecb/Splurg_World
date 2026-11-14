@@ -286,4 +286,32 @@ class SplurgsTest {
         new Zombie(new Splurg(hive));
         assertEquals(2, Splurgs.getInstance().getZombieCount());
     }
+
+    @Test
+    void updateCharismaHandlesZombies() {
+        Hive hive = new Hive(new Location(1, 1), null, "Hive", false);
+        Hives.addHive(hive);
+        Hives.addHive(new Hive(new Location(0, 0), null, "Zombie", true));
+        new Zombie(new Splurg(hive));
+
+        assertDoesNotThrow(() -> Splurgs.getInstance().updateCharisma());
+    }
+
+    @Test
+    void averageAttributesExcludeZombiesFromTheDenominator() {
+        Hive hive = new Hive(new Location(1, 1), null, "Hive", false);
+        Hives.addHive(hive);
+        Splurg first = new Splurg(hive);
+        Splurg second = new Splurg(hive);
+        new Zombie(first);
+
+        assertEquals(
+                (first.getStrength().getValue() + second.getStrength().getValue()) / 2,
+                Splurgs.getInstance().getAverageSplurgStrength()
+        );
+        assertEquals(
+                (first.getSize().getValue() + second.getSize().getValue()) / 2,
+                Splurgs.getInstance().getAverageSplurgSize()
+        );
+    }
 }

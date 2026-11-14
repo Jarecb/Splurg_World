@@ -1,7 +1,5 @@
 package org.jarec.util;
 
-import java.util.Random;
-
 public class RandomNameGenerator {
     private RandomNameGenerator() {
     }
@@ -18,13 +16,11 @@ public class RandomNameGenerator {
             "dar", "dra", "nor", "dir", "wen", "nor", "lian", "mir", "thar", "ven", "vian", "el", "thos", "vor", "ath"
     };
 
-    private static final Random RANDOM = new Random();
-
     // Method to generate a random name, useful for log reading
     public static String generateName() {
-        String prefix = PREFIXES[RANDOM.nextInt(PREFIXES.length)];
-        String suffix = SUFFIXES[RANDOM.nextInt(SUFFIXES.length)];
-        String secondPart = SECOND_PARTS[RANDOM.nextInt(SECOND_PARTS.length)];
+        String prefix = PREFIXES[RandomInt.getRandomInt(PREFIXES.length) - 1];
+        String suffix = SUFFIXES[RandomInt.getRandomInt(SUFFIXES.length) - 1];
+        String secondPart = SECOND_PARTS[RandomInt.getRandomInt(SECOND_PARTS.length) - 1];
 
         return prefix + secondPart + suffix;
     }

@@ -26,4 +26,19 @@ class StrengthTest {
             assertTrue(strength.getValue() <= max && strength.getValue() > 0, "Strength = " + strength.getValue());
         }
     }
+
+    @Test
+    void setValueTest_clampsOutOfRangeValuesAndAcceptsValidValues() {
+        int max = Integer.parseInt(PropertyHandler.get("splurg.default.max.attribute", "10"));
+        SettableAttribute strength = new Strength();
+
+        strength.setValue(4);
+        assertEquals(4, strength.getValue());
+
+        strength.setValue(max + 1);
+        assertEquals(max, strength.getValue());
+
+        strength.setValue(0);
+        assertEquals(max, strength.getValue());
+    }
 }

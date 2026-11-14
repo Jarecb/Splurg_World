@@ -1,10 +1,12 @@
 package org.jarec.game;
 
 import org.jarec.data.Hive;
+import org.jarec.data.WorldBounds;
 import org.jarec.game.resources.Hives;
 import org.jarec.game.resources.Splurgs;
 import org.jarec.gui.WorldFrame;
 import org.jarec.gui.WorldPanel;
+import org.jarec.gui.WorldRenderer;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +20,14 @@ public class GameLoop {
     private static final Logger log = LoggerFactory.getLogger(GameLoop.class);
 
     private static final GameLoop INSTANCE = new GameLoop();
+    private final SimulationEngine simulationEngine = new SimulationEngine();
+    private final WorldRenderer worldRenderer = new WorldRenderer();
 
-    private int turn = 0;
-    private AtomicBoolean running = new AtomicBoolean(false);
+    private volatile int turn = 0;
+    private final AtomicBoolean running = new AtomicBoolean(false);
     private volatile boolean started = false;
+    private volatile long generation = 0;
+    private volatile Thread loopThread;
     private final AtomicInteger loopSleepTime = new AtomicInteger(0);
     private boolean zombiesActive;
     private boolean herdingActive;
@@ -40,34 +46,53 @@ public class GameLoop {
         return INSTANCE;
     }
 
-    public void start(boolean zombiesActive, boolean herdingActive) {
+    public synchronized void start(boolean zombiesActive, boolean herdingActive) {
         if (started) return;
         this.zombiesActive = zombiesActive;
         this.herdingActive = herdingActive;
-        running = new AtomicBoolean(true);
+        SimulationState.configure(zombiesActive, herdingActive);
+        long runGeneration = ++generation;
+        running.set(true);
         started = true;
         turn = 0;
+        SimulationState.setTurn(turn);
         energyPeak = 0;
         spawnPhase = true;
         maxSplurgs = 0;
         maxCombatsPerTurn = 0;
         maxZombies = 0;
-        loopSleepTime.set(Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000")));
+        simulationEngine.resetGuardrails();
+        loopSleepTime.set(PropertyHandler.getInt("world.game.loop.sleeptime", 1000));
 
-        Thread loopThread = new Thread(() -> {
+        loopThread = new Thread(() -> {
             try {
-                run();
+                run(runGeneration);
             } catch (InterruptedException e) {
-                log.error("Something went wrong in the game loop", e);
                 Thread.currentThread().interrupt();
+                if (runGeneration == generation) {
+                    log.error("Game loop interrupted unexpectedly", e);
+                }
+            } catch (RuntimeException e) {
+                log.error("Game loop stopped after an unexpected error", e);
+            } finally {
+                synchronized (GameLoop.this) {
+                    if (runGeneration == generation) {
+                        started = false;
+                        running.set(false);
+                    }
+                    if (loopThread == Thread.currentThread()) {
+                        loopThread = null;
+                    }
+                }
             }
-        });
+        }, "splurg-world-game-loop");
 
         loopThread.setDaemon(true);
         loopThread.start();
     }
 
-    public void pause() {
+    public synchronized void pause() {
+        if (!started) return;
         boolean current = running.get();
         running.set(!current);
         if (!current) {
@@ -78,42 +103,38 @@ public class GameLoop {
     }
 
 
-    public void stop() {
+    public synchronized void stop() {
         started = false;
+        running.set(false);
+        generation++;
+        Thread thread = loopThread;
+        if (thread != null) {
+            thread.interrupt();
+        }
         log.info("Game stopping");
     }
 
-    private void run() throws InterruptedException {
-        var loopPauseTime = Integer.parseInt(PropertyHandler.get("world.game.loop.pausedelaytime", "1000"));
+    private void run(long runGeneration) throws InterruptedException {
+        var loopPauseTime = PropertyHandler.getInt("world.game.loop.pausedelaytime", 1000);
 
         log.info("Game starting");
 
-        while (started) {
+        while (started && runGeneration == generation) {
             if (running.get()) {
                 turn++;
+                SimulationState.setTurn(turn);
                 combatsPerTurn = 0;
                 WorldFrame.getInstance().refreshStatus();
 
-                Splurgs.getInstance().reorder();
-
-                Splurgs.getInstance().drawSplurges();
-                Splurgs.getInstance().updateCharisma();
-                Splurgs.getInstance().moveSplurgs();
-                Splurgs.getInstance().removeDeadSplurgs();
-                Splurgs.getInstance().healSplurgs();
-                Splurgs.getInstance().depositEnergy();
-                Splurgs.getInstance().handleBreeding();
-
-                Hives.getInstance().drawHives();
-                Hives.getInstance().spawnHives();
-
                 WorldPanel worldPanel = WorldFrame.getInstance().getWorldPanel();
-                worldPanel.publish();
+                WorldBounds.set(worldPanel.getWorldWidth(), worldPanel.getWorldHeight());
+                SimulationFrame frame = simulationEngine.step(
+                        turn, combatsPerTurn, WorldFrame.getMaxPopulation());
+                SimulationMetrics metrics = frame.metrics();
+                worldRenderer.render(worldPanel, frame.snapshot());
+                WorldFrame.updateStats(getStats(metrics));
 
-                WorldFrame.updateStats(getStats());
-
-                // Endgame check
-                if(Splurgs.getLiveHiveCount() <= 1 || Splurgs.getTotalSplurgs() > WorldFrame.getMaxPopulation()) {
+                if (metrics.liveHiveCount() <= 1 || metrics.populationLimitReached()) {
                     WorldFrame.getInstance().displayEndGamePanel(Splurgs.getInstance().getWinningHive());
                 }
 
@@ -156,10 +177,10 @@ public class GameLoop {
     }
 
     public void resetGameSpeed() {
-        loopSleepTime.set(Integer.parseInt(PropertyHandler.get("world.game.loop.sleeptime", "1000")));
+        loopSleepTime.set(PropertyHandler.getInt("world.game.loop.sleeptime", 1000));
     }
 
-    private String getStats(){
+    private String getStats(SimulationMetrics metrics){
         StringBuilder sb = new StringBuilder("\n");
 
         sb.append("Turn: ").append(turn).append("\n\n");
@@ -203,6 +224,7 @@ public class GameLoop {
         sb.append(getSplurgs());
         sb.append("\nDeaths: ").append(splurgs.getDeaths());
         sb.append("\nSpawns: ").append(splurgs.getSpawns());
+        sb.append("\nTick time: ").append(metrics.durationNanos() / 1_000_000L).append(" ms");
 
         sb.append("\n\nAve. Aggression: ").append(splurgs.getAverageSplurgAggression());
         sb.append("\nAve. Foraging: ").append(splurgs.getAverageSplurgForaging());
@@ -218,7 +240,7 @@ public class GameLoop {
             var zSpawns = splurgs.getZombieSpawns();
             var zDeaths = splurgs.getZombieDeaths();
             if (zCurrent > maxZombies) {
-                maxZombies++;
+                maxZombies = zCurrent;
             }
             sb.append("\n\nCurrent Zombies: ").append(zCurrent);
             sb.append("\nZombies Spawned: ").append(zSpawns);

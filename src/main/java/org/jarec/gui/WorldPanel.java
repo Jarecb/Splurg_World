@@ -48,7 +48,7 @@ public class WorldPanel extends JPanel {
     }
 
     @Override
-    protected void paintComponent(Graphics g) {
+    protected synchronized void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         if (displayBuffer == null || displayBuffer.getWidth() != getWidth() || displayBuffer.getHeight() != getHeight()) {
@@ -75,7 +75,7 @@ public class WorldPanel extends JPanel {
         g2.dispose();
     }
 
-    public Graphics2D getBackgroundGraphics() {
+    public synchronized Graphics2D getBackgroundGraphics() {
         if (backgroundBuffer == null) {
             backgroundBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         }
@@ -85,7 +85,7 @@ public class WorldPanel extends JPanel {
     /**
      * Pushes background buffer to display buffer and repaints.
      */
-    public void publish() {
+    public synchronized void publish() {
         if (displayBuffer == null || backgroundBuffer == null) return;
 
         Graphics2D displayG = displayBuffer.createGraphics();

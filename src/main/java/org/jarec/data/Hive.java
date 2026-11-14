@@ -2,6 +2,7 @@ package org.jarec.data;
 
 import org.jarec.data.creature.Splurg;
 import org.jarec.util.PropertyHandler;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +10,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Hive {
     private static final Logger log = LoggerFactory.getLogger(Hive.class);
@@ -43,10 +43,15 @@ public class Hive {
         } else {
             return;
         }
+        var imageResource = getClass().getResource(imageName);
+        if (imageResource == null) {
+            log.error("Could not load hive image {}; resource was not found", imageName);
+            return;
+        }
         try {
-            hiveIcon = ImageIO.read(Objects.requireNonNull(getClass().getResource(imageName)));
+            hiveIcon = ImageIO.read(imageResource);
         } catch (IOException | IllegalArgumentException e) {
-            log.error("Could not load hive image: {}", e.getMessage());
+            log.error("Could not load hive image {}", imageName, e);
         }
     }
 
@@ -56,13 +61,13 @@ public class Hive {
 
     public void spawn() {
         if (!zombieHive) {
-            var spawnEnergy = Integer.parseInt(PropertyHandler.get("hive.default.spawn.energy", "10"));
+            var spawnEnergy = PropertyHandler.getInt("hive.default.spawn.energy", 10);
             if (spawnCountdown > 0) {
                 spawnCountdown--;
             } else {
                 if (energyReserve >= spawnEnergy) {
                     getEnergy(spawnEnergy);
-                    spawnCountdown = Integer.parseInt(PropertyHandler.get("hive.default.spawn.rate", "5"));
+                    spawnCountdown = PropertyHandler.getInt("hive.default.spawn.rate", 5);
                     new Splurg(this);
                 }
             }
@@ -108,23 +113,22 @@ public class Hive {
 
     @Override
     public String toString() {
-        return String.format(
-                "{\"Hive\": {" +
-                        "\"name\": \"%s\"," +
-                        "\"location\": %s," +
-                        "\"color\": {\"r\": %d, \"g\": %d, \"b\": %d}," +
-                        "\"energyReserve\": %d," +
-                        "\"spawnCountdown\": %d" +
-                        "\"zombie\": %b" +
-                        "}}",
-                name,
-                location != null ? location.toString() : "null",
-                color != null ? color.getRed() : 0,
-                color != null ? color.getGreen() : 0,
-                color != null ? color.getBlue() : 0,
-                energyReserve,
-                spawnCountdown,
-                zombieHive
-        );
+        Object locationJson = location == null
+                ? JSONObject.NULL
+                : new JSONObject().put("x", location.getX()).put("y", location.getY());
+        Object colorJson = color == null
+                ? JSONObject.NULL
+                : new JSONObject()
+                        .put("r", color.getRed())
+                        .put("g", color.getGreen())
+                        .put("b", color.getBlue());
+        JSONObject hiveJson = new JSONObject()
+                .put("name", name)
+                .put("location", locationJson)
+                .put("color", colorJson)
+                .put("energyReserve", energyReserve)
+                .put("spawnCountdown", spawnCountdown)
+                .put("zombie", zombieHive);
+        return new JSONObject().put("Hive", hiveJson).toString();
     }
 }

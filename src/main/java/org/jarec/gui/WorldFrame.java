@@ -4,6 +4,7 @@ import org.jarec.data.Hive;
 import org.jarec.game.GameEndState;
 import org.jarec.game.GameLoop;
 import org.jarec.game.GameStart;
+import org.jarec.util.GameEvents;
 import org.jarec.util.PropertyHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.net.URL;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.IntConsumer;
 import java.util.function.IntFunction;
 
@@ -33,24 +35,34 @@ public class WorldFrame extends JFrame {
     private JLabel splashImage;
     private JPanel wrapper;
 
-    private static int hiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
-    private static int hiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
-    private static int maxPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
-    private static boolean zombiesActive = Boolean.parseBoolean(PropertyHandler.get("game.default.zombie", "false"));
-    private static boolean herdingActive = Boolean.parseBoolean(PropertyHandler.get("game.default.herding", "false"));
+    private static int hiveCount = PropertyHandler.getInt("gui.hive.default.number", 2);
+    private static int hiveEnergy = PropertyHandler.getInt("hive.default.setup.energy", 100);
+    private static volatile int maxPopulation = PropertyHandler.getInt("game.max.concurrent.medium", 750);
+    private static boolean zombiesActive = PropertyHandler.getBoolean("game.default.zombie", false);
+    private static boolean herdingActive = PropertyHandler.getBoolean("game.default.herding", false);
     private String currentStatusMessage = "";
     private int messageTurnSet = -1;
     private static final int MESSAGE_DURATION_TURNS = 50;
     private boolean startup = true;
+    private final AtomicBoolean endGameShown = new AtomicBoolean();
+    private static final LatestEdtUpdate<String> statsUpdate =
+            new LatestEdtUpdate<>(value -> statsPanel.setText("Splurg World Stats\n" + value));
+    private final LatestEdtUpdate<StatusUpdate> statusUpdate =
+            new LatestEdtUpdate<>(this::applyStatusUpdate);
+    private final LatestEdtUpdate<Integer> statusRefresh =
+            new LatestEdtUpdate<>(this::applyStatusRefresh);
+
+    private record StatusUpdate(int turn, String message) {}
 
     private WorldFrame() {
         setTitle("Splurg World");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(
-                Integer.parseInt(PropertyHandler.get("gui.frame.width", "800")),
-                Integer.parseInt(PropertyHandler.get("gui.frame.height", "600"))
+                PropertyHandler.getInt("gui.frame.width", 800),
+                PropertyHandler.getInt("gui.frame.height", 600)
         );
         setLayout(new BorderLayout());
+        GameEvents.setStatusListener(this::updateStatus);
 
         // Center the frame on the screen
         setLocationRelativeTo(null);
@@ -163,8 +175,7 @@ public class WorldFrame extends JFrame {
     }
 
     public static void updateStats(String stats) {
-        var output = "Splurg World Stats\n";
-        statsPanel.setText(output + stats);
+        statsUpdate.submit(stats);
     }
 
     private void setupKeyBindings() {
@@ -240,6 +251,7 @@ public class WorldFrame extends JFrame {
 
         startItem = new JMenuItem("Start");
         startItem.addActionListener(e -> {
+            endGameShown.set(false);
             world = new WorldPanel();
             add(world, BorderLayout.CENTER);
             revalidate();
@@ -293,10 +305,13 @@ public class WorldFrame extends JFrame {
     }
 
     public void displayEndGamePanel(Hive winningHive) {
+        if (!endGameShown.compareAndSet(false, true)) return;
         GameLoop.getInstance().stop();
         GameEndState endState = determineEndState(winningHive);
-        SwingUtilities.invokeLater(() -> WinnerPanel.createAndShowWinnerPanel(endState));
-        updateMenuItemsState();
+        SwingUtilities.invokeLater(() -> {
+            WinnerPanel.createAndShowWinnerPanel(endState);
+            updateMenuItemsState();
+        });
     }
 
     private static JMenu getSettingsMenu() {
@@ -306,9 +321,9 @@ public class WorldFrame extends JFrame {
         ButtonGroup energyGroup = new ButtonGroup();
         ButtonGroup populationGroup = new ButtonGroup();
 
-        int defaultHiveCount = Integer.parseInt(PropertyHandler.get("gui.hive.default.number", "2"));
-        int defaultHiveEnergy = Integer.parseInt(PropertyHandler.get("hive.default.setup.energy", "100"));
-        int defaultPopulation = Integer.parseInt(PropertyHandler.get("game.max.concurrent.medium", "750"));
+        int defaultHiveCount = PropertyHandler.getInt("gui.hive.default.number", 2);
+        int defaultHiveEnergy = PropertyHandler.getInt("hive.default.setup.energy", 100);
+        int defaultPopulation = PropertyHandler.getInt("game.max.concurrent.medium", 750);
 
         addRadioItems(settingsMenu, hiveGroup,
                 new int[]{2, 3, 4},
@@ -329,10 +344,10 @@ public class WorldFrame extends JFrame {
         settingsMenu.addSeparator();
 
         int[] populationLevels = {
-                Integer.parseInt(PropertyHandler.get("game.max.concurrent.low", "500")),
+                PropertyHandler.getInt("game.max.concurrent.low", 500),
                 defaultPopulation,
-                Integer.parseInt(PropertyHandler.get("game.max.concurrent.high", "1000")),
-                Integer.parseInt(PropertyHandler.get("game.max.concurrent.extreme", "1500"))
+                PropertyHandler.getInt("game.max.concurrent.high", 1000),
+                PropertyHandler.getInt("game.max.concurrent.extreme", 1500)
         };
         String[] populationLabels = {
                 "Max Population Low", "Max Population Medium", "Max Population High", "Max Population Extreme"
@@ -439,10 +454,15 @@ public class WorldFrame extends JFrame {
     }
 
     private void updateMenuItemsState() {
+        if (!SwingUtilities.isEventDispatchThread()) {
+            SwingUtilities.invokeLater(this::updateMenuItemsState);
+            return;
+        }
+
         boolean isRunning = GameLoop.getInstance().isRunning();
         boolean isStarted = GameLoop.getInstance().isStarted();
 
-        startItem.setEnabled(!isStarted || !isRunning);
+        startItem.setEnabled(!isStarted);
         pauseItem.setEnabled(isStarted);
         stopItem.setEnabled(isStarted);
 
@@ -453,10 +473,6 @@ public class WorldFrame extends JFrame {
         }
     }
 
-    private String getTurn() {
-        return "Turn: " + GameLoop.getInstance().getTurn() + "      ";
-    }
-
     private void setupStatusBar() {
         statusBar = new JLabel("");
         statusBar.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
@@ -464,19 +480,26 @@ public class WorldFrame extends JFrame {
     }
 
     public void updateStatus(String message) {
-        currentStatusMessage = message;
-        messageTurnSet = GameLoop.getInstance().getTurn();
-        statusBar.setText(getTurn() + message);
         log.info(message);
+        statusUpdate.submit(new StatusUpdate(GameLoop.getInstance().getTurn(), message));
+    }
+
+    private void applyStatusUpdate(StatusUpdate update) {
+        currentStatusMessage = update.message();
+        messageTurnSet = update.turn();
+        statusBar.setText("Turn: " + update.turn() + "      " + update.message());
     }
 
     public void refreshStatus() {
-        int currentTurn = GameLoop.getInstance().getTurn();
+        statusRefresh.submit(GameLoop.getInstance().getTurn());
+    }
+
+    private void applyStatusRefresh(int currentTurn) {
         if (currentTurn - messageTurnSet < MESSAGE_DURATION_TURNS) {
-            statusBar.setText(getTurn() + currentStatusMessage);
+            statusBar.setText("Turn: " + currentTurn + "      " + currentStatusMessage);
         } else {
             currentStatusMessage = "";
-            statusBar.setText(getTurn());
+            statusBar.setText("Turn: " + currentTurn + "      ");
         }
     }
 

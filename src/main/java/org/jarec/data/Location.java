@@ -1,7 +1,5 @@
 package org.jarec.data;
 
-import org.jarec.gui.WorldFrame;
-
 public class Location {
     private int x;
     private int y;
@@ -28,8 +26,13 @@ public class Location {
     }
 
     public Heading updateLocation(Heading heading) {
-        var worldWidth = WorldFrame.getInstance().getWorldPanel().getWorldWidth();
-        var worldHeight = WorldFrame.getInstance().getWorldPanel().getWorldHeight();
+        return updateLocation(heading, WorldBounds.getWidth(), WorldBounds.getHeight());
+    }
+
+    public Heading updateLocation(Heading heading, int worldWidth, int worldHeight) {
+        if (worldWidth < 1 || worldHeight < 1) {
+            throw new IllegalArgumentException("World dimensions must be positive");
+        }
 
         int newX = this.x + heading.getDx();
         int newY = this.y + heading.getDy();
