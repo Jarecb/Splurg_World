@@ -36,14 +36,19 @@ public class WinnerPanel {
                 log.error("Image must be 512x512 pixels");
             }
 
-            JPanel panel = getWinnerPanel(image);
+            WinnerContent content = getWinnerPanel(image, gameEndStata);
 
             JDialog dialog = new JDialog(WorldFrame.getInstance(), "Winner", false);
             dialog.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-            dialog.setUndecorated(true);
-            dialog.getContentPane().add(panel);
+            dialog.setResizable(false);
+            dialog.getContentPane().add(content.panel());
             dialog.pack();
             dialog.setLocationRelativeTo(null);
+            dialog.getRootPane().setDefaultButton(content.closeButton());
+            dialog.getRootPane().registerKeyboardAction(
+                    event -> dialog.dispose(),
+                    KeyStroke.getKeyStroke("ESCAPE"),
+                    JComponent.WHEN_IN_FOCUSED_WINDOW);
             dialog.setVisible(true);
 
         } catch (IOException e) {
@@ -53,27 +58,69 @@ public class WinnerPanel {
         }
     }
 
-    private static JPanel getWinnerPanel(BufferedImage image) {
-        JPanel panel = new JPanel() {
+    private record WinnerContent(JPanel panel, JButton closeButton) {}
+
+    private static WinnerContent getWinnerPanel(BufferedImage image, GameEndState state) {
+        JPanel panel = new JPanel(new BorderLayout(0, 14));
+        panel.setBackground(UiTheme.SURFACE);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UiTheme.BORDER),
+                BorderFactory.createEmptyBorder(18, 18, 14, 18)));
+
+        JPanel titleBlock = new JPanel(new BorderLayout(0, 4));
+        titleBlock.setBackground(UiTheme.SURFACE);
+        titleBlock.add(UiTheme.heading(getWinnerTitle(state)), BorderLayout.NORTH);
+        titleBlock.add(UiTheme.caption("The world has reached its end state"), BorderLayout.SOUTH);
+
+        JPanel imagePanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(image, 0, 0, this);
             }
         };
-        panel.setPreferredSize(new Dimension(512, 512));
-
-        // Add mouse listener to close on click
-        panel.addMouseListener(new MouseAdapter() {
+        imagePanel.setBackground(UiTheme.BACKGROUND);
+        imagePanel.setPreferredSize(new Dimension(512, 512));
+        imagePanel.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                Window window = SwingUtilities.getWindowAncestor(panel);
-                if (window != null) {
-                    window.dispose();
-                }
+            public void mouseClicked(MouseEvent event) {
+                closeDialog(panel);
             }
         });
-        return panel;
+
+        JButton close = new JButton("Close");
+        close.addActionListener(event -> closeDialog(panel));
+        JPanel actions = new JPanel(new BorderLayout());
+        actions.setOpaque(false);
+        actions.add(UiTheme.caption("Click the image or press Escape to close"), BorderLayout.WEST);
+        actions.add(close, BorderLayout.EAST);
+
+        panel.add(titleBlock, BorderLayout.NORTH);
+        panel.add(imagePanel, BorderLayout.CENTER);
+        panel.add(actions, BorderLayout.SOUTH);
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent event) {
+                closeDialog(panel);
+            }
+        });
+        return new WinnerContent(panel, close);
+    }
+
+    private static String getWinnerTitle(GameEndState state) {
+        return switch (state) {
+            case BLUE -> "Blue colony wins";
+            case GREEN -> "Green colony wins";
+            case RED -> "Red colony wins";
+            case YELLOW -> "Yellow colony wins";
+            case ZOMBIE -> "The zombies take over";
+            case STALEMATE -> "A world in balance";
+        };
+    }
+
+    private static void closeDialog(Component component) {
+        Window window = SwingUtilities.getWindowAncestor(component);
+        if (window != null) window.dispose();
     }
 
     private static BufferedImage loadImageFromResources(String path) throws IOException {
